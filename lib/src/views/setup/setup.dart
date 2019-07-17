@@ -3,6 +3,7 @@ import 'package:friends_tournament/src/ui/page.dart';
 import 'package:friends_tournament/src/views/setup/matches_name.dart';
 import 'package:friends_tournament/src/views/setup/number_setup_screen.dart';
 import 'package:friends_tournament/src/views/setup/users_name_screen.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Setup extends StatefulWidget {
   @override
@@ -38,6 +39,14 @@ class _SetupState extends State<Setup> with SingleTickerProviderStateMixin {
     });
   }
 
+  bool isFirstPage() {
+    return this._currentPage == 0;
+  }
+
+  bool isFinalPage() {
+    return this._currentPage == _allPages.length - 1;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -57,37 +66,73 @@ class _SetupState extends State<Setup> with SingleTickerProviderStateMixin {
                   );
                 }).toList()),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                InkWell(
-                  child: Icon(Icons.arrow_back_ios),
-                  onTap: () {
-                    // TODO: improve and disable the tap
-                    if (this._currentPage != 0) {
-                      setState(() {
-                        _controller.animateTo(this._currentPage - 1);
-                      });
-                    }
-                  },
-                ),
-                Text(this._currentPage.toString()),
-                InkWell(
-                  child: Icon(Icons.arrow_forward_ios),
-                  onTap: () {
-                    // TODO: improve and disable the tap
-                    if (this._currentPage != _allPages.length - 1) {
-                      _controller.animateTo(this._currentPage + 1);
-                    }
-                  },
-                ),
-              ],
-            ),
-          )
+          Padding(padding: const EdgeInsets.all(16.0), child: createBottomBar())
         ],
       ),
     ));
+  }
+
+  Widget createBottomBar() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: Opacity(
+            opacity: _currentPage == 0 ? 0 : 1,
+            child: InkResponse(
+              child: SvgPicture.asset(
+                'assets/left_arrow.svg',
+              ),
+              onTap: this.isFirstPage()
+                  ? null
+                  : () {
+                      setState(() {
+                        _controller.animateTo(this._currentPage - 1);
+                      });
+                    },
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+          child: FloatingActionButton(
+            child: this.isFinalPage()
+                ? Icon(
+                    Icons.done,
+                  )
+                : Text(
+                    (this._currentPage + 1).toString(),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
+                  ),
+            onPressed: this.isFinalPage()
+                ? () {
+                    // TODO: implement
+                  }
+                : null,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 10),
+          child: Opacity(
+            opacity: this.isFinalPage() ? 0 : 1,
+            child: InkResponse(
+              enableFeedback: _currentPage == 2 ? false : true,
+              child: SvgPicture.asset(
+                'assets/right_arrow.svg',
+              ),
+              onTap: this.isFinalPage()
+                  ? null
+                  : () {
+                      _controller.animateTo(this._currentPage + 1);
+                    },
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

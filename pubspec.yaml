@@ -45,6 +45,9 @@ flutter:
   assets:
     - right_arrow.svg
     - left_arrow.svg
+    - players_icon.svg
+    - players_ast_icon.svg
+    - matches_icon.svg
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

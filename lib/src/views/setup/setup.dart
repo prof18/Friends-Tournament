@@ -49,8 +49,8 @@ class _SetupState extends State<Setup> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-        child: SafeArea(
+    return Scaffold(
+        body: SafeArea(
       child: Column(
         children: <Widget>[
           Expanded(
@@ -66,7 +66,7 @@ class _SetupState extends State<Setup> with SingleTickerProviderStateMixin {
                   );
                 }).toList()),
           ),
-          Padding(padding: const EdgeInsets.all(16.0), child: createBottomBar())
+          Padding(padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0), child: createBottomBar())
         ],
       ),
     ));

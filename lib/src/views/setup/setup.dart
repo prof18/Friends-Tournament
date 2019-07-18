@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:friends_tournament/src/bloc/setup_bloc.dart';
+import 'package:friends_tournament/src/bloc/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/ui/page.dart';
 import 'package:friends_tournament/src/views/setup/matches_name.dart';
 import 'package:friends_tournament/src/views/setup/number_setup_screen.dart';
@@ -27,6 +29,8 @@ class _SetupState extends State<Setup> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
+  // Controller of the textFields in the
+
   List<Page> _allPages = [
     Page(widget: NumberSetup()),
     Page(widget: UserName()),
@@ -47,29 +51,38 @@ class _SetupState extends State<Setup> with SingleTickerProviderStateMixin {
     return this._currentPage == _allPages.length - 1;
   }
 
+  SetupBloc _setupBloc = SetupBloc();
+
+  String tournamentName;
+  int numberOfPlayers;
+
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-      child: Column(
-        children: <Widget>[
-          Expanded(
-            child: TabBarView(
-                physics: NeverScrollableScrollPhysics(),
-                controller: _controller,
-                children: _allPages.map<Widget>((Page page) {
-                  return Container(
-                    child: Container(
-                        key: ObjectKey(page.widget),
-                        padding: const EdgeInsets.all(12.0),
-                        child: page.widget),
-                  );
-                }).toList()),
-          ),
-          Padding(padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0), child: createBottomBar())
-        ],
-      ),
-    ));
+    return SetupBlocProvider(
+      setupBloc: _setupBloc,
+      child: Scaffold(
+          body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: TabBarView(
+                  physics: NeverScrollableScrollPhysics(),
+                  controller: _controller,
+                  children: _allPages.map<Widget>((Page page) {
+                    return Container(
+                      child: Container(
+                          key: ObjectKey(page.widget),
+                          padding: const EdgeInsets.all(12.0),
+                          child: page.widget),
+                    );
+                  }).toList()),
+            ),
+            Padding(padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0), child: createBottomBar())
+          ],
+        ),
+      )),
+    );
   }
 
   Widget createBottomBar() {
@@ -135,4 +148,5 @@ class _SetupState extends State<Setup> with SingleTickerProviderStateMixin {
       ],
     );
   }
+
 }

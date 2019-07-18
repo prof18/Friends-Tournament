@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:friends_tournament/src/views/setup/setup.dart';
+import 'package:friends_tournament/src/views/setup/setup_wrapper.dart';
 
 class Welcome extends StatefulWidget {
   @override

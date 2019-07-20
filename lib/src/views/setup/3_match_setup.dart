@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:friends_tournament/src/ui/slide_left_route.dart';
 
 class MatchSetup extends StatefulWidget {
   @override

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:friends_tournament/src/bloc/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/ui/slide_left_route.dart';
 import 'package:friends_tournament/src/views/setup/3_match_setup.dart';
 
@@ -10,13 +11,25 @@ class PlayerSetup extends StatefulWidget {
 class _PlayerSetupState extends State<PlayerSetup> {
   @override
   Widget build(BuildContext context) {
+    final _setupBloc = SetupBlocProvider.of(context);
+
+   return StreamBuilder(
+     initialData: 0,
+     builder: createBody,
+     stream: _setupBloc.getPlayersNumber,
+   );
+  }
+
+  Widget createBody(BuildContext context, AsyncSnapshot<int> snapshot) {
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: <Widget>[
             Expanded(
               child: Container(
-                color: Colors.green,
+                child: Text(
+                  snapshot.data.toString()
+                )
               ),
             ),
             Padding(

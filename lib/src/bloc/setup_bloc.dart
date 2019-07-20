@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:rxdart/rxdart.dart';
+
 class SetupBloc {
 
   /* *************
@@ -9,13 +11,14 @@ class SetupBloc {
   * ************** */
 
   // Controllers of input and output
-  final _playersNumberController = StreamController<int>();
+  final _playersNumberController = BehaviorSubject<int>();
   final _playersAstNumberController = StreamController<int>();
   final _matchesNumberController = StreamController<int>();
   final _tournamentNameController = StreamController<String>();
 
+
   // Input
-  Sink<int> get setPlayersNumber => _playersNumberController.sink;
+  Sink<int> get  setPlayersNumber => _playersNumberController.sink;
   Sink<int> get setPlayersAstNumber => _playersAstNumberController.sink;
   Sink<int> get setMatchesNumber => _matchesNumberController.sink;
   Sink<String> get setTournamentName => _tournamentNameController.sink;
@@ -24,8 +27,7 @@ class SetupBloc {
   Stream<int> get getPlayersNumber => _playersNumberController.stream;
   Stream<int> get getMatchesNumber => _matchesNumberController.stream;
 
-
-  /* *************
+ /* *************
   *
   * Constructor/Destructor
   *
@@ -45,7 +47,7 @@ class SetupBloc {
     _tournamentNameController.close();
   }
 
-  /* *************
+ /* *************
   *
   * Status Variables
   *
@@ -62,7 +64,6 @@ class SetupBloc {
   * ************** */
   void _setPlayersNumber(int value) {
     _playersNumber = value;
-    _playersNumberController.add(value);
   }
 
   void _setPlayersAstNumber(int value) {
@@ -71,11 +72,9 @@ class SetupBloc {
 
   void _setMatchesNumber(int value) {
     _matchesNumber = value;
-    _matchesNumberController.add(value);
   }
 
   void _setTournamentName(String value) {
     _tournamentName = value;
   }
-
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:friends_tournament/src/views/setup/setup_wrapper.dart';
+import 'package:friends_tournament/src/views/setup/1_number_setup.dart';
 
 class Welcome extends StatefulWidget {
   @override
@@ -25,7 +25,7 @@ class _WelcomeState extends State<Welcome> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Setup()),
+                    MaterialPageRoute(builder: (context) => NumberSetup()),
                   );
                 },
               ),

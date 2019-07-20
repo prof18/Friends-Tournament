@@ -10,6 +10,8 @@ class NumberSetup extends StatefulWidget {
 }
 
 class _NumberSetupState extends State<NumberSetup> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   TextEditingController _tournamentController = new TextEditingController();
   TextEditingController _playersController = new TextEditingController();
   TextEditingController _playersAstController = new TextEditingController();
@@ -17,21 +19,46 @@ class _NumberSetupState extends State<NumberSetup> {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey,
+      body: StreamBuilder<Object>(
+          stream: null,
+          builder: (context, snapshot) {
+            return SafeArea(
+              child: Column(
+                children: <Widget>[
+                  Expanded(child: renderBody()),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: renderBottomBar(),
+                  )
+                ],
+              ),
+            );
+          }),
+    );
+  }
 
+  void goToNextPage() {
     var setupBloc = SetupBlocProvider.of(context);
 
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Expanded(child: renderBody()),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: renderBottomBar(),
-            )
-          ],
-        ),
-      ),
+    if (_tournamentController.text.isEmpty ||
+        _playersController.text.isEmpty ||
+        _playersAstController.text.isEmpty ||
+        _matchesController.text.isEmpty) {
+      _scaffoldKey.currentState
+          .showSnackBar(SnackBar(content: Text('Complete all the field')));
+      return;
+    }
+
+    setupBloc.setTournamentName.add(_tournamentController.text);
+    setupBloc.setPlayersNumber.add(int.parse(_playersController.text));
+    setupBloc.setPlayersAstNumber.add(int.parse(_playersAstController.text));
+    setupBloc.setMatchesNumber.add(int.parse(_matchesController.text));
+
+    Navigator.push(
+      context,
+      SlideLeftRoute(page: PlayerSetup()),
     );
   }
 
@@ -43,10 +70,7 @@ class _NumberSetupState extends State<NumberSetup> {
           heroTag: "btn2",
           child: Icon(Icons.arrow_forward_ios),
           onPressed: () {
-            Navigator.push(
-              context,
-              SlideLeftRoute(page: PlayerSetup()),
-            );
+            goToNextPage();
           },
         )
       ],
@@ -93,10 +117,8 @@ class _NumberSetupState extends State<NumberSetup> {
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: TextField(
+                            controller: _playersController,
                             keyboardType: TextInputType.number,
-                            onSubmitted: (value) {
-                              print("Value: $value");
-                            },
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Number of players',

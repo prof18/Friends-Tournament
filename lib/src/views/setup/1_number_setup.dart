@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/ui/slide_left_route.dart';
+import 'package:friends_tournament/src/ui/utils.dart';
 import 'package:friends_tournament/src/views/setup/2_player_setup.dart';
 
 class NumberSetup extends StatefulWidget {
@@ -12,10 +13,35 @@ class NumberSetup extends StatefulWidget {
 class _NumberSetupState extends State<NumberSetup> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  TextEditingController _tournamentController = new TextEditingController();
-  TextEditingController _playersController = new TextEditingController();
-  TextEditingController _playersAstController = new TextEditingController();
-  TextEditingController _matchesController = new TextEditingController();
+  // Text Fields Controllers
+  final TextEditingController _tournamentController = new TextEditingController();
+  final TextEditingController _playersController = new TextEditingController();
+  final TextEditingController _playersAstController = new TextEditingController();
+  final TextEditingController _matchesController = new TextEditingController();
+
+  // Text Fields Focus
+  FocusNode _tournamentFocusNode;
+  FocusNode _playersFocusNode;
+  FocusNode _playersAstFocusNode;
+  FocusNode _matchesFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+   _tournamentFocusNode = FocusNode();
+   _playersFocusNode = FocusNode();
+   _playersAstFocusNode = FocusNode();
+   _matchesFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _tournamentFocusNode.dispose();
+    _playersFocusNode.dispose();
+    _playersAstFocusNode.dispose();
+    _matchesFocusNode.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +73,7 @@ class _NumberSetupState extends State<NumberSetup> {
         _playersAstController.text.isEmpty ||
         _matchesController.text.isEmpty) {
       _scaffoldKey.currentState
-          .showSnackBar(SnackBar(content: Text('Complete all the field')));
+          .showSnackBar(SnackBar(content: Text('Complete all the fields')));
       return;
     }
 
@@ -99,6 +125,11 @@ class _NumberSetupState extends State<NumberSetup> {
                     padding: const EdgeInsets.all(20),
                     child: TextField(
                         controller: _tournamentController,
+                        textInputAction: TextInputAction.next,
+                        focusNode: _tournamentFocusNode,
+                        onSubmitted: (value) {
+                          changeTextFieldFocus(context, _tournamentFocusNode, _playersFocusNode);
+                        },
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Tournament Name',
@@ -119,6 +150,11 @@ class _NumberSetupState extends State<NumberSetup> {
                           child: TextField(
                             controller: _playersController,
                             keyboardType: TextInputType.number,
+                            textInputAction: TextInputAction.next,
+                            focusNode: _playersFocusNode,
+                            onSubmitted: (value) {
+                              changeTextFieldFocus(context, _playersFocusNode, _playersAstFocusNode);
+                            },
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Number of players',
@@ -143,6 +179,11 @@ class _NumberSetupState extends State<NumberSetup> {
                           child: TextField(
                             keyboardType: TextInputType.number,
                             controller: _playersAstController,
+                            textInputAction: TextInputAction.next,
+                            focusNode: _playersAstFocusNode,
+                            onSubmitted: (value) {
+                              changeTextFieldFocus(context, _playersAstFocusNode, _matchesFocusNode);
+                            },
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Number of players at the same time',
@@ -166,6 +207,12 @@ class _NumberSetupState extends State<NumberSetup> {
                           padding: const EdgeInsets.all(20.0),
                           child: TextField(
                             keyboardType: TextInputType.number,
+                            textInputAction: TextInputAction.done,
+                            focusNode: _matchesFocusNode,
+                            onSubmitted: (value) {
+                              _matchesFocusNode.unfocus();
+                              goToNextPage();
+                            },
                             controller: _matchesController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),

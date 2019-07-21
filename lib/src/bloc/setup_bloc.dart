@@ -13,8 +13,10 @@ class SetupBloc {
   // Controllers of input and output
   final _playersNumberController = BehaviorSubject<int>();
   final _playersAstNumberController = StreamController<int>();
-  final _matchesNumberController = StreamController<int>();
+  final _matchesNumberController = BehaviorSubject<int>();
   final _tournamentNameController = StreamController<String>();
+  final _playersNameController = BehaviorSubject<Map<int, String>>();
+  final _matchesNameController = BehaviorSubject<Map<int, String>>();
 
 
   // Input
@@ -22,10 +24,14 @@ class SetupBloc {
   Sink<int> get setPlayersAstNumber => _playersAstNumberController.sink;
   Sink<int> get setMatchesNumber => _matchesNumberController.sink;
   Sink<String> get setTournamentName => _tournamentNameController.sink;
+  Sink<Map<int, String>> get setPlayersName => _playersNameController.sink;
+  Sink<Map<int, String>> get setMatchesName => _matchesNameController.sink;
 
   // Output
   Stream<int> get getPlayersNumber => _playersNumberController.stream;
   Stream<int> get getMatchesNumber => _matchesNumberController.stream;
+  Stream<Map<int, String>> get getPlayersName => _playersNameController.stream;
+  Stream<Map<int, String>> get getMatchesName => _matchesNameController.stream;
 
  /* *************
   *
@@ -38,6 +44,8 @@ class SetupBloc {
     _playersAstNumberController.stream.listen(_setPlayersAstNumber);
     _matchesNumberController.stream.listen(_setMatchesNumber);
     _tournamentNameController.stream.listen(_setTournamentName);
+    _playersNameController.stream.listen(_setPlayersName);
+    _matchesNameController.stream.listen(_setMatchesName);
   }
 
   void dispose() {
@@ -45,6 +53,8 @@ class SetupBloc {
     _playersAstNumberController.close();
     _matchesNumberController.close();
     _tournamentNameController.close();
+    _playersNameController.close();
+    _matchesNameController.close();
   }
 
  /* *************
@@ -56,6 +66,8 @@ class SetupBloc {
   int _playersAstNumber;
   int _matchesNumber;
   String _tournamentName;
+  Map<int, String> _playersName;
+  Map<int, String> _matchesName;
 
   /* *************
   *
@@ -76,5 +88,13 @@ class SetupBloc {
 
   void _setTournamentName(String value) {
     _tournamentName = value;
+  }
+
+  void _setPlayersName(Map<int, String> value) {
+    _playersName = value;
+  }
+
+  void _setMatchesName(Map<int, String> value) {
+    _matchesName = value;
   }
 }

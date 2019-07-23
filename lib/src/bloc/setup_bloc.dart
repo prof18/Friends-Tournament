@@ -1,9 +1,10 @@
 import 'dart:async';
+import 'dart:collection';
+import 'dart:math';
 
 import 'package:rxdart/rxdart.dart';
 
 class SetupBloc {
-
   /* *************
   *
   * Stream Stuff
@@ -18,22 +19,29 @@ class SetupBloc {
   final _playersNameController = BehaviorSubject<Map<int, String>>();
   final _matchesNameController = BehaviorSubject<Map<int, String>>();
 
-
   // Input
-  Sink<int> get  setPlayersNumber => _playersNumberController.sink;
+  Sink<int> get setPlayersNumber => _playersNumberController.sink;
+
   Sink<int> get setPlayersAstNumber => _playersAstNumberController.sink;
+
   Sink<int> get setMatchesNumber => _matchesNumberController.sink;
+
   Sink<String> get setTournamentName => _tournamentNameController.sink;
+
   Sink<Map<int, String>> get setPlayersName => _playersNameController.sink;
+
   Sink<Map<int, String>> get setMatchesName => _matchesNameController.sink;
 
   // Output
   Stream<int> get getPlayersNumber => _playersNumberController.stream;
+
   Stream<int> get getMatchesNumber => _matchesNumberController.stream;
+
   Stream<Map<int, String>> get getPlayersName => _playersNameController.stream;
+
   Stream<Map<int, String>> get getMatchesName => _matchesNameController.stream;
 
- /* *************
+  /* *************
   *
   * Constructor/Destructor
   *
@@ -57,7 +65,7 @@ class SetupBloc {
     _matchesNameController.close();
   }
 
- /* *************
+  /* *************
   *
   * Status Variables
   *
@@ -96,5 +104,32 @@ class SetupBloc {
 
   void _setMatchesName(Map<int, String> value) {
     _matchesName = value;
+  }
+
+  void createMatches() {
+    final random = new Random();
+    // number of matches
+    for (int i = 0; i < _matchesNumber; i++) {
+      String matchName = _matchesName[i];
+      // create a map for the list of player
+      List<List<int>> sessionList = List<List<int>>();
+      // number of sessions for the same match
+      int sessions = (_matchesNumber / _playersAstNumber).ceil();
+      for (int j = 0; j < sessions; j++) {
+        List<int> currentSessionPlayers = List<int>();
+        for (int k = 0; k < _playersAstNumber; k++) {
+          while (true) {
+            int player = random.nextInt(_playersNumber + 1);
+            if (currentSessionPlayers.contains(player)) {
+              continue;
+            } else {
+              currentSessionPlayers.add(player);
+              break;
+            }
+          }
+        }
+        sessionList.add(currentSessionPlayers);
+      }
+    }
   }
 }

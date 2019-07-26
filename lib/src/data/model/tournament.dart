@@ -1,10 +1,10 @@
 class Tournament {
   String id;
   String name;
-  int playerNumber;
-  int playerAstNumber;
+  int playersNumber;
+  int playersAstNumber;
   int matchesNumber;
 
-  Tournament(this.id, this.name, this.playerNumber, this.playerAstNumber,
+  Tournament(this.id, this.name, this.playersNumber, this.playersAstNumber,
       this.matchesNumber);
 }

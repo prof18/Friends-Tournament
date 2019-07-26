@@ -1,5 +1,7 @@
 class PlayerSession {
   String playerId;
-  String playerSession;
+  String session;
   int score;
+
+  PlayerSession(this.playerId, this.session, this.score);
 }

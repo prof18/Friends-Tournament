@@ -1,7 +1,6 @@
 import 'dart:async';
-import 'dart:collection';
-import 'dart:math';
 
+import 'package:friends_tournament/src/data/setup_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SetupBloc {
@@ -106,30 +105,9 @@ class SetupBloc {
     _matchesName = value;
   }
 
-  void createMatches() {
-    final random = new Random();
-    // number of matches
-    for (int i = 0; i < _matchesNumber; i++) {
-      String matchName = _matchesName[i];
-      // create a map for the list of player
-      List<List<int>> sessionList = List<List<int>>();
-      // number of sessions for the same match
-      int sessions = (_matchesNumber / _playersAstNumber).ceil();
-      for (int j = 0; j < sessions; j++) {
-        List<int> currentSessionPlayers = List<int>();
-        for (int k = 0; k < _playersAstNumber; k++) {
-          while (true) {
-            int player = random.nextInt(_playersNumber + 1);
-            if (currentSessionPlayers.contains(player)) {
-              continue;
-            } else {
-              currentSessionPlayers.add(player);
-              break;
-            }
-          }
-        }
-        sessionList.add(currentSessionPlayers);
-      }
-    }
+  void setupTournament() {
+    SetupRepository repository = new SetupRepository();
+    repository.setupTournament(_playersNumber, _playersAstNumber,
+        _matchesNumber, _tournamentName, _playersName, _matchesName);
   }
 }

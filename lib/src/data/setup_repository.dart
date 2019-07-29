@@ -140,6 +140,7 @@ class SetupRepository {
     setupDataSource.insert(_tournament, TournamentDao());
 
     // save players
+    // TODO: check if present in the db
     var playerDao = PlayerDao();
     _players.forEach((player) {
       setupDataSource.insert(player, playerDao);

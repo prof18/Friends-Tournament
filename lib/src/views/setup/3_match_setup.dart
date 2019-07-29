@@ -7,6 +7,7 @@ import 'package:friends_tournament/src/bloc/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
 import 'package:friends_tournament/src/data/setup_repository.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 
 class MatchSetup extends StatefulWidget {
   @override
@@ -143,5 +144,25 @@ class _MatchSetupState extends State<MatchSetup> {
     // TODO: launch a loader or change window
     // TODO: show a popup or go to new screen in order to handle the process
 //    _setupBloc.setupTournament();
+
+    showDialog(
+        context: context,
+        builder: (_) => FlareGiffyDialog(
+          flarePath: 'assets/Teddy.flr',
+          flareAnimation: 'test',
+          title: Text(
+            'Men Wearing Jackets',
+            style: TextStyle(
+                fontSize: 22.0, fontWeight: FontWeight.w600),
+          ),
+          description: Text(
+            'This is a men wearing jackets dialog box. This library helps you easily create fancy giffy dialog.',
+            textAlign: TextAlign.center,
+            style: TextStyle(),
+          ),
+          onOkButtonPressed: () {
+            _setupBloc.setupTournament();
+          },
+        ));
   }
 }

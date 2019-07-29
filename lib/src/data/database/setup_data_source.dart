@@ -1,5 +1,4 @@
 import 'package:friends_tournament/src/data/database/dao.dart';
-import 'package:friends_tournament/src/data/database/dao.dart' as prefix0;
 import 'package:friends_tournament/src/data/database/database_provider.dart';
 
 class SetupDataSource {

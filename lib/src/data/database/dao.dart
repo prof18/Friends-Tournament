@@ -1,5 +1,6 @@
 abstract class Dao<T> {
   // queries
+  String get tableName;
   String get createTableQuery;
 
   // abstract mapping methods

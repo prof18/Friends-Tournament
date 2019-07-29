@@ -1,3 +1,11 @@
+import 'package:friends_tournament/src/data/database/dao/match_dao.dart';
+import 'package:friends_tournament/src/data/database/dao/match_session_dao.dart';
+import 'package:friends_tournament/src/data/database/dao/player_dao.dart';
+import 'package:friends_tournament/src/data/database/dao/player_session_dao.dart';
+import 'package:friends_tournament/src/data/database/dao/session_dao.dart';
+import 'package:friends_tournament/src/data/database/dao/tournament_dao.dart';
+import 'package:friends_tournament/src/data/database/dao/tournament_match_dao.dart';
+import 'package:friends_tournament/src/data/database/dao/tournament_player_dao.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -11,7 +19,7 @@ class DatabaseProvider {
   DatabaseProvider._internal();
 
   Future<Database> db() async {
-    if (_db != null) await _init();
+    if (_db == null) await _init();
     return _db;
   }
 
@@ -20,11 +28,17 @@ class DatabaseProvider {
    String path = join(databasePath, "friends_tournament.db");
 
    _db = await openDatabase(
-       databasePath,
+       path,
        version: 1,
        onCreate: (Database db, int version) async {
-         // TODO: add all the queries to create the tables
-//        await db.execute()
+        await db.execute(MatchDao().createTableQuery);
+        await db.execute(MatchSessionDao().createTableQuery);
+        await db.execute(PlayerDao().createTableQuery);
+        await db.execute(PlayerSessionDao().createTableQuery);
+        await db.execute(SessionDao().createTableQuery);
+        await db.execute(TournamentDao().createTableQuery);
+        await db.execute(TournamentMatchDao().createTableQuery);
+        await db.execute(TournamentPlayerDao().createTableQuery);
    } );
  }
 

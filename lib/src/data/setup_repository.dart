@@ -1,5 +1,15 @@
 import 'dart:math';
 
+import 'package:friends_tournament/src/data/database/dao/match_dao.dart';
+import 'package:friends_tournament/src/data/database/dao/match_session_dao.dart';
+import 'package:friends_tournament/src/data/database/dao/player_dao.dart';
+import 'package:friends_tournament/src/data/database/dao/player_session_dao.dart';
+import 'package:friends_tournament/src/data/database/dao/session_dao.dart';
+import 'package:friends_tournament/src/data/database/dao/tournament_dao.dart';
+import 'package:friends_tournament/src/data/database/dao/tournament_match_dao.dart';
+import 'package:friends_tournament/src/data/database/dao/tournament_player_dao.dart';
+import 'package:friends_tournament/src/data/database/database_provider.dart';
+import 'package:friends_tournament/src/data/database/setup_data_source.dart';
 import 'package:friends_tournament/src/data/model/match.dart';
 import 'package:friends_tournament/src/data/model/match_session.dart';
 import 'package:friends_tournament/src/data/model/player.dart';
@@ -47,6 +57,9 @@ class SetupRepository {
   int _matchesNumber;
   String _tournamentName;
 
+  DatabaseProvider databaseProvider = DatabaseProvider.get;
+  var setupDataSource = SetupDataSource();
+
   void setupTournament(
       int playersNumber,
       int playersAstNumber,
@@ -65,7 +78,7 @@ class SetupRepository {
     _setupPlayers(playersName);
     _setupMatches(matchesName);
     _generateTournament();
-    _saveOnDB();
+    _save();
   }
 
   void _setupPlayers(Map<int, String> playersName) {
@@ -104,7 +117,7 @@ class SetupRepository {
         var currentSessionPlayers = List<int>();
         for (int j = 0; j < _playersAstNumber; j++) {
           while (true) {
-            int playerIndex = _random.nextInt(_playersNumber + 1);
+            int playerIndex = _random.nextInt(_playersNumber);
             if (currentSessionPlayers.contains(playerIndex)) {
               continue;
             } else {
@@ -122,7 +135,50 @@ class SetupRepository {
     });
   }
 
-  void _saveOnDB() {
+  void _save() {
+    // save tournament
+    setupDataSource.insert(_tournament, TournamentDao());
 
+    // save players
+    var playerDao = PlayerDao();
+    _players.forEach((player) {
+      setupDataSource.insert(player, playerDao);
+    });
+
+    // save sessions
+    var sessionDao = SessionDao();
+    _sessions.forEach((session) {
+      setupDataSource.insert(session, sessionDao);
+    });
+
+    // save matches
+    var matchDao = MatchDao();
+    _matches.forEach((match) {
+      setupDataSource.insert(match, matchDao);
+    });
+
+    // save player session
+    var playerSessionDao = PlayerSessionDao();
+    _playerSessionList.forEach((playerSession) {
+      setupDataSource.insert(playerSession, playerSessionDao);
+    });
+
+    // save match session
+    var matchSessionDao = MatchSessionDao();
+    _matchSessionList.forEach((matchSession) {
+      setupDataSource.insert(matchSession, matchSessionDao);
+    });
+
+    // save tournament match
+    var tournamentMatchDao = TournamentMatchDao();
+    _tournamentMatchList.forEach((tournamentMatch) {
+      setupDataSource.insert(tournamentMatch, tournamentMatchDao);
+    });
+
+    // save tournament player
+    var tournamentPlayerDao = TournamentPlayerDao();
+    _tournamentPlayerList.forEach((tournamentPlayer) {
+      setupDataSource.insert(tournamentPlayer, tournamentPlayerDao);
+    });
   }
 }

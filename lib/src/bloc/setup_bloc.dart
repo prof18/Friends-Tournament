@@ -103,6 +103,8 @@ class SetupBloc {
 
   void _setMatchesName(Map<int, String> value) {
     _matchesName = value;
+    // TODO: remove this
+    setupTournament();
   }
 
   void setupTournament() {

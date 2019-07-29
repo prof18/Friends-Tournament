@@ -1,9 +1,11 @@
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
+import 'package:friends_tournament/src/data/setup_repository.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
 
 class MatchSetup extends StatefulWidget {
@@ -109,6 +111,7 @@ class _MatchSetupState extends State<MatchSetup> {
           heroTag: "btn2",
           child: Icon(Icons.done),
           onPressed: () {
+            saveValues();
             goToNextPage();
           },
         )
@@ -132,12 +135,13 @@ class _MatchSetupState extends State<MatchSetup> {
   }
 
   void goToNextPage() {
-    saveValues();
     if (_savedValues.length != _textFieldsList.length) {
       _scaffoldKey.currentState
           .showSnackBar(SnackBar(content: Text('Complete all the fields')));
       return;
     }
-    // TODO: go to the next window
+    // TODO: launch a loader or change window
+    // TODO: show a popup or go to new screen in order to handle the process
+//    _setupBloc.setupTournament();
   }
 }

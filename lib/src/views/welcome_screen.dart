@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/views/setup/1_number_setup.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
 
 class Welcome extends StatefulWidget {
   @override

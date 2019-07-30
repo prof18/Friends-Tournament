@@ -114,6 +114,8 @@ class SetupRepository {
         var sessionId = generateSessionId(match.id, sessionName);
         var session = Session(sessionId, sessionName);
         _sessions.add(session);
+        var matchSession = MatchSession(match.id, sessionId);
+        _matchSessionList.add(matchSession);
         var currentSessionPlayers = List<int>();
         for (int j = 0; j < _playersAstNumber; j++) {
           while (true) {
@@ -125,8 +127,6 @@ class SetupRepository {
               var player = _players[playerIndex];
               var playerSession = PlayerSession(player.id, sessionId, 0);
               _playerSessionList.add(playerSession);
-              var matchSession = MatchSession(match.id, sessionId);
-              _matchSessionList.add(matchSession);
               break;
             }
           }
@@ -140,10 +140,9 @@ class SetupRepository {
     setupDataSource.insert(_tournament, TournamentDao());
 
     // save players
-    // TODO: check if present in the db
     var playerDao = PlayerDao();
     _players.forEach((player) {
-      setupDataSource.insert(player, playerDao);
+      setupDataSource.insertIgnore(player, playerDao);
     });
 
     // save sessions

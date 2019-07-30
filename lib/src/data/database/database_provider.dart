@@ -27,6 +27,9 @@ class DatabaseProvider {
    var databasePath = await getDatabasesPath();
    String path = join(databasePath, "friends_tournament.db");
 
+   // TODO: check if debug mode
+   Sqflite.devSetDebugModeOn(true);
+
    _db = await openDatabase(
        path,
        version: 1,

@@ -9,7 +9,6 @@ class TournamentMatchDao implements Dao<TournamentMatch> {
   String get tableName => "tournament_match";
 
   @override
-  // TODO: implement createTableQuery
   String get createTableQuery => "CREATE TABLE $tableName ("
       "$columnTournamentId VARCHAR(255), "
       "$columnMatchId VARCHAR(255), "

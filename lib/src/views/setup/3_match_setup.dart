@@ -1,13 +1,10 @@
 import 'dart:collection';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
-import 'package:friends_tournament/src/data/setup_repository.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
 
 class MatchSetup extends StatefulWidget {
   @override
@@ -19,7 +16,6 @@ class _MatchSetupState extends State<MatchSetup> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   SetupBloc _setupBloc;
   Map<int, String> _savedValues = new HashMap();
-
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +61,7 @@ class _MatchSetupState extends State<MatchSetup> {
     if (_textFieldsList.length != matchesNumber) {
       for (int i = 0; i < matchesNumber; i++) {
         TextFieldWrapper textFieldWrapper =
-        TextFieldWrapper(TextEditingController(), "Match ${i + 1}");
+            TextFieldWrapper(TextEditingController(), "Match ${i + 1}");
         if (matchesName.containsKey(i)) {
           textFieldWrapper.value = matchesName[i];
           textFieldWrapper.textEditingController.text = matchesName[i];
@@ -141,28 +137,9 @@ class _MatchSetupState extends State<MatchSetup> {
           .showSnackBar(SnackBar(content: Text('Complete all the fields')));
       return;
     }
-    // TODO: launch a loader or change window
-    // TODO: show a popup or go to new screen in order to handle the process
+
+    // TODO: go to a new screen, save data and show the matches
 //    _setupBloc.setupTournament();
 
-    showDialog(
-        context: context,
-        builder: (_) => FlareGiffyDialog(
-          flarePath: 'assets/Teddy.flr',
-          flareAnimation: 'test',
-          title: Text(
-            'Men Wearing Jackets',
-            style: TextStyle(
-                fontSize: 22.0, fontWeight: FontWeight.w600),
-          ),
-          description: Text(
-            'This is a men wearing jackets dialog box. This library helps you easily create fancy giffy dialog.',
-            textAlign: TextAlign.center,
-            style: TextStyle(),
-          ),
-          onOkButtonPressed: () {
-            _setupBloc.setupTournament();
-          },
-        ));
   }
 }

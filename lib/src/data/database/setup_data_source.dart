@@ -1,5 +1,6 @@
 import 'package:friends_tournament/src/data/database/dao.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
+import 'package:sqflite/sqflite.dart';
 
 class SetupDataSource {
   // Implement singleton
@@ -20,6 +21,12 @@ class SetupDataSource {
   void insert(dynamic object, Dao dao) async {
     final db = await databaseProvider.db();
     db.insert(dao.tableName, dao.toMap(object));
+  }
+
+  void insertIgnore(dynamic object, Dao dao) async {
+    final db = await databaseProvider.db();
+    db.insert(dao.tableName, dao.toMap(object),
+        conflictAlgorithm: ConflictAlgorithm.ignore);
   }
 
   Future<dynamic> getItems(Dao dao) async {

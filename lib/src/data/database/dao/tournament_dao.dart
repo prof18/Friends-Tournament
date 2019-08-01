@@ -7,6 +7,7 @@ class TournamentDao implements Dao<Tournament> {
   final columnPlayersNumber = "players_number";
   final columnAstPlayersNumber = "players_ast_number";
   final columnMatchesNumber = "matches_number";
+  final columnActiveTournament = "is_active";
 
   @override
   String get tableName => "tournaments";
@@ -19,6 +20,7 @@ class TournamentDao implements Dao<Tournament> {
       "$columnPlayersNumber INTEGER, "
       "$columnAstPlayersNumber INTEGER, "
       "$columnMatchesNumber INTEGER, "
+      "$columnActiveTournament INTEGER, "
       "PRIMARY KEY ($columnId)"
       ")";
 
@@ -38,8 +40,9 @@ class TournamentDao implements Dao<Tournament> {
     var playersNumber = query[columnPlayersNumber];
     var playersAstNumber = query[columnAstPlayersNumber];
     var macthesNumber = query[columnMatchesNumber];
+    var isActive = query[columnActiveTournament];
     return Tournament(tournamentId, tournamentName, playersNumber,
-        playersAstNumber, macthesNumber);
+        playersAstNumber, macthesNumber, isActive);
   }
 
   @override
@@ -49,7 +52,8 @@ class TournamentDao implements Dao<Tournament> {
       columnName: object.name,
       columnPlayersNumber: object.playersNumber,
       columnAstPlayersNumber: object.playersAstNumber,
-      columnMatchesNumber: object.matchesNumber
+      columnMatchesNumber: object.matchesNumber,
+      columnActiveTournament: object.isActive
     };
   }
 }

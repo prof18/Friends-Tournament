@@ -73,7 +73,7 @@ class SetupRepository {
     this._tournamentName = tournamentName;
 
     this._tournament = Tournament(generateTournamentId(_tournamentName),
-        _tournamentName, _playersNumber, _playersAstNumber, _matchesNumber);
+        _tournamentName, _playersNumber, _playersAstNumber, _matchesNumber, 1);
 
     _setupPlayers(playersName);
     _setupMatches(matchesName);

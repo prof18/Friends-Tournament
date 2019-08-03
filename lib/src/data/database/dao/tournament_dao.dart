@@ -13,7 +13,6 @@ class TournamentDao implements Dao<Tournament> {
   String get tableName => "tournaments";
 
   @override
-  // TODO: implement createTableQuery
   String get createTableQuery => "CREATE TABLE $tableName ("
       "$columnId VARCHAR(255), "
       "$columnName TEXT, "

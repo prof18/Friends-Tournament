@@ -92,9 +92,13 @@ class SetupRepository {
   }
 
   void _setupMatches(Map<int, String> matchesName) {
-    matchesName.forEach((_, matchName) {
+    matchesName.forEach((index, matchName) {
       var matchId = generateMatchId(_tournamentName, matchName);
-      var match = Match(matchId, matchName);
+      var isActiveMatch = 0;
+      if (index == 0 ) {
+        isActiveMatch = 1;
+      }
+      var match = Match(matchId, matchName, isActiveMatch);
       if (_matches.contains(match)) {
         throw Exception("Two matches has the same name");
       } else {
@@ -112,7 +116,11 @@ class SetupRepository {
       for (int i = 0; i < sessions; i++) {
         var sessionName = "Session-$i";
         var sessionId = generateSessionId(match.id, sessionName);
-        var session = Session(sessionId, sessionName);
+        var isActiveSession = 0;
+        if (i == 0) {
+          isActiveSession = 1;
+        }
+        var session = Session(sessionId, sessionName, isActiveSession);
         _sessions.add(session);
         var matchSession = MatchSession(match.id, sessionId);
         _matchSessionList.add(matchSession);
@@ -157,6 +165,12 @@ class SetupRepository {
       setupDataSource.insert(match, matchDao);
     });
 
+    // save tournament player
+    var tournamentPlayerDao = TournamentPlayerDao();
+    _tournamentPlayerList.forEach((tournamentPlayer) {
+      setupDataSource.insert(tournamentPlayer, tournamentPlayerDao);
+    });
+
     // save player session
     var playerSessionDao = PlayerSessionDao();
     _playerSessionList.forEach((playerSession) {
@@ -173,12 +187,6 @@ class SetupRepository {
     var tournamentMatchDao = TournamentMatchDao();
     _tournamentMatchList.forEach((tournamentMatch) {
       setupDataSource.insert(tournamentMatch, tournamentMatchDao);
-    });
-
-    // save tournament player
-    var tournamentPlayerDao = TournamentPlayerDao();
-    _tournamentPlayerList.forEach((tournamentPlayer) {
-      setupDataSource.insert(tournamentPlayer, tournamentPlayerDao);
     });
   }
 }

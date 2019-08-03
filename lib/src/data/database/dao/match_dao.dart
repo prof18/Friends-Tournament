@@ -4,6 +4,7 @@ import 'package:friends_tournament/src/data/model/match.dart';
 class MatchDao implements Dao<Match> {
   final columnId = "id";
   final columnName = "name";
+  final columnActiveMatch = "is_active";
 
   @override
   String get tableName => "matches";
@@ -12,6 +13,7 @@ class MatchDao implements Dao<Match> {
   String get createTableQuery => "CREATE TABLE $tableName ( "
       "$columnId VARCHAR(255), "
       "$columnName TEXT, "
+      "$columnActiveMatch INTEGER, "
       "PRIMARY KEY ($columnId)"
       ")";
 
@@ -28,11 +30,16 @@ class MatchDao implements Dao<Match> {
   Match fromMap(Map<String, dynamic> query) {
     var matchId = query[columnId];
     var matchName = query[columnName];
-    return Match(matchId, matchName);
+    var isActive = query[columnActiveMatch];
+    return Match(matchId, matchName, isActive);
   }
 
   @override
   Map<String, dynamic> toMap(object) {
-    return <String, dynamic>{columnId: object.id, columnName: object.name};
+    return <String, dynamic>{
+      columnId: object.id,
+      columnName: object.name,
+      columnActiveMatch: object.isActive
+    };
   }
 }

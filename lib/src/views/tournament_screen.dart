@@ -1,6 +1,7 @@
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc_provider.dart';
+import 'package:friends_tournament/src/views/backdrop.dart';
 
 class TournamentScreen extends StatefulWidget {
   final bool _isSetup;
@@ -53,7 +54,7 @@ class _TournamentScreenState extends State<TournamentScreen> {
 
   Widget buildBody() {
     return Center(
-      child: Text("This is the tournament screen"),
+      child: Backdrop(),
     );
   }
 }

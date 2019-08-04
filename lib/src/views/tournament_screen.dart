@@ -1,7 +1,7 @@
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc_provider.dart';
-import 'package:friends_tournament/src/views/backdrop.dart';
+import 'package:friends_tournament/src/ui/backdrop.dart';
 
 class TournamentScreen extends StatefulWidget {
   final bool _isSetup;
@@ -46,15 +46,22 @@ class _TournamentScreenState extends State<TournamentScreen> {
   Widget buildLoader(BuildContext context) {
     // TODO: add also some strings to show the insert process and the computing of the tournament data
     return Container(
-      child: Center(
-        child: CircularProgressIndicator(),
-      )
-    );
+        child: Center(
+      child: CircularProgressIndicator(),
+    ));
   }
 
   Widget buildBody() {
     return Center(
-      child: Backdrop(),
+      child: Backdrop(_buildDropdownWidget(), _buildContentWidget()),
     );
+  }
+
+  Widget _buildDropdownWidget() {
+    return Center(child: Text("dropdown widget"));
+  }
+
+  Widget _buildContentWidget() {
+    return Center(child: Text("content widget"));
   }
 }

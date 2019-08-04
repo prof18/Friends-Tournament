@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class Backdrop extends StatefulWidget {
+  final Widget dropdownWidget;
+  final Widget contentWidget;
+
   @override
   _BackdropState createState() => _BackdropState();
+
+  Backdrop(this.dropdownWidget, this.contentWidget);
+
 }
 
 class _BackdropState extends State<Backdrop>
@@ -51,6 +57,7 @@ class _BackdropState extends State<Backdrop>
       appBar: AppBar(
         backgroundColor: Colors.blue,
         elevation: 0.0,
+        // TODO: take the title from a bloc stream
         title: Text("Match 1"),
         leading: IconButton(
             onPressed: () {
@@ -74,7 +81,7 @@ class _BackdropState extends State<Backdrop>
       color: theme.primaryColor,
       child: Stack(
         children: <Widget>[
-          Center(child: Text("base")),
+          widget.dropdownWidget,
           new PositionedTransition(
             rect: animation,
             child: new Material(
@@ -82,21 +89,7 @@ class _BackdropState extends State<Backdrop>
                   topLeft: Radius.circular(16.0),
                   topRight: Radius.circular(16.0)),
               elevation: 12.0,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    height: _PANEL_HEADER_HEIGHT,
-                    child: Center(
-                      child: Text("panel"),
-                    ),
-                  ),
-                  Expanded(
-                    child: Center(
-                      child: Text("Content"),
-                    ),
-                  )
-                ],
-              ),
+              child: widget.contentWidget
             ),
           )
         ],

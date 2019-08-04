@@ -9,4 +9,11 @@ class Tournament {
 
   Tournament(this.id, this.name, this.playersNumber, this.playersAstNumber,
       this.matchesNumber, this.isActive);
+
+  @override
+  String toString() {
+    return 'Tournament{id: $id, name: $name, playersNumber: $playersNumber, playersAstNumber: $playersAstNumber, matchesNumber: $matchesNumber, isActive: $isActive}';
+  }
+
+
 }

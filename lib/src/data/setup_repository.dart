@@ -1,3 +1,5 @@
+import 'dart:core' as prefix0;
+import 'dart:core';
 import 'dart:math';
 
 import 'package:friends_tournament/src/data/database/dao/match_dao.dart';
@@ -60,13 +62,13 @@ class SetupRepository {
   DatabaseProvider databaseProvider = DatabaseProvider.get;
   var setupDataSource = SetupDataSource();
 
-  void setupTournament(
+  Future setupTournament(
       int playersNumber,
       int playersAstNumber,
       int matchesNumber,
       String tournamentName,
       Map<int, String> playersName,
-      Map<int, String> matchesName) {
+      Map<int, String> matchesName) async {
     this._playersNumber = playersNumber;
     this._playersAstNumber = playersAstNumber;
     this._matchesNumber = matchesNumber;
@@ -78,7 +80,7 @@ class SetupRepository {
     _setupPlayers(playersName);
     _setupMatches(matchesName);
     _generateTournament();
-    _save();
+    await _save();
   }
 
   void _setupPlayers(Map<int, String> playersName) {
@@ -143,50 +145,75 @@ class SetupRepository {
     });
   }
 
-  void _save() {
+  Future _save() async {
+
+    await setupDataSource.createBatch();
+
+    // TODO: add first a check to control if there is a current tournament active. Just for control
+
     // save tournament
-    setupDataSource.insert(_tournament, TournamentDao());
+    setupDataSource.insertToBatch(_tournament, TournamentDao());
+    print(_tournament.toString());
 
     // save players
     var playerDao = PlayerDao();
     _players.forEach((player) {
-      setupDataSource.insertIgnore(player, playerDao);
+      setupDataSource.insertIgnoreToBatch(player, playerDao);
+      print(player.toString());
     });
 
     // save sessions
     var sessionDao = SessionDao();
     _sessions.forEach((session) {
-      setupDataSource.insert(session, sessionDao);
+      setupDataSource.insertToBatch(session, sessionDao);
+      print(session.toString());
     });
 
     // save matches
     var matchDao = MatchDao();
     _matches.forEach((match) {
-      setupDataSource.insert(match, matchDao);
+      setupDataSource.insertToBatch(match, matchDao);
+      print(match.toString());
     });
 
     // save tournament player
     var tournamentPlayerDao = TournamentPlayerDao();
     _tournamentPlayerList.forEach((tournamentPlayer) {
-      setupDataSource.insert(tournamentPlayer, tournamentPlayerDao);
+      setupDataSource.insertToBatch(tournamentPlayer, tournamentPlayerDao);
+      print(tournamentPlayer.toString());
     });
 
     // save player session
     var playerSessionDao = PlayerSessionDao();
     _playerSessionList.forEach((playerSession) {
-      setupDataSource.insert(playerSession, playerSessionDao);
+      setupDataSource.insertToBatch(playerSession, playerSessionDao);
+      print(playerSession.toString());
     });
 
     // save match session
     var matchSessionDao = MatchSessionDao();
     _matchSessionList.forEach((matchSession) {
-      setupDataSource.insert(matchSession, matchSessionDao);
+      setupDataSource.insertToBatch(matchSession, matchSessionDao);
+      print(matchSession.toString());
     });
 
     // save tournament match
     var tournamentMatchDao = TournamentMatchDao();
     _tournamentMatchList.forEach((tournamentMatch) {
-      setupDataSource.insert(tournamentMatch, tournamentMatchDao);
+      print(tournamentMatch.toString());
+      setupDataSource.insertToBatch(tournamentMatch, tournamentMatchDao);
     });
+
+    await setupDataSource.flushBatch();
   }
+
+  Future<bool> isTournamentActive() async {
+    var dao = TournamentDao();
+    var tournament = await setupDataSource.getActiveTournament(dao);
+    if (tournament != null) {
+      return true;
+    }
+    return false;
+  }
+
 }

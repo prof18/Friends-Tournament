@@ -3,4 +3,11 @@ class MatchSession {
   String sessionId;
 
   MatchSession(this.matchId, this.sessionId);
+
+  @override
+  String toString() {
+    return 'MatchSession{matchId: $matchId, sessionId: $sessionId}';
+  }
+
+
 }

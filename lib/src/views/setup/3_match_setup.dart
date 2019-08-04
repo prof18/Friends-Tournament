@@ -5,6 +5,7 @@ import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
+import 'package:friends_tournament/src/views/tournament_screen.dart';
 
 class MatchSetup extends StatefulWidget {
   @override
@@ -141,5 +142,8 @@ class _MatchSetupState extends State<MatchSetup> {
     // TODO: go to a new screen, save data and show the matches
 //    _setupBloc.setupTournament();
 
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => TournamentScreen(true)),
+        (Route<dynamic> route) => false);
   }
 }

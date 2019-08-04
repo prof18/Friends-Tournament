@@ -105,9 +105,9 @@ class SetupBloc {
     _matchesName = value;
   }
 
-  void setupTournament() {
+  Future<void> setupTournament() async {
     SetupRepository repository = new SetupRepository();
-    repository.setupTournament(_playersNumber, _playersAstNumber,
+    await repository.setupTournament(_playersNumber, _playersAstNumber,
         _matchesNumber, _tournamentName, _playersName, _matchesName);
   }
 }

@@ -1,5 +1,6 @@
 import 'package:friends_tournament/src/data/database/dao.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
+import 'package:friends_tournament/src/data/model/tournament.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SetupDataSource {
@@ -17,15 +18,16 @@ class SetupDataSource {
   /// -------
 
   var databaseProvider = DatabaseProvider.get;
+  Batch _batch;
 
-  void insert(dynamic object, Dao dao) async {
+  Future insert(dynamic object, Dao dao) async {
     final db = await databaseProvider.db();
-    db.insert(dao.tableName, dao.toMap(object));
+    await db.insert(dao.tableName, dao.toMap(object));
   }
 
-  void insertIgnore(dynamic object, Dao dao) async {
+  Future insertIgnore(dynamic object, Dao dao) async {
     final db = await databaseProvider.db();
-    db.insert(dao.tableName, dao.toMap(object),
+    await db.insert(dao.tableName, dao.toMap(object),
         conflictAlgorithm: ConflictAlgorithm.ignore);
   }
 
@@ -33,5 +35,34 @@ class SetupDataSource {
     final db = await databaseProvider.db();
     List<dynamic> results = await db.query(dao.tableName);
     return dao.fromList(results);
+  }
+
+  Future createBatch() async {
+    final db = await databaseProvider.db();
+    _batch = db.batch();
+  }
+
+  void insertToBatch(dynamic object, Dao dao) {
+    _batch.insert(dao.tableName, dao.toMap(object));
+  }
+
+  void insertIgnoreToBatch(dynamic object, Dao dao) {
+    _batch.insert(dao.tableName, dao.toMap(object),
+        conflictAlgorithm: ConflictAlgorithm.ignore);
+  }
+
+  Future flushBatch() async {
+    await _batch.commit();
+    _batch = null;
+  }
+
+  Future<Tournament> getActiveTournament(Dao dao) async {
+    final db = await databaseProvider.db();
+    List<Map> maps =
+        await db.query(dao.tableName, where: 'is_active = ?', whereArgs: [1]);
+    if (maps.length > 0) {
+      return dao.fromMap(maps.first);
+    }
+    return null;
   }
 }

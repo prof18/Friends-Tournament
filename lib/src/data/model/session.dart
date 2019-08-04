@@ -5,4 +5,11 @@ class Session {
   int isActive;
 
   Session(this.id, this.name, this.isActive);
+
+  @override
+  String toString() {
+    return 'Session{id: $id, name: $name, isActive: $isActive}';
+  }
+
+
 }

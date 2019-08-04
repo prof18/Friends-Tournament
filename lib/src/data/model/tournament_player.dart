@@ -4,4 +4,11 @@ class TournamentPlayer {
   int finalScore;
 
   TournamentPlayer(this.playerId, this.tournamentId, this.finalScore);
+
+  @override
+  String toString() {
+    return 'TournamentPlayer{playerId: $playerId, tournamentId: $tournamentId, finalScore: $finalScore}';
+  }
+
+
 }

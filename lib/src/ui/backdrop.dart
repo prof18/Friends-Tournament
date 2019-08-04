@@ -4,12 +4,12 @@ import 'package:flutter/services.dart';
 class Backdrop extends StatefulWidget {
   final Widget dropdownWidget;
   final Widget contentWidget;
+  final AnimationController controller;
 
   @override
   _BackdropState createState() => _BackdropState();
 
-  Backdrop(this.dropdownWidget, this.contentWidget);
-
+  Backdrop(this.dropdownWidget, this.contentWidget, this.controller);
 }
 
 class _BackdropState extends State<Backdrop>
@@ -20,8 +20,7 @@ class _BackdropState extends State<Backdrop>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-        duration: Duration(milliseconds: 100), value: 1.0, vsync: this);
+    _controller = widget.controller;
   }
 
   @override
@@ -48,7 +47,6 @@ class _BackdropState extends State<Backdrop>
 
   @override
   Widget build(BuildContext context) {
-
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.blue.shade500,
     ));
@@ -85,12 +83,11 @@ class _BackdropState extends State<Backdrop>
           new PositionedTransition(
             rect: animation,
             child: new Material(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16.0),
-                  topRight: Radius.circular(16.0)),
-              elevation: 12.0,
-              child: widget.contentWidget
-            ),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16.0),
+                    topRight: Radius.circular(16.0)),
+                elevation: 12.0,
+                child: widget.contentWidget),
           )
         ],
       ),

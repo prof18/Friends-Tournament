@@ -34,7 +34,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                       ),
                     ),
                     Text(
-                      'CART',
+                      'Leaderboard',
                       style: localTheme.textTheme.subhead
                           .copyWith(fontWeight: FontWeight.w600),
                     ),

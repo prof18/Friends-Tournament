@@ -51,6 +51,12 @@ flutter:
     - players_icon.svg
     - players_ast_icon.svg
     - matches_icon.svg
+
+  fonts:
+   - family:  CustomIcons
+     fonts:
+      - asset: fonts/CustomIcons.ttf
+
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

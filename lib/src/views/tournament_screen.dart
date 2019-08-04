@@ -20,7 +20,7 @@ class _TournamentScreenState extends State<TournamentScreen> with SingleTickerPr
 
   @override
   void initState() {
-    // TODO: implement initState
+    super.initState();
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 450),
@@ -29,8 +29,13 @@ class _TournamentScreenState extends State<TournamentScreen> with SingleTickerPr
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
 
     if (widget._isSetup) {
@@ -67,13 +72,10 @@ class _TournamentScreenState extends State<TournamentScreen> with SingleTickerPr
   Widget buildBody() {
     return Stack(
       children: <Widget>[
-        Backdrop(_buildDropdownWidget(), _buildContentWidget()),
+        Backdrop(_buildDropdownWidget(), _buildContentWidget(), _controller),
         Align(child: ExpandingBottomSheet(hideController: _controller), alignment: Alignment.bottomRight),
       ],
     );
-    /*return Center(
-      child: Backdrop(_buildDropdownWidget(), _buildContentWidget()),
-    );*/
   }
 
   Widget _buildDropdownWidget() {

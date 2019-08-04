@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:friends_tournament/src/ui/custom_icons_icons.dart';
 import 'package:friends_tournament/src/views/leaderboard_page.dart';
 import 'package:meta/meta.dart';
 
@@ -14,11 +15,10 @@ const Cubic _kDecelerateCurve = Cubic(0.23, 0.94, 0.41, 1.0);
 const double _kPeakVelocityTime = 0.248210;
 // Percent (as a decimal) of animation that should be completed at _peakVelocityTime
 const double _kPeakVelocityProgress = 0.379146;
-const double _kCartHeight = 56.0;
+const double _kBottomHeight = 56.0;
 // Radius of the shape on the top left of the sheet.
 const double _kCornerRadius = 24.0;
-// Width for just the cart icon and no thumbnails.
-const double _kWidthForCartIcon = 64.0;
+const double _kWidthForBottomIcon = 54.0;
 
 class ExpandingBottomSheet extends StatefulWidget {
   const ExpandingBottomSheet({Key key, @required this.hideController})
@@ -104,11 +104,6 @@ class _ExpandingBottomSheetState extends State<ExpandingBottomSheet>
   final GlobalKey _expandingBottomSheetKey =
       GlobalKey(debugLabel: 'Expanding bottom sheet');
 
-  // The width of the Material, calculated by _widthFor() & based on the number
-  // of products in the cart. 64.0 is the width when there are 0 products
-  // (_kWidthForZeroProducts)
-  double _width = _kWidthForCartIcon;
-
   // Controller for the opening and closing of the ExpandingBottomSheet
   AnimationController _controller;
 
@@ -116,7 +111,7 @@ class _ExpandingBottomSheetState extends State<ExpandingBottomSheet>
   Animation<double> _widthAnimation;
   Animation<double> _heightAnimation;
   Animation<double> _thumbnailOpacityAnimation;
-  Animation<double> _cartOpacityAnimation;
+  Animation<double> _leaderboardOpacityAnimation;
   Animation<double> _shapeAnimation;
   Animation<Offset> _slideAnimation;
 
@@ -138,7 +133,7 @@ class _ExpandingBottomSheetState extends State<ExpandingBottomSheet>
   Animation<double> _getWidthAnimation(double screenWidth) {
     if (_controller.status == AnimationStatus.forward) {
       // Opening animation
-      return Tween<double>(begin: _width, end: screenWidth).animate(
+      return Tween<double>(begin: _kWidthForBottomIcon, end: screenWidth).animate(
         CurvedAnimation(
           parent: _controller.view,
           curve: const Interval(0.0, 0.3, curve: Curves.fastOutSlowIn),
@@ -147,8 +142,8 @@ class _ExpandingBottomSheetState extends State<ExpandingBottomSheet>
     } else {
       // Closing animation
       return _getEmphasizedEasingAnimation(
-        begin: _width,
-        peak: _getPeakPoint(begin: _width, end: screenWidth),
+        begin: _kWidthForBottomIcon,
+        peak: _getPeakPoint(begin: _kWidthForBottomIcon, end: screenWidth),
         end: screenWidth,
         isForward: false,
         parent: CurvedAnimation(
@@ -162,9 +157,9 @@ class _ExpandingBottomSheetState extends State<ExpandingBottomSheet>
       // Opening animation
 
       return _getEmphasizedEasingAnimation(
-        begin: _kCartHeight,
-        peak: _kCartHeight +
-            (screenHeight - _kCartHeight) * _kPeakVelocityProgress,
+        begin: _kBottomHeight,
+        peak: _kBottomHeight +
+            (screenHeight - _kBottomHeight) * _kPeakVelocityProgress,
         end: screenHeight,
         isForward: true,
         parent: _controller.view,
@@ -172,7 +167,7 @@ class _ExpandingBottomSheetState extends State<ExpandingBottomSheet>
     } else {
       // Closing animation
       return Tween<double>(
-        begin: _kCartHeight,
+        begin: _kBottomHeight,
         end: screenHeight,
       ).animate(
         CurvedAnimation(
@@ -217,7 +212,7 @@ class _ExpandingBottomSheetState extends State<ExpandingBottomSheet>
     );
   }
 
-  Animation<double> _getCartOpacityAnimation() {
+  Animation<double> _getLeaderboardOpacityAnimation() {
     return CurvedAnimation(
       parent: _controller.view,
       curve: _controller.status == AnimationStatus.forward
@@ -226,24 +221,7 @@ class _ExpandingBottomSheetState extends State<ExpandingBottomSheet>
     );
   }
 
-  // Returns the correct width of the ExpandingBottomSheet based on the number of
-  // products in the cart.
-  double _widthFor(int numProducts) {
-    switch (numProducts) {
-      case 0:
-        return _kWidthForCartIcon;
-      case 1:
-        return 136.0;
-      case 2:
-        return 192.0;
-      case 3:
-        return 248.0;
-      default:
-        return 278.0;
-    }
-  }
-
-  // Returns true if the cart is open or opening and false otherwise.
+  // Returns true if the leaderboard is open or opening and false otherwise.
   bool get _isOpen {
     final AnimationStatus status = _controller.status;
     return status == AnimationStatus.completed ||
@@ -266,7 +244,7 @@ class _ExpandingBottomSheetState extends State<ExpandingBottomSheet>
 
   bool get _cartIsVisible => _thumbnailOpacityAnimation.value == 0.0;
 
-  Widget _buildThumbnails() {
+  Widget _buildBottomIcon() {
     return ExcludeSemantics(
       child: Opacity(
         opacity: _thumbnailOpacityAnimation.value,
@@ -276,7 +254,10 @@ class _ExpandingBottomSheetState extends State<ExpandingBottomSheet>
               children: <Widget>[
                 AnimatedPadding(
                   padding: EdgeInsetsDirectional.only(start: 20.0, end: 8.0),
-                  child: const Icon(Icons.shopping_cart),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: Icon(CustomIcons.award),
+                  ),
                   duration: const Duration(milliseconds: 225),
                 ),
               ],
@@ -287,43 +268,41 @@ class _ExpandingBottomSheetState extends State<ExpandingBottomSheet>
     );
   }
 
-  Widget _buildShoppingCartPage() {
+  Widget _buildLeaderboardPage() {
     return Opacity(
-      opacity: _cartOpacityAnimation.value,
+      opacity: _leaderboardOpacityAnimation.value,
       child: LeaderboardScreen(),
     );
   }
 
-  Widget _buildCart(BuildContext context, Widget child) {
+  Widget _buildLeaderboard(BuildContext context, Widget child) {
     // numProducts is the number of different products in the cart (does not
     // include multiples of the same product).
     final Size screenSize = MediaQuery.of(context).size;
     final double screenWidth = screenSize.width;
     final double screenHeight = screenSize.height;
 
-    _width = _kWidthForCartIcon;
     _widthAnimation = _getWidthAnimation(screenWidth);
     _heightAnimation = _getHeightAnimation(screenHeight);
     _shapeAnimation = _getShapeAnimation();
     _thumbnailOpacityAnimation = _getThumbnailOpacityAnimation();
-    _cartOpacityAnimation = _getCartOpacityAnimation();
+    _leaderboardOpacityAnimation = _getLeaderboardOpacityAnimation();
 
     return Semantics(
       button: true,
-      value: 'Shopping cart',
       child: Container(
         width: _widthAnimation.value,
         height: _heightAnimation.value,
         child: Material(
           animationDuration: const Duration(milliseconds: 0),
-          shape: BeveledRectangleBorder(
+          shape: ContinuousRectangleBorder (
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(_shapeAnimation.value),
             ),
           ),
           elevation: 4.0,
           color: Colors.pinkAccent,
-          child: _cartIsVisible ? _buildShoppingCartPage() : _buildThumbnails(),
+          child: _cartIsVisible ? _buildLeaderboardPage() : _buildBottomIcon(),
         ),
       ),
     );
@@ -345,8 +324,9 @@ class _ExpandingBottomSheetState extends State<ExpandingBottomSheet>
     );
   }
 
-  // Closes the cart if the cart is open, otherwise exits the app (this should
+  // Closes the leaderboard if is open, otherwise exits the app (this should
   // only be relevant for Android).
+  // TODO: check the back button behaviour
   Future<bool> _onWillPop() async {
     if (!_isOpen) {
       await SystemNavigator.pop();
@@ -374,7 +354,7 @@ class _ExpandingBottomSheetState extends State<ExpandingBottomSheet>
             behavior: HitTestBehavior.opaque,
             onTap: open,
             child: AnimatedBuilder(
-              builder: _buildCart,
+              builder: _buildLeaderboard,
               animation: _controller,
             ),
           ),

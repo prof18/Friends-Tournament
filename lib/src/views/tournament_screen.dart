@@ -2,6 +2,8 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/ui/backdrop.dart';
+import 'package:friends_tournament/src/ui/expanding_bottom_sheet.dart';
+import 'package:friends_tournament/src/views/session_carousel.dart';
 
 class TournamentScreen extends StatefulWidget {
   final bool _isSetup;
@@ -12,8 +14,19 @@ class TournamentScreen extends StatefulWidget {
   _TournamentScreenState createState() => _TournamentScreenState();
 }
 
-class _TournamentScreenState extends State<TournamentScreen> {
+class _TournamentScreenState extends State<TournamentScreen> with SingleTickerProviderStateMixin {
   var _isLoading = true;
+  var _controller;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 450),
+      value: 1.0,
+    );
+  }
 
   @override
   void didChangeDependencies() {
@@ -52,9 +65,15 @@ class _TournamentScreenState extends State<TournamentScreen> {
   }
 
   Widget buildBody() {
-    return Center(
-      child: Backdrop(_buildDropdownWidget(), _buildContentWidget()),
+    return Stack(
+      children: <Widget>[
+        Backdrop(_buildDropdownWidget(), _buildContentWidget()),
+        Align(child: ExpandingBottomSheet(hideController: _controller), alignment: Alignment.bottomRight),
+      ],
     );
+    /*return Center(
+      child: Backdrop(_buildDropdownWidget(), _buildContentWidget()),
+    );*/
   }
 
   Widget _buildDropdownWidget() {
@@ -62,6 +81,6 @@ class _TournamentScreenState extends State<TournamentScreen> {
   }
 
   Widget _buildContentWidget() {
-    return Center(child: Text("content widget"));
+    return Carousel();
   }
 }

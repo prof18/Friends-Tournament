@@ -1,3 +1,4 @@
+/// The player of a specific tournament
 class TournamentPlayer {
   String playerId;
   String tournamentId;
@@ -9,6 +10,4 @@ class TournamentPlayer {
   String toString() {
     return 'TournamentPlayer{playerId: $playerId, tournamentId: $tournamentId, finalScore: $finalScore}';
   }
-
-
 }

@@ -1,3 +1,5 @@
+/// Different matches compose a tournament
+/// Only ONE match can be active at the same time
 class Match {
   String id;
   String name;
@@ -9,6 +11,4 @@ class Match {
   String toString() {
     return 'Match{id: $id, name: $name, isActive: $isActive}';
   }
-
-
 }

@@ -1,3 +1,4 @@
+/// The session of a specific match
 class MatchSession {
   String matchId;
   String sessionId;
@@ -8,6 +9,4 @@ class MatchSession {
   String toString() {
     return 'MatchSession{matchId: $matchId, sessionId: $sessionId}';
   }
-
-
 }

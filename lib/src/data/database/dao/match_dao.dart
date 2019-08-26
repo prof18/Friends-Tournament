@@ -1,5 +1,5 @@
 import 'package:friends_tournament/src/data/database/dao.dart';
-import 'package:friends_tournament/src/data/model/match.dart';
+import 'package:friends_tournament/src/data/model/tournament/match.dart';
 
 class MatchDao implements Dao<Match> {
   final columnId = "id";

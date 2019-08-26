@@ -1,3 +1,4 @@
+/// The match of a specific tournament
 class TournamentMatch {
   String tournamentId;
   String matchId;

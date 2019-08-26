@@ -1,6 +1,6 @@
 import 'package:friends_tournament/src/data/database/dao.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
-import 'package:friends_tournament/src/data/model/tournament.dart';
+import 'package:friends_tournament/src/data/model/tournament/tournament.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SetupDataSource {

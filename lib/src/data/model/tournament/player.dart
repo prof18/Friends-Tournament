@@ -8,6 +8,4 @@ class Player {
   String toString() {
     return 'Player{id: $id, name: $name}';
   }
-
-
 }

@@ -1,4 +1,3 @@
-import 'dart:core' as prefix0;
 import 'dart:core';
 import 'dart:math';
 
@@ -12,14 +11,14 @@ import 'package:friends_tournament/src/data/database/dao/tournament_match_dao.da
 import 'package:friends_tournament/src/data/database/dao/tournament_player_dao.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
 import 'package:friends_tournament/src/data/database/setup_data_source.dart';
-import 'package:friends_tournament/src/data/model/match.dart';
-import 'package:friends_tournament/src/data/model/match_session.dart';
-import 'package:friends_tournament/src/data/model/player.dart';
-import 'package:friends_tournament/src/data/model/player_session.dart';
-import 'package:friends_tournament/src/data/model/session.dart';
-import 'package:friends_tournament/src/data/model/tournament.dart';
-import 'package:friends_tournament/src/data/model/tournament_match.dart';
-import 'package:friends_tournament/src/data/model/tournament_player.dart';
+import 'package:friends_tournament/src/data/model/tournament/match.dart';
+import 'package:friends_tournament/src/data/model/tournament/match_session.dart';
+import 'package:friends_tournament/src/data/model/tournament/player.dart';
+import 'package:friends_tournament/src/data/model/tournament/player_session.dart';
+import 'package:friends_tournament/src/data/model/tournament/session.dart';
+import 'package:friends_tournament/src/data/model/tournament/tournament.dart';
+import 'package:friends_tournament/src/data/model/tournament/tournament_match.dart';
+import 'package:friends_tournament/src/data/model/tournament/tournament_player.dart';
 import 'package:friends_tournament/src/utils/id_generator.dart';
 
 class SetupRepository {

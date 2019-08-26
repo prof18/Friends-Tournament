@@ -1,5 +1,5 @@
 import 'package:friends_tournament/src/data/database/dao.dart';
-import 'package:friends_tournament/src/data/model/player_session.dart';
+import 'package:friends_tournament/src/data/model/tournament/player_session.dart';
 
 class PlayerSessionDao implements Dao<PlayerSession> {
   final columnPlayerId = "id_player";

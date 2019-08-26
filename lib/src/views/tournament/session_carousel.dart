@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/ui/page_transformer.dart';
 import 'package:friends_tournament/src/views/tournament/session_item_widget.dart';
@@ -16,7 +14,6 @@ class _CarouselState extends State<Carousel> {
 
   @override
   Widget build(BuildContext context) {
-    child:
     return Column(
       children: <Widget>[
         Expanded(child: renderBody()),

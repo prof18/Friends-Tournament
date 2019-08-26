@@ -1,3 +1,5 @@
+/// A match is composed by a different number of sessions,
+/// due to the player at the same time constraint
 class Session {
   String id;
   String name;
@@ -10,6 +12,4 @@ class Session {
   String toString() {
     return 'Session{id: $id, name: $name, isActive: $isActive}';
   }
-
-
 }

@@ -1,3 +1,4 @@
+/// The player of a specific sessions
 class PlayerSession {
   String playerId;
   String sessionId;
@@ -9,6 +10,4 @@ class PlayerSession {
   String toString() {
     return 'PlayerSession{playerId: $playerId, sessionId: $sessionId, score: $score}';
   }
-
-
 }

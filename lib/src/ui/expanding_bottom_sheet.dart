@@ -1,4 +1,4 @@
-// Adapted from https://github.com/flutter/flutter/blob/master/examples/flutter_gallery/lib/demo/shrine/expanding_bottom_sheet.dart
+/// Adapted from https://github.com/flutter/flutter/blob/master/examples/flutter_gallery/lib/demo/shrine/expanding_bottom_sheet.dart
 
 import 'dart:async';
 

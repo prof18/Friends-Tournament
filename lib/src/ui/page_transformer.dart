@@ -1,7 +1,7 @@
+/// Adapted From https://github.com/urmilshroff/dashboard_reborn/blob/master/lib/utils/page_transformer.dart
+///
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-
-/// From https://github.com/urmilshroff/dashboard_reborn/blob/master/lib/utils/page_transformer.dart
 
 /// A function that builds a [PageView] lazily.
 typedef PageView PageViewBuilder(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/ui/page_transformer.dart';
 import 'package:friends_tournament/src/ui/utils.dart';
-import 'package:friends_tournament/src/views/session_player_tile.dart';
+import 'package:friends_tournament/src/views/tournament/session_player_tile.dart';
 
 class SessionItemWidget extends StatelessWidget {
   SessionItemWidget({

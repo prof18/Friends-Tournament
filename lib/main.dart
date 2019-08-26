@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/data/setup_repository.dart';
-import 'package:friends_tournament/src/views/tournament_screen.dart';
+import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
 import 'package:friends_tournament/src/views/welcome_screen.dart';
 
 void main() => runApp(MyApp());

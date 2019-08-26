@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/ui/backdrop.dart';
 import 'package:friends_tournament/src/ui/expanding_bottom_sheet.dart';
-import 'package:friends_tournament/src/views/session_carousel.dart';
+import 'package:friends_tournament/src/views/tournament/session_carousel.dart';
 
 class TournamentScreen extends StatefulWidget {
   final bool _isSetup;

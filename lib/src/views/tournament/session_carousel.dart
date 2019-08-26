@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/ui/page_transformer.dart';
-import 'package:friends_tournament/src/views/session_item_widget.dart';
+import 'package:friends_tournament/src/views/tournament/session_item_widget.dart';
 
 class Carousel extends StatefulWidget {
   @override

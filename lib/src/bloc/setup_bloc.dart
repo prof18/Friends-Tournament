@@ -11,6 +11,7 @@ class SetupBloc {
   * ************** */
 
   // Controllers of input and output
+  // Behaviour subjects emits the latest item when a new listener is added
   final _playersNumberController = BehaviorSubject<int>();
   final _playersAstNumberController = StreamController<int>();
   final _matchesNumberController = BehaviorSubject<int>();

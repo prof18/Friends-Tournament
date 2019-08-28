@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc_provider.dart';
-import 'package:friends_tournament/src/data/setup_repository.dart';
+import 'package:friends_tournament/src/bloc/tournament_bloc_provider.dart';
+import 'package:friends_tournament/src/data/tournament_repository.dart';
 import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
 import 'package:friends_tournament/src/views/welcome_screen.dart';
 
@@ -13,7 +14,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   var _isLoading = true;
   var _isActive = false;
 
@@ -22,7 +22,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     // TODO: add error handling
-    var repository = SetupRepository();
+    var repository = TournamentRepository();
     repository.isTournamentActive().then((active) {
       setState(() {
         _isActive = active;
@@ -34,12 +34,16 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return SetupBlocProvider(
-      child: MaterialApp(
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
-          home: _isLoading ? buildLoader() : _isActive ? TournamentScreen(false) : Welcome()),
+      child: TournamentBlocProvider(
+        child: MaterialApp(
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            home: _isLoading
+                ? buildLoader()
+                : _isActive ? TournamentScreen(false) : Welcome()),
+      ),
     );
   }
 
@@ -50,6 +54,18 @@ class _MyAppState extends State<MyApp> {
           child: CircularProgressIndicator(),
         ),
       ),
+    );
+  }
+
+  Widget buildWelcomeScreen() {
+    return SetupBlocProvider(
+      child: Welcome(),
+    );
+  }
+
+  Widget buildTournamentScreen() {
+    return TournamentBlocProvider(
+      child: TournamentScreen(false),
     );
   }
 }

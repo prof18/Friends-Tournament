@@ -1,7 +1,10 @@
+import 'package:friends_tournament/src/data/database/dao/tournament_dao.dart';
+
 /// A tournament is played by [playersNumber] different player and the can be
 /// a fixed number of players that plays at the same time [playersAstNumber].
 /// A tournament is composed by different number of matches [matchesNumber].
-/// Due to the 'player at the same time constraint', a match is divided in sessions
+/// Due to the 'player at the same time constraint', a match is divided in sessions.
+/// Correspond to a row of the 'tournaments' db table [TournamentDao]
 class Tournament {
   String id;
   String name;

@@ -10,15 +10,15 @@ import 'package:friends_tournament/src/data/database/dao/tournament_dao.dart';
 import 'package:friends_tournament/src/data/database/dao/tournament_match_dao.dart';
 import 'package:friends_tournament/src/data/database/dao/tournament_player_dao.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
-import 'package:friends_tournament/src/data/database/setup_data_source.dart';
-import 'package:friends_tournament/src/data/model/tournament/match.dart';
-import 'package:friends_tournament/src/data/model/tournament/match_session.dart';
-import 'package:friends_tournament/src/data/model/tournament/player.dart';
-import 'package:friends_tournament/src/data/model/tournament/player_session.dart';
-import 'package:friends_tournament/src/data/model/tournament/session.dart';
-import 'package:friends_tournament/src/data/model/tournament/tournament.dart';
-import 'package:friends_tournament/src/data/model/tournament/tournament_match.dart';
-import 'package:friends_tournament/src/data/model/tournament/tournament_player.dart';
+import 'package:friends_tournament/src/data/database/db_data_source.dart';
+import 'package:friends_tournament/src/data/model/db/match.dart';
+import 'package:friends_tournament/src/data/model/db/match_session.dart';
+import 'package:friends_tournament/src/data/model/db/player.dart';
+import 'package:friends_tournament/src/data/model/db/player_session.dart';
+import 'package:friends_tournament/src/data/model/db/session.dart';
+import 'package:friends_tournament/src/data/model/db/tournament.dart';
+import 'package:friends_tournament/src/data/model/db/tournament_match.dart';
+import 'package:friends_tournament/src/data/model/db/tournament_player.dart';
 import 'package:friends_tournament/src/utils/id_generator.dart';
 
 class SetupRepository {
@@ -59,7 +59,7 @@ class SetupRepository {
   String _tournamentName;
 
   DatabaseProvider databaseProvider = DatabaseProvider.get;
-  var setupDataSource = SetupDataSource();
+  var setupDataSource = DBDataSource();
 
   Future setupTournament(
       int playersNumber,
@@ -205,14 +205,4 @@ class SetupRepository {
 
     await setupDataSource.flushBatch();
   }
-
-  Future<bool> isTournamentActive() async {
-    var dao = TournamentDao();
-    var tournament = await setupDataSource.getActiveTournament(dao);
-    if (tournament != null) {
-      return true;
-    }
-    return false;
-  }
-
 }

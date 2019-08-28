@@ -23,26 +23,25 @@ class DatabaseProvider {
     return _db;
   }
 
- Future _init() async {
-   var databasePath = await getDatabasesPath();
-   String path = join(databasePath, "friends_tournament.db");
+  Future _init() async {
+    var databasePath = await getDatabasesPath();
+    String path = join(databasePath, "friends_tournament.db");
 
-   // TODO: check if debug mode
-   Sqflite.devSetDebugModeOn(true);
+    // TODO: check if debug mode
+    Sqflite.devSetDebugModeOn(true);
 
-   _db = await openDatabase(
-       path,
-       version: 1,
-       onCreate: (Database db, int version) async {
-        await db.execute(MatchDao().createTableQuery);
-        await db.execute(MatchSessionDao().createTableQuery);
-        await db.execute(PlayerDao().createTableQuery);
-        await db.execute(PlayerSessionDao().createTableQuery);
-        await db.execute(SessionDao().createTableQuery);
-        await db.execute(TournamentDao().createTableQuery);
-        await db.execute(TournamentMatchDao().createTableQuery);
-        await db.execute(TournamentPlayerDao().createTableQuery);
-   } );
- }
+    _db = await openDatabase(path, version: 1,
+        onCreate: (Database db, int version) async {
+      await db.execute(MatchDao().createTableQuery);
+      await db.execute(MatchSessionDao().createTableQuery);
+      await db.execute(PlayerDao().createTableQuery);
+      await db.execute(PlayerSessionDao().createTableQuery);
+      await db.execute(SessionDao().createTableQuery);
+      await db.execute(TournamentDao().createTableQuery);
+      await db.execute(TournamentMatchDao().createTableQuery);
+      await db.execute(TournamentPlayerDao().createTableQuery);
+    });
+  }
 
+  // TODO: close db connection
 }

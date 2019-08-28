@@ -1,21 +1,25 @@
 import 'package:friends_tournament/src/data/database/dao.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
-import 'package:friends_tournament/src/data/model/tournament/tournament.dart';
+import 'package:friends_tournament/src/data/database/db_queries.dart';
+import 'package:friends_tournament/src/data/model/db/tournament.dart';
+import 'package:friends_tournament/src/utils/utils.dart';
 import 'package:sqflite/sqflite.dart';
 
-class SetupDataSource {
+class DBDataSource {
   // Implement singleton
   // To get back it, simple call: MyClass myObj = new MyClass();
   /// -------
-  static final SetupDataSource _singleton = new SetupDataSource._internal();
+  static final DBDataSource _singleton = new DBDataSource._internal();
 
-  factory SetupDataSource() {
+  factory DBDataSource() {
     return _singleton;
   }
 
-  SetupDataSource._internal();
+  DBDataSource._internal();
 
   /// -------
+
+  // TODO: close db connection
 
   var databaseProvider = DatabaseProvider.get;
   Batch _batch;
@@ -56,6 +60,8 @@ class SetupDataSource {
     _batch = null;
   }
 
+  /// Return the active tournament
+  /// There should be always one active match. If not, it returns the first one.
   Future<Tournament> getActiveTournament(Dao dao) async {
     final db = await databaseProvider.db();
     List<Map> maps =
@@ -64,5 +70,28 @@ class SetupDataSource {
       return dao.fromMap(maps.first);
     }
     return null;
+  }
+
+  /// Returns all the matches of the tournament provided as input
+  Future<List<Map>> getTournamentMatches(String tournamentId) async {
+    final db = await databaseProvider.db();
+    List<Map> result = await db.rawQuery(
+        format(allMatchesForActiveTournamentQuery, tournamentId));
+    return result;
+  }
+
+  /// Returns all the session for a specific match
+  Future<List<Map>> getMatchSessions(String matchId) async {
+    final db = await databaseProvider.db();
+    List<Map> result =
+        await db.rawQuery(format(getMatchSessionsQuery, matchId));
+    return result;
+  }
+
+  /// Returns all the players for a specific session
+  Future<List<Map>> getSessionPlayers(String sessionId) async {
+    final db = await databaseProvider.db();
+    List<Map> results = await db.rawQuery(format(getSessionPlayersQuery, sessionId));
+    return results;
   }
 }

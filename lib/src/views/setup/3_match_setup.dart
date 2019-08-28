@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc_provider.dart';
+import 'package:friends_tournament/src/bloc/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
 import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
@@ -17,6 +18,12 @@ class _MatchSetupState extends State<MatchSetup> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   SetupBloc _setupBloc;
   Map<int, String> _savedValues = new HashMap();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _setupBloc.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +150,11 @@ class _MatchSetupState extends State<MatchSetup> {
 //    _setupBloc.setupTournament();
 
     Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => TournamentScreen(true)),
+        MaterialPageRoute(
+          builder: (context) => TournamentBlocProvider(
+            child: TournamentScreen(true),
+          ),
+        ),
         (Route<dynamic> route) => false);
   }
 }

@@ -1,4 +1,4 @@
-// Adapted from https://github.com/flutter/flutter/blob/master/examples/flutter_gallery/lib/demo/shrine/shopping_cart.dart
+/// Adapted from https://github.com/flutter/flutter/blob/master/examples/flutter_gallery/lib/demo/shrine/shopping_cart.dart
 
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/ui/expanding_bottom_sheet.dart';

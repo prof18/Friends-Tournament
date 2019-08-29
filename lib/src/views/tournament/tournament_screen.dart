@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc_provider.dart';
+import 'package:friends_tournament/src/bloc/tournament_bloc_provider.dart';
+import 'package:friends_tournament/src/data/model/app/ui_match.dart';
 import 'package:friends_tournament/src/ui/backdrop.dart';
 import 'package:friends_tournament/src/ui/expanding_bottom_sheet.dart';
+import 'package:friends_tournament/src/views/tournament/match_selection_tile.dart';
 import 'package:friends_tournament/src/views/tournament/session_carousel.dart';
 
 class TournamentScreen extends StatefulWidget {
@@ -13,9 +16,11 @@ class TournamentScreen extends StatefulWidget {
   _TournamentScreenState createState() => _TournamentScreenState();
 }
 
-class _TournamentScreenState extends State<TournamentScreen> with SingleTickerProviderStateMixin {
+class _TournamentScreenState extends State<TournamentScreen>
+    with SingleTickerProviderStateMixin {
   var _isLoading = true;
   var _controller;
+  var _tournamentBloc;
 
   @override
   void initState() {
@@ -51,6 +56,8 @@ class _TournamentScreenState extends State<TournamentScreen> with SingleTickerPr
 
   @override
   Widget build(BuildContext context) {
+    _tournamentBloc = TournamentBlocProvider.of(context);
+
     return Material(
       child: SafeArea(
         child: widget._isSetup
@@ -72,14 +79,29 @@ class _TournamentScreenState extends State<TournamentScreen> with SingleTickerPr
     return Stack(
       children: <Widget>[
         Backdrop(_buildDropdownWidget(), _buildContentWidget(), _controller),
-        Align(child: ExpandingBottomSheet(hideController: _controller), alignment: Alignment.bottomRight),
+        Align(
+            child: ExpandingBottomSheet(hideController: _controller),
+            alignment: Alignment.bottomRight),
       ],
     );
   }
 
   Widget _buildDropdownWidget() {
     // TODO: implement dropdown widget.
-    return Center(child: Text("dropdown widget"));
+    return StreamBuilder<List<UIMatch>>(
+      initialData: List<UIMatch>(),
+      stream: _tournamentBloc.tournamentMatches,
+      builder: (context, snapshot) {
+        return ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            return MatchSelectionTile(
+              match: snapshot.data[index],
+            );
+          },
+          itemCount: snapshot.data.length,
+        );
+      },
+    );
   }
 
   Widget _buildContentWidget() {

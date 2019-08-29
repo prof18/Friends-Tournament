@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
+import 'package:friends_tournament/src/bloc/tournament_bloc_provider.dart';
+import 'package:friends_tournament/src/data/model/app/ui_match.dart';
 
 class Backdrop extends StatefulWidget {
   final Widget dropdownWidget;
@@ -17,10 +20,24 @@ class _BackdropState extends State<Backdrop>
   AnimationController _controller;
   static const _PANEL_HEADER_HEIGHT = 32.0;
 
+  bool _panelExpanded = false;
+
   @override
   void initState() {
     super.initState();
     _controller = widget.controller;
+
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.reverse) {
+        setState(() {
+          _panelExpanded = true;
+        });
+      } else if (status == AnimationStatus.forward) {
+        setState(() {
+          _panelExpanded = false;
+        });
+      }
+    });
   }
 
   @override
@@ -51,12 +68,23 @@ class _BackdropState extends State<Backdrop>
       statusBarColor: Colors.blue.shade500,
     ));
 
+    TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
         elevation: 0.0,
-        // TODO: take the title from a bloc stream
-        title: Text("Match 1"),
+        title: AnimatedOpacity(
+          opacity: _panelExpanded ? 0.0 : 1.0,
+          duration: Duration(milliseconds: 200),
+          child: StreamBuilder<UIMatch>(
+            stream: tournamentBloc.currentMatch,
+            builder: (context, snapshot) {
+              // TODO: localize me
+              return snapshot.hasData ? Text(snapshot.data.name) : Text("");
+            },
+          ),
+        ),
         leading: IconButton(
             onPressed: () {
               _controller.fling(velocity: _isPanelVisible ? -1.0 : 1.0);

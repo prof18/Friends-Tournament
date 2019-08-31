@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class SessionPlayerTile extends StatefulWidget {
   // TODO: pass an object, not the simple string
   final String playerName;
-  final double score;
-  final double step;
+  final int score;
+  final int step;
 
   final double buttonSize = 20;
   final double iconSize = 16;
@@ -16,8 +16,9 @@ class SessionPlayerTile extends StatefulWidget {
 }
 
 class _SessionPlayerTileState extends State<SessionPlayerTile> {
-  double _score;
-  double _step;
+  // TODO: not hold here, but in bloc
+  int _score;
+  int _step;
 
   @override
   void initState() {
@@ -30,14 +31,19 @@ class _SessionPlayerTileState extends State<SessionPlayerTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Center(
       child: Row(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(
+              top: 8.0,
+              left: 8.0,
+              right: 16.0,
+              bottom: 8.0,
+            ),
             child: Text(
               widget.playerName,
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 22),
             ),
           ),
           Row(

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc_provider.dart';
+import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/bloc/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
+import 'package:friends_tournament/src/data/model/app/ui_session.dart';
 import 'package:friends_tournament/src/ui/backdrop.dart';
 import 'package:friends_tournament/src/ui/expanding_bottom_sheet.dart';
+import 'package:friends_tournament/src/ui/utils.dart';
 import 'package:friends_tournament/src/views/tournament/match_selection_tile.dart';
 import 'package:friends_tournament/src/views/tournament/session_carousel.dart';
 
@@ -20,7 +23,7 @@ class _TournamentScreenState extends State<TournamentScreen>
     with SingleTickerProviderStateMixin {
   var _isLoading = true;
   var _controller;
-  var _tournamentBloc;
+  TournamentBloc _tournamentBloc;
 
   @override
   void initState() {
@@ -87,7 +90,6 @@ class _TournamentScreenState extends State<TournamentScreen>
   }
 
   Widget _buildDropdownWidget() {
-    // TODO: implement dropdown widget.
     return StreamBuilder<List<UIMatch>>(
       initialData: List<UIMatch>(),
       stream: _tournamentBloc.tournamentMatches,
@@ -106,6 +108,14 @@ class _TournamentScreenState extends State<TournamentScreen>
   }
 
   Widget _buildContentWidget() {
-    return Carousel();
+    return StreamBuilder<UIMatch>(
+        stream: _tournamentBloc.currentMatch,
+        builder: (context, snapshot) {
+          return Carousel(
+            sessions: snapshot.hasData
+                ? snapshot.data.matchSessions
+                : List<UISession>(),
+          );
+        });
   }
 }

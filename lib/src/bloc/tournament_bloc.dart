@@ -15,8 +15,10 @@ class TournamentBloc {
   final _activeTournamentController = BehaviorSubject<Tournament>();
   final _tournamentMatchesController = BehaviorSubject<List<UIMatch>>();
   final _currentMatchController = BehaviorSubject<UIMatch>();
+  final _updateCurrentMatchController = BehaviorSubject<UIMatch>();
 
   // Input
+  Sink<UIMatch> get setCurrentMatch => _updateCurrentMatchController.sink;
 
   // Output
   Stream<Tournament> get activeTournament => _activeTournamentController.stream;
@@ -32,6 +34,7 @@ class TournamentBloc {
   *
   * ************** */
   TournamentBloc() {
+    _updateCurrentMatchController.stream.listen(_setCurrentMatch);
     _fetchInitialData();
   }
 
@@ -40,6 +43,7 @@ class TournamentBloc {
     _activeTournamentController.close();
     _tournamentMatchesController.close();
     _currentMatchController.close();
+    _updateCurrentMatchController.close();
   }
 
   /* *************
@@ -76,6 +80,7 @@ class TournamentBloc {
 
       final currentMatch =
           _tournamentMatches.firstWhere((match) => match.isActive == 1);
+      currentMatch.isSelected = true;
       _currentMatch = currentMatch;
 
       _activeTournamentController.add(_activeTournament);
@@ -85,5 +90,13 @@ class TournamentBloc {
       print(error);
       // TODO: handle error?
     });
+  }
+
+  _setCurrentMatch(UIMatch match) {
+    match.isSelected = true;
+    _currentMatch.isSelected = false;
+    _currentMatch = match;
+    _currentMatchController.add(_currentMatch);
+    _tournamentMatchesController.add(_tournamentMatches);
   }
 }

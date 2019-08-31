@@ -96,6 +96,7 @@ class _TournamentScreenState extends State<TournamentScreen>
           itemBuilder: (BuildContext context, int index) {
             return MatchSelectionTile(
               match: snapshot.data[index],
+              controller: _controller,
             );
           },
           itemCount: snapshot.data.length,

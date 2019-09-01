@@ -25,19 +25,38 @@ class Carousel extends StatelessWidget {
   }
 
   Widget renderBody(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.7,
-      child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: sessions.length,
-          itemBuilder: (context, index) {
-            return Container(
-              width: MediaQuery.of(context).size.width * 0.75,
-              child: SessionItemWidget(
-                session: sessions[index],
+    return ListView(
+      children: <Widget>[
+        Container(
+          height: MediaQuery.of(context).size.height * 0.4,
+          child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: sessions.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  width: MediaQuery.of(context).size.width * 0.75,
+                  child: SessionItemWidget(
+                    session: sessions[index],
+                  ),
+                );
+              }),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.3,
+            child: Container(
+              child: Material(
+                borderRadius: BorderRadius.circular(10.0),
+                elevation: 8.0,
+                child: Center(
+                  child: Text("First 3 players"),
+                ),
               ),
-            );
-          }),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

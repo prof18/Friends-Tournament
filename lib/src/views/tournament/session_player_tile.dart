@@ -31,58 +31,57 @@ class _SessionPlayerTileState extends State<SessionPlayerTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Row(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 8.0,
-              left: 8.0,
-              right: 16.0,
-              bottom: 8.0,
-            ),
-            child: Text(
-              widget.playerName,
-              style: TextStyle(fontSize: 22),
-            ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(
+            top: 8.0,
+            left: 8.0,
+            right: 16.0,
+            bottom: 8.0,
           ),
-          Row(
-            children: <Widget>[
-              SizedBox(
-                width: widget.buttonSize,
-                height: widget.buttonSize,
-                child: FloatingActionButton(
-                  onPressed: _decrementScore,
-                  elevation: 2,
-                  child: Icon(
-                    Icons.remove,
-                    size: widget.iconSize,
-                  ),
+          child: Text(
+            widget.playerName,
+            style: TextStyle(fontSize: 22),
+          ),
+        ),
+        Row(
+          children: <Widget>[
+            SizedBox(
+              width: widget.buttonSize,
+              height: widget.buttonSize,
+              child: FloatingActionButton(
+                onPressed: _decrementScore,
+                elevation: 2,
+                child: Icon(
+                  Icons.remove,
+                  size: widget.iconSize,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  _score.toString(),
-                  style: TextStyle(fontSize: 18),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                _score.toString(),
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+            SizedBox(
+              width: widget.buttonSize,
+              height: widget.buttonSize,
+              child: FloatingActionButton(
+                onPressed: _incrementScore,
+                elevation: 2,
+                child: Icon(
+                  Icons.add,
+                  size: widget.iconSize,
                 ),
               ),
-              SizedBox(
-                width: widget.buttonSize,
-                height: widget.buttonSize,
-                child: FloatingActionButton(
-                  onPressed: _incrementScore,
-                  elevation: 2,
-                  child: Icon(
-                    Icons.add,
-                    size: widget.iconSize,
-                  ),
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
+            ),
+          ],
+        )
+      ],
     );
   }
 

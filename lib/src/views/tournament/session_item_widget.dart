@@ -31,17 +31,19 @@ class SessionItemWidget extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: ListView.builder(
-                  physics: ScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (BuildContext context, int index) {
-                    UIPlayer player = session.sessionPlayers[index];
-                    return SessionPlayerTile(
-                      playerName: player.name,
-                      score: player.score,
-                    );
-                  },
-                  itemCount: session.sessionPlayers.length,
+                child: NotificationListener<ScrollEndNotification>(
+                  child: ListView.builder(
+                    physics: ScrollPhysics(),
+                    shrinkWrap: true,
+                    itemBuilder: (BuildContext context, int index) {
+                      UIPlayer player = session.sessionPlayers[index];
+                      return SessionPlayerTile(
+                        player: player,
+                        session: session,
+                      );
+                    },
+                    itemCount: session.sessionPlayers.length,
+                  ),
                 ),
               ),
             ],

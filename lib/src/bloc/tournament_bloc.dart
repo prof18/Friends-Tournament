@@ -1,4 +1,9 @@
+import 'dart:async';
+
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
+import 'package:friends_tournament/src/data/model/app/ui_player.dart';
+import 'package:friends_tournament/src/data/model/app/ui_session.dart';
+import 'package:friends_tournament/src/data/model/db/player_session.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/data/tournament_repository.dart';
 import 'package:rxdart/rxdart.dart';
@@ -16,9 +21,12 @@ class TournamentBloc {
   final _tournamentMatchesController = BehaviorSubject<List<UIMatch>>();
   final _currentMatchController = BehaviorSubject<UIMatch>();
   final _updateCurrentMatchController = BehaviorSubject<UIMatch>();
+  final _updatePlayerScoreController = StreamController<PlayerSession>();
 
   // Input
   Sink<UIMatch> get setCurrentMatch => _updateCurrentMatchController.sink;
+
+  Sink<PlayerSession> get setPlayerScore => _updatePlayerScoreController.sink;
 
   // Output
   Stream<Tournament> get activeTournament => _activeTournamentController.stream;
@@ -35,6 +43,7 @@ class TournamentBloc {
   * ************** */
   TournamentBloc() {
     _updateCurrentMatchController.stream.listen(_setCurrentMatch);
+    _updatePlayerScoreController.stream.listen(_setPlayerScore);
     _fetchInitialData();
   }
 
@@ -44,6 +53,7 @@ class TournamentBloc {
     _tournamentMatchesController.close();
     _currentMatchController.close();
     _updateCurrentMatchController.close();
+    _updatePlayerScoreController.close();
   }
 
   /* *************
@@ -99,4 +109,19 @@ class TournamentBloc {
     _currentMatchController.add(_currentMatch);
     _tournamentMatchesController.add(_tournamentMatches);
   }
+
+  _setPlayerScore(PlayerSession playerSession) {
+    UISession session = _currentMatch.matchSessions
+        .firstWhere((session) => session.id == playerSession.sessionId);
+
+    UIPlayer player = session.sessionPlayers
+        .firstWhere((player) => player.id == playerSession.playerId);
+
+    player.score = playerSession.score;
+
+    _currentMatchController.add(_currentMatch);
+    _tournamentMatchesController.add(_tournamentMatches);
+  }
+
+  
 }

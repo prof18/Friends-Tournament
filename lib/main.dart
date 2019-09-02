@@ -37,6 +37,7 @@ class _MyAppState extends State<MyApp> {
       child: TournamentBlocProvider(
         child: MaterialApp(
             title: 'Flutter Demo',
+            debugShowCheckedModeBanner: false,
             theme: ThemeData(
               primarySwatch: Colors.blue,
             ),

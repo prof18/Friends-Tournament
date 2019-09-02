@@ -7,6 +7,7 @@ import 'package:friends_tournament/src/data/model/db/match.dart' as tournament;
 class UIMatch extends tournament.Match {
   List<UISession> matchSessions;
   bool isSelected = false;
+  bool isFinished = false;
 
   UIMatch({this.matchSessions, id, name, isActive}) : super(id, name, isActive);
 }

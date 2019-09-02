@@ -109,13 +109,15 @@ class _TournamentScreenState extends State<TournamentScreen>
 
   Widget _buildContentWidget() {
     return StreamBuilder<UIMatch>(
-        stream: _tournamentBloc.currentMatch,
-        builder: (context, snapshot) {
-          return Carousel(
-            sessions: snapshot.hasData
-                ? snapshot.data.matchSessions
-                : List<UISession>(),
-          );
-        });
+      stream: _tournamentBloc.currentMatch,
+      builder: (context, snapshot) {
+        return Carousel(
+          sessions: snapshot.hasData
+              ? snapshot.data.matchSessions
+              : List<UISession>(),
+          controller: _controller,
+        );
+      },
+    );
   }
 }

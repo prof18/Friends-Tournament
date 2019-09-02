@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/bloc/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
+import 'package:friends_tournament/src/ui/custom_icons_icons.dart';
 
 class Backdrop extends StatefulWidget {
   final Widget dropdownWidget;
@@ -80,19 +81,32 @@ class _BackdropState extends State<Backdrop>
           child: StreamBuilder<UIMatch>(
             stream: tournamentBloc.currentMatch,
             builder: (context, snapshot) {
-              // TODO: localize me
               return snapshot.hasData ? Text(snapshot.data.name) : Text("");
             },
           ),
         ),
         leading: IconButton(
-            onPressed: () {
-              _controller.fling(velocity: _isPanelVisible ? -1.0 : 1.0);
-            },
-            icon: AnimatedIcon(
-              icon: AnimatedIcons.close_menu,
-              progress: _controller.view,
-            )),
+          onPressed: () {
+            _controller.fling(velocity: _isPanelVisible ? -1.0 : 1.0);
+          },
+          icon: AnimatedIcon(
+            icon: AnimatedIcons.close_menu,
+            progress: _controller.view,
+          ),
+        ),
+        actions: <Widget>[
+          Visibility(
+            visible: !_panelExpanded,
+            child: IconButton(
+              icon: Icon(CustomIcons.flag_checkered),
+              onPressed: () {
+                // TODO
+              },
+              // TODO: localize me
+              tooltip: "Finish the tournament",
+            ),
+          ),
+        ],
       ),
       body: LayoutBuilder(
         builder: _buildStack,

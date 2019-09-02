@@ -123,5 +123,6 @@ class TournamentBloc {
     _tournamentMatchesController.add(_tournamentMatches);
   }
 
-  
+
+
 }

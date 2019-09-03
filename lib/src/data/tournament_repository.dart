@@ -101,4 +101,13 @@ class TournamentRepository {
     });
     return uiMatchList;
   }
+
+  /// This methods perform an update on the state of the tournament.
+  /// The tables the must updated are the following:
+  ///   - matches -> is_active
+  ///   - player_session -> score
+  ///   - tournament_player -> final_score
+  Future<void> updateTournamentStatus(UIMatch uiMatch) async {
+
+  }
 }

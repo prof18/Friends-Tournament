@@ -123,6 +123,11 @@ class TournamentBloc {
     _tournamentMatchesController.add(_tournamentMatches);
   }
 
+  _saveProgress() {
+    // save the current progress on the database
 
+    // the current match is no active. Select another as active
+
+  }
 
 }

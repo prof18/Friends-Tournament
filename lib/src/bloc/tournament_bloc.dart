@@ -128,6 +128,7 @@ class TournamentBloc {
     _tournamentMatchesController.add(_tournamentMatches);
   }
 
+  // TODO: handle error!
   Future<void> endMatch() async {
     // save the current progress on the database
     _currentMatch.isActive = 0;
@@ -135,7 +136,6 @@ class TournamentBloc {
 
     await repository.finishMatch(_currentMatch);
 
-    // TODO: compute the temporary podium
     _computeTempPodium();
 
     // the current match is no active. Select another as active

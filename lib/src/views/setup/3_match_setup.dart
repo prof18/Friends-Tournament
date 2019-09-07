@@ -197,7 +197,8 @@ class _MatchSetupState extends State<MatchSetup>
       barrierDismissible: false,
       builder: (_) => DialogLoader(
         controller: _controller,
-        text: "This is loading something",
+        // TODO: localize
+        text: "Generating the tournament",
       ),
     );
 

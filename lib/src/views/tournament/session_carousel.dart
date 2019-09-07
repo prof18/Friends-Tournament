@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
+import 'package:friends_tournament/src/bloc/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/data/model/app/ui_session.dart';
 import 'package:friends_tournament/src/ui/utils.dart';
 import 'package:friends_tournament/src/views/tournament/session_item_widget.dart';
 
-class Carousel extends StatefulWidget {
+class SessionCarousel extends StatefulWidget {
   final List<UISession> sessions;
   final AnimationController controller;
 
-  Carousel({this.sessions, this.controller});
+  SessionCarousel({this.sessions, this.controller});
 
   @override
-  _CarouselState createState() => _CarouselState();
+  _SessionCarouselState createState() => _SessionCarouselState();
 }
 
-class _CarouselState extends State<Carousel> {
+class _SessionCarouselState extends State<SessionCarousel> {
   bool _panelExpanded = false;
+  TournamentBloc _tournamentBloc;
 
   @override
   void initState() {
@@ -34,6 +37,8 @@ class _CarouselState extends State<Carousel> {
 
   @override
   Widget build(BuildContext context) {
+    _tournamentBloc = TournamentBlocProvider.of(context);
+
     return Scaffold(
       backgroundColor: hexToColor("#eeeeee"),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -46,6 +51,12 @@ class _CarouselState extends State<Carousel> {
           icon: Icon(Icons.save),
           onPressed: () {
             // TODO
+            // TODO: show a loader or a popup. Say also that automatically
+            // TODO: we skip to the following match
+            _tournamentBloc.endMatch().then((_) {
+              // TODO: hide the loader and change app state
+            });
+
           },
         ),
       ),

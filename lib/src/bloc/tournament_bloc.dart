@@ -122,11 +122,33 @@ class TournamentBloc {
     _tournamentMatchesController.add(_tournamentMatches);
   }
 
-  _saveProgress() {
+  Future<void> endMatch() async {
     // save the current progress on the database
+    _currentMatch.isActive = 0;
+    _currentMatch.isSelected = false;
+
+    await repository.finishMatch(_currentMatch);
 
     // the current match is no active. Select another as active
-
+    int currentMatchIndex = _tournamentMatches.indexOf(_currentMatch);
+    // it could be the last match
+    int nextMatchIndex = currentMatchIndex +1;
+    if (nextMatchIndex > _tournamentMatches.length - 1) {
+      // we can finish the entire tournament
+      _endTournament();
+    } else {
+      UIMatch nextMatch = _tournamentMatches[nextMatchIndex];
+      nextMatch.isActive = 1;
+      nextMatch.isSelected = true;
+      await repository.updateMatch(nextMatch);
+      _currentMatch = nextMatch;
+      _currentMatchController.add(_currentMatch);
+      _tournamentMatchesController.add(_tournamentMatches);
+    }
   }
 
+  _endTournament() {
+    // TODO
+    throw UnimplementedError();
+  }
 }

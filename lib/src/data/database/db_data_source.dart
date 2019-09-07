@@ -1,6 +1,10 @@
 import 'package:friends_tournament/src/data/database/dao.dart';
+import 'package:friends_tournament/src/data/database/dao/match_dao.dart';
+import 'package:friends_tournament/src/data/database/dao/player_session_dao.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
 import 'package:friends_tournament/src/data/database/db_queries.dart';
+import 'package:friends_tournament/src/data/model/db/match.dart' as tournament;
+import 'package:friends_tournament/src/data/model/db/player_session.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/utils/utils.dart';
 import 'package:sqflite/sqflite.dart';
@@ -75,8 +79,8 @@ class DBDataSource {
   /// Returns all the matches of the tournament provided as input
   Future<List<Map>> getTournamentMatches(String tournamentId) async {
     final db = await databaseProvider.db();
-    List<Map> result = await db.rawQuery(
-        format(allMatchesForActiveTournamentQuery, tournamentId));
+    List<Map> result = await db
+        .rawQuery(format(allMatchesForActiveTournamentQuery, tournamentId));
     return result;
   }
 
@@ -91,7 +95,32 @@ class DBDataSource {
   /// Returns all the players for a specific session
   Future<List<Map>> getSessionPlayers(String sessionId) async {
     final db = await databaseProvider.db();
-    List<Map> results = await db.rawQuery(format(getSessionPlayersQuery, sessionId));
+    List<Map> results =
+        await db.rawQuery(format(getSessionPlayersQuery, sessionId));
     return results;
+  }
+
+  Future<void> updateMatch(tournament.Match match) async {
+    final db = await databaseProvider.db();
+    final MatchDao dao = MatchDao();
+    await db.update(
+      dao.tableName,
+      dao.toMap(match),
+      where: dao.columnId + " = ?",
+      whereArgs: [match.id],
+    );
+    return;
+  }
+
+  Future<void> updatePlayerSession(PlayerSession playerSession) async {
+    final db = await databaseProvider.db();
+    final PlayerSessionDao dao = PlayerSessionDao();
+    await db.update(
+      dao.tableName,
+      dao.toMap(playerSession),
+      where: dao.columnSessionId + " = ? AND " + dao.columnPlayerId + " = ?",
+      whereArgs: [playerSession.sessionId, playerSession.playerId],
+    );
+    return;
   }
 }

@@ -1,12 +1,12 @@
 /// Get all the matches for the current tournament
 const allMatchesForActiveTournamentQuery =
-    "SELECT tournament_match.id_match, matches.name, matches.is_active FROM tournament_match "
+    "SELECT tournament_match.id_match, matches.name, matches.is_active, matches.match_order FROM tournament_match "
     "INNER JOIN matches ON tournament_match.id_match = matches.id "
     "WHERE tournament_match.id_tournament = '<>' "
     "ORDER BY matches.match_order ASC;";
 
 const getMatchSessionsQuery =
-    "SELECT matches_session.id_session, sessions.name FROM matches_session "
+    "SELECT matches_session.id_session, sessions.name, sessions.session_order FROM matches_session "
     "INNER JOIN sessions ON matches_session.id_session = sessions.id "
     "WHERE matches_session.id_match = '<>' "
     "ORDER BY sessions.session_order ASC;";

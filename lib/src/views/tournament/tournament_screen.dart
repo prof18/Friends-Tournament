@@ -83,7 +83,7 @@ class _TournamentScreenState extends State<TournamentScreen>
     return StreamBuilder<UIMatch>(
       stream: _tournamentBloc.currentMatch,
       builder: (context, snapshot) {
-        return Carousel(
+        return SessionCarousel(
           sessions: snapshot.hasData
               ? snapshot.data.matchSessions
               : List<UISession>(),

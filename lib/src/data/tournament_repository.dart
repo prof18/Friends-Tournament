@@ -3,6 +3,8 @@ import 'package:friends_tournament/src/data/database/db_data_source.dart';
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/app/ui_session.dart';
+import 'package:friends_tournament/src/data/model/db/match.dart' as tournament;
+import 'package:friends_tournament/src/data/model/db/player_session.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
 
 class TournamentRepository {
@@ -46,11 +48,10 @@ class TournamentRepository {
     List<UIMatch> uiMatchList = List<UIMatch>();
 
     await Future.forEach(dbMatches.toList(), (row) async {
-
-      // TODO: change this
       final String idMatch = row['id_match'];
       final String matchName = row['name'];
       final int isActive = row['is_active'];
+      final int matchOrder = row['match_order'];
 
       final List<Map> dbMatchSessions =
           await dbDataSource.getMatchSessions(idMatch);
@@ -61,7 +62,7 @@ class TournamentRepository {
       await Future.forEach(dbMatchSessions.toList(), (row) async {
         final idSession = row['id_session'];
         final sessionName = row['name'];
-        final order = row['order'];
+        final order = row['session_order'];
 
         final List<Map> dbPlayers =
             await dbDataSource.getSessionPlayers(idSession);
@@ -70,7 +71,6 @@ class TournamentRepository {
         List<UIPlayer> uiPlayerList = List<UIPlayer>();
 
         await Future.forEach(dbPlayers.toList(), (row) async {
-
           final idPlayer = row['player_id'];
           final playerName = row['player_name'];
           final playerScore = row['player_score'];
@@ -93,22 +93,49 @@ class TournamentRepository {
       });
 
       UIMatch uiMatch = UIMatch(
-        id: idMatch,
-        name: matchName,
-        isActive: isActive,
-        matchSessions: uiSessionList,
-      );
+          id: idMatch,
+          name: matchName,
+          isActive: isActive,
+          matchSessions: uiSessionList,
+          order: matchOrder);
       uiMatchList.add(uiMatch);
     });
     return uiMatchList;
   }
 
-  /// This methods perform an update on the state of the tournament.
+  /// This methods finish a match, i.e. perform an update on the
+  /// state of the tournament.
   /// The tables the must updated are the following:
   ///   - matches -> is_active
   ///   - player_session -> score
   ///   - tournament_player -> final_score
-  Future<void> updateTournamentStatus(UIMatch uiMatch) async {
+  Future<void> finishMatch(UIMatch uiMatch) async {
+    // put inactive the current match
+    final tournament.Match match = uiMatch.getParent();
+    await dbDataSource.updateMatch(match);
 
+    // update the scores of the player
+    await Future.forEach(uiMatch.matchSessions, (session) async {
+      print("Session: ${session.toString()}");
+      // loop through the players
+      await Future.forEach(session.sessionPlayers, (player) async {
+        print("Player: ${player.toString()}");
+        final PlayerSession playerSession =
+            PlayerSession(player.id, session.id, player.score);
+        await dbDataSource.updatePlayerSession(playerSession);
+
+        // TODO: update also the global score
+      });
+    });
+
+    return;
+  }
+
+  Future<void> updateMatch(UIMatch uiMatch) async {
+    // TODO: delete
+    // put inactive the current match
+    final tournament.Match match = uiMatch.getParent();
+    await dbDataSource.updateMatch(match);
+    return;
   }
 }

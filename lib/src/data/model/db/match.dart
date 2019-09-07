@@ -7,11 +7,12 @@ class Match {
   String id;
   String name;
   int isActive;
+  int order;
 
-  Match(this.id, this.name, this.isActive);
+  Match(this.id, this.name, this.isActive, this.order);
 
   @override
   String toString() {
-    return 'Match{id: $id, name: $name, isActive: $isActive}';
+    return 'Match{id: $id, name: $name, isActive: $isActive, order: $order}';
   }
 }

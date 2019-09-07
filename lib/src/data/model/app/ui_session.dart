@@ -7,6 +7,6 @@ import 'package:friends_tournament/src/data/model/db/session.dart';
 class UISession extends Session {
   List<UIPlayer> sessionPlayers;
 
-  UISession({this.sessionPlayers, id, name, isActive})
-      : super(id, name, isActive);
+  UISession({this.sessionPlayers, id, name, order})
+      : super(id, name, order);
 }

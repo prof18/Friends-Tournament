@@ -5,6 +5,7 @@ class MatchDao implements Dao<Match> {
   final columnId = "id";
   final columnName = "name";
   final columnActiveMatch = "is_active";
+  final columnOrder = "match_order";
 
   @override
   String get tableName => "matches";
@@ -14,6 +15,7 @@ class MatchDao implements Dao<Match> {
       "$columnId VARCHAR(255), "
       "$columnName TEXT, "
       "$columnActiveMatch INTEGER, "
+      "$columnOrder INTEGER, "
       "PRIMARY KEY ($columnId)"
       ")";
 
@@ -31,7 +33,8 @@ class MatchDao implements Dao<Match> {
     var matchId = query[columnId];
     var matchName = query[columnName];
     var isActive = query[columnActiveMatch];
-    return Match(matchId, matchName, isActive);
+    var order = query[columnOrder];
+    return Match(matchId, matchName, isActive, order);
   }
 
   @override
@@ -39,7 +42,8 @@ class MatchDao implements Dao<Match> {
     return <String, dynamic>{
       columnId: object.id,
       columnName: object.name,
-      columnActiveMatch: object.isActive
+      columnActiveMatch: object.isActive,
+      columnOrder: object.order
     };
   }
 }

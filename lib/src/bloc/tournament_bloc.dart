@@ -47,7 +47,6 @@ class TournamentBloc {
     _fetchInitialData();
   }
 
-  // TODO: add the dispose
   void dispose() {
     _activeTournamentController.close();
     _tournamentMatchesController.close();

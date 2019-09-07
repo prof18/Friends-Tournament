@@ -6,13 +6,12 @@ import 'package:friends_tournament/src/data/database/dao/session_dao.dart';
 class Session {
   String id;
   String name;
-  // 0 inactive, 1 active
-  int isActive;
+  int order;
 
-  Session(this.id, this.name, this.isActive);
+  Session(this.id, this.name, this.order);
 
   @override
   String toString() {
-    return 'Session{id: $id, name: $name, isActive: $isActive}';
+    return 'Session{id: $id, name: $name, order: $order}';
   }
 }

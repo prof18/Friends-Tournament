@@ -4,7 +4,7 @@ import 'package:friends_tournament/src/data/model/db/session.dart';
 class SessionDao implements Dao<Session> {
   final columnId = "id";
   final columnName = "name";
-  final columnActiveSession = "is_active";
+  final columnOrder = "session_order";
 
   @override
   String get tableName => "sessions";
@@ -13,7 +13,7 @@ class SessionDao implements Dao<Session> {
   String get createTableQuery => "CREATE TABLE $tableName ( "
       "$columnId VARCHAR(255), "
       "$columnName TEXT, "
-      "$columnActiveSession INTEGER, "
+      "$columnOrder INTEGER, "
       "PRIMARY KEY ($columnId)"
       ")";
 
@@ -30,8 +30,8 @@ class SessionDao implements Dao<Session> {
   Session fromMap(Map<String, dynamic> query) {
     var sessionId = query[columnId];
     var sessionName = query[columnName];
-    var isActive = query[columnActiveSession];
-    return Session(sessionId, sessionName, isActive);
+    var order = query[columnOrder];
+    return Session(sessionId, sessionName, order);
   }
 
   @override
@@ -39,7 +39,7 @@ class SessionDao implements Dao<Session> {
     return <String, dynamic>{
       columnId: object.id,
       columnName: object.name,
-      columnActiveSession: object.isActive
+      columnOrder: object.order
     };
   }
 }

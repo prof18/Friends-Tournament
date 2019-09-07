@@ -9,5 +9,5 @@ class UIMatch extends tournament.Match {
   bool isSelected = false;
   bool isFinished = false;
 
-  UIMatch({this.matchSessions, id, name, isActive}) : super(id, name, isActive);
+  UIMatch({this.matchSessions, id, name, isActive, order}) : super(id, name, isActive, order);
 }

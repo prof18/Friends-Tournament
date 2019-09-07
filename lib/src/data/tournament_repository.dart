@@ -47,6 +47,7 @@ class TournamentRepository {
 
     await Future.forEach(dbMatches.toList(), (row) async {
 
+      // TODO: change this
       final String idMatch = row['id_match'];
       final String matchName = row['name'];
       final int isActive = row['is_active'];
@@ -60,7 +61,7 @@ class TournamentRepository {
       await Future.forEach(dbMatchSessions.toList(), (row) async {
         final idSession = row['id_session'];
         final sessionName = row['name'];
-        final isActive = row['is_active'];
+        final order = row['order'];
 
         final List<Map> dbPlayers =
             await dbDataSource.getSessionPlayers(idSession);
@@ -85,7 +86,7 @@ class TournamentRepository {
         UISession uiSession = UISession(
           id: idSession,
           name: sessionName,
-          isActive: isActive,
+          order: order,
           sessionPlayers: uiPlayerList,
         );
         uiSessionList.add(uiSession);

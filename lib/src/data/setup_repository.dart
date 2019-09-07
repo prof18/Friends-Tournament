@@ -99,7 +99,7 @@ class SetupRepository {
       if (index == 0 ) {
         isActiveMatch = 1;
       }
-      var match = Match(matchId, matchName, isActiveMatch);
+      var match = Match(matchId, matchName, isActiveMatch, index);
       if (_matches.contains(match)) {
         throw Exception("Two matches has the same name");
       } else {
@@ -115,26 +115,22 @@ class SetupRepository {
       // number of sessions for the same match
       int sessions = (_matchesNumber / _playersAstNumber).ceil();
       for (int i = 0; i < sessions; i++) {
-        var sessionName = "Session-$i";
+        var sessionName = "Session ${i+1}";
         var sessionId = generateSessionId(match.id, sessionName);
-        var isActiveSession = 0;
-        if (i == 0) {
-          isActiveSession = 1;
-        }
-        var session = Session(sessionId, sessionName, isActiveSession);
+        var session = Session(sessionId, sessionName, i);
         _sessions.add(session);
         var matchSession = MatchSession(match.id, sessionId);
         _matchSessionList.add(matchSession);
-        var currentSessionPlayers = List<int>();
+        var currentSessionPlayers = List<String>();
         for (int j = 0; j < _playersAstNumber; j++) {
           while (true) {
             int playerIndex = _random.nextInt(_playersNumber);
-            if (currentSessionPlayers.contains(playerIndex)) {
+            final playerCandidate = _players[playerIndex];
+            if (currentSessionPlayers.contains(playerCandidate.id)) {
               continue;
             } else {
-              currentSessionPlayers.add(playerIndex);
-              var player = _players[playerIndex];
-              var playerSession = PlayerSession(player.id, sessionId, 0);
+              currentSessionPlayers.add(playerCandidate.id);
+              var playerSession = PlayerSession(playerCandidate.id, sessionId, 0);
               _playerSessionList.add(playerSession);
               break;
             }
@@ -145,6 +141,8 @@ class SetupRepository {
   }
 
   Future _save() async {
+
+    print("Launching the save process");
 
     await setupDataSource.createBatch();
 

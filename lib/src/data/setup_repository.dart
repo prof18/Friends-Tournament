@@ -114,14 +114,15 @@ class SetupRepository {
     _matches.forEach((match) {
       // number of sessions for the same match
       int sessions = (_matchesNumber / _playersAstNumber).ceil();
+      var currentSessionPlayers = List<String>();
       for (int i = 0; i < sessions; i++) {
+        // TODO: localize
         var sessionName = "Session ${i+1}";
         var sessionId = generateSessionId(match.id, sessionName);
         var session = Session(sessionId, sessionName, i);
         _sessions.add(session);
         var matchSession = MatchSession(match.id, sessionId);
         _matchSessionList.add(matchSession);
-        var currentSessionPlayers = List<String>();
         for (int j = 0; j < _playersAstNumber; j++) {
           while (true) {
             int playerIndex = _random.nextInt(_playersNumber);

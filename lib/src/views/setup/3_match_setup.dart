@@ -5,6 +5,7 @@ import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
+import 'package:friends_tournament/src/ui/dialog_loader.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
 import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
 
@@ -13,15 +14,25 @@ class MatchSetup extends StatefulWidget {
   _MatchSetupState createState() => _MatchSetupState();
 }
 
-class _MatchSetupState extends State<MatchSetup> {
+class _MatchSetupState extends State<MatchSetup>
+    with SingleTickerProviderStateMixin {
   List<TextFieldWrapper> _textFieldsList = new List<TextFieldWrapper>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   SetupBloc _setupBloc;
   Map<int, String> _savedValues = new HashMap();
+  AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 450));
+  }
 
   @override
   void dispose() {
     super.dispose();
+    _controller.dispose();
     _setupBloc.dispose();
   }
 
@@ -145,16 +156,67 @@ class _MatchSetupState extends State<MatchSetup> {
           .showSnackBar(SnackBar(content: Text('Complete all the fields')));
       return;
     }
+    _showAlertDialog();
+  }
 
-    // TODO: go to a new screen, save data and show the matches
-//    _setupBloc.setupTournament();
+  _showAlertDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          // TODO: localize
+          title: Text('Tournament building'),
+          content: const Text(
+              "This will start the generation of the tournament. "
+              "Please be sure that all the data are correct since you can't "
+              "modify it later"),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: const Text('Proceed'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _showLoaderAndStartProcess();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
 
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (context) => TournamentBlocProvider(
-            child: TournamentScreen(true),
-          ),
-        ),
-        (Route<dynamic> route) => false);
+  _showLoaderAndStartProcess() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => DialogLoader(
+        controller: _controller,
+        text: "This is loading something",
+      ),
+    );
+
+    _setupBloc.setupTournament().then(
+      (_) {
+        print("I'm over on saving data on the db");
+        _controller.reverse().then(
+          (_) {
+            Navigator.pop(context);
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => TournamentBlocProvider(
+                    child: TournamentScreen(),
+                  ),
+                ),
+                (Route<dynamic> route) => false);
+          },
+        );
+      },
+    );
   }
 }

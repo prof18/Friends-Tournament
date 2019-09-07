@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
             ),
             home: _isLoading
                 ? buildLoader()
-                : _isActive ? TournamentScreen(false) : Welcome()),
+                : _isActive ? TournamentScreen() : Welcome()),
       ),
     );
   }
@@ -66,7 +66,7 @@ class _MyAppState extends State<MyApp> {
 
   Widget buildTournamentScreen() {
     return TournamentBlocProvider(
-      child: TournamentScreen(false),
+      child: TournamentScreen(),
     );
   }
 }

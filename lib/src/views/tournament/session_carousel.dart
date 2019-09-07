@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/bloc/tournament_bloc_provider.dart';
+import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/app/ui_session.dart';
 import 'package:friends_tournament/src/ui/utils.dart';
 import 'package:friends_tournament/src/views/tournament/session_item_widget.dart';
@@ -56,7 +57,6 @@ class _SessionCarouselState extends State<SessionCarousel> {
             _tournamentBloc.endMatch().then((_) {
               // TODO: hide the loader and change app state
             });
-
           },
         ),
       ),
@@ -102,9 +102,32 @@ class _SessionCarouselState extends State<SessionCarousel> {
                   child: Material(
                     borderRadius: BorderRadius.circular(10.0),
                     elevation: 8.0,
-                    child: Center(
-                      // TODO: implement it!
-                      child: Text("First 3 players"),
+                    child: StreamBuilder<List<UIPlayer>>(
+                      stream: _tournamentBloc.podiumPlayers,
+                      builder: (context, snapshot) {
+                        return Center(
+                          // TODO: make better looking!
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: <Widget>[
+                                Text("Podium of the last session"),
+                                snapshot.hasData && snapshot.data.length > 0
+                                    ? ListView.builder(
+                                        physics: ScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return Text(
+                                              snapshot.data[index].name);
+                                        },
+                                        itemCount: snapshot.data.length,
+                                      )
+                                    : Text("No players. Finish first a match"),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),

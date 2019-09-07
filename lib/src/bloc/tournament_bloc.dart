@@ -22,6 +22,7 @@ class TournamentBloc {
   final _currentMatchController = BehaviorSubject<UIMatch>();
   final _updateCurrentMatchController = BehaviorSubject<UIMatch>();
   final _updatePlayerScoreController = StreamController<PlayerSession>();
+  final _podiumPlayersController = BehaviorSubject<List<UIPlayer>>();
 
   // Input
   Sink<UIMatch> get setCurrentMatch => _updateCurrentMatchController.sink;
@@ -35,6 +36,8 @@ class TournamentBloc {
       _tournamentMatchesController.stream;
 
   Stream<UIMatch> get currentMatch => _currentMatchController.stream;
+
+  Stream<List<UIPlayer>> get podiumPlayers => _podiumPlayersController.stream;
 
   /* *************
   *
@@ -53,6 +56,7 @@ class TournamentBloc {
     _currentMatchController.close();
     _updateCurrentMatchController.close();
     _updatePlayerScoreController.close();
+    _podiumPlayersController.close();
   }
 
   /* *************
@@ -92,6 +96,8 @@ class TournamentBloc {
       currentMatch.isSelected = true;
       _currentMatch = currentMatch;
 
+      _computeTempPodium();
+
       _activeTournamentController.add(_activeTournament);
       _tournamentMatchesController.add(_tournamentMatches);
       _currentMatchController.add(_currentMatch);
@@ -129,10 +135,13 @@ class TournamentBloc {
 
     await repository.finishMatch(_currentMatch);
 
+    // TODO: compute the temporary podium
+    _computeTempPodium();
+
     // the current match is no active. Select another as active
     int currentMatchIndex = _tournamentMatches.indexOf(_currentMatch);
     // it could be the last match
-    int nextMatchIndex = currentMatchIndex +1;
+    int nextMatchIndex = currentMatchIndex + 1;
     if (nextMatchIndex > _tournamentMatches.length - 1) {
       // we can finish the entire tournament
       _endTournament();
@@ -150,5 +159,25 @@ class TournamentBloc {
   _endTournament() {
     // TODO
     throw UnimplementedError();
+  }
+
+  void _computeTempPodium() {
+    List<UIPlayer> players = List<UIPlayer>();
+
+    _currentMatch.matchSessions.forEach((session) {
+      players.addAll(session.sessionPlayers);
+    });
+
+    players.sort((a, b) => a.score.compareTo(b.score));
+    players = players.reversed.toList().take(3).toList();
+
+    if (players.length == 3 &&
+        players[0].score == 0 &&
+        players[1].score == 0 &&
+        players[2].score == 0) {
+      _podiumPlayersController.add(List<UIPlayer>());
+    } else {
+      _podiumPlayersController.add(players);
+    }
   }
 }

@@ -1,11 +1,14 @@
 import 'package:friends_tournament/src/data/database/dao.dart';
 import 'package:friends_tournament/src/data/database/dao/match_dao.dart';
 import 'package:friends_tournament/src/data/database/dao/player_session_dao.dart';
+import 'package:friends_tournament/src/data/database/dao/tournament_dao.dart';
+import 'package:friends_tournament/src/data/database/dao/tournament_player_dao.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
 import 'package:friends_tournament/src/data/database/db_queries.dart';
 import 'package:friends_tournament/src/data/model/db/match.dart' as tournament;
 import 'package:friends_tournament/src/data/model/db/player_session.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
+import 'package:friends_tournament/src/data/model/db/tournament_player.dart';
 import 'package:friends_tournament/src/utils/utils.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -122,5 +125,33 @@ class DBDataSource {
       whereArgs: [playerSession.sessionId, playerSession.playerId],
     );
     return;
+  }
+
+  Future<List<Map>> getFinalScore() async {
+    final db = await databaseProvider.db();
+    List<Map> results = await db.rawQuery(getFinalScoreQuery);
+    return results;
+  }
+
+  Future<void> updateTournamentPlayer(TournamentPlayer tournamentPlayer) async {
+    final db = await databaseProvider.db();
+    final TournamentPlayerDao dao = TournamentPlayerDao();
+    await db.update(
+      dao.tableName,
+      dao.toMap(tournamentPlayer),
+      where: dao.columnIdTournament + " = ? AND " + dao.columnIdPlayer + " = ?",
+      whereArgs: [tournamentPlayer.tournamentId, tournamentPlayer.playerId],
+    );
+  }
+
+  Future<void> updateTournament(Tournament tournament) async {
+    final db = await databaseProvider.db();
+    final TournamentDao dao = TournamentDao();
+    await db.update(
+      dao.tableName,
+      dao.toMap(tournament),
+      where: dao.columnId + " = ?",
+      whereArgs: [tournament.id],
+    );
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:friends_tournament/src/data/model/app/ui_final_score.dart';
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/app/ui_session.dart';
@@ -144,7 +145,7 @@ class TournamentBloc {
     int nextMatchIndex = currentMatchIndex + 1;
     if (nextMatchIndex > _tournamentMatches.length - 1) {
       // we can finish the entire tournament
-      _endTournament();
+      await endTournament();
     } else {
       UIMatch nextMatch = _tournamentMatches[nextMatchIndex];
       nextMatch.isActive = 1;
@@ -156,14 +157,19 @@ class TournamentBloc {
     }
   }
 
-  _endTournament() {
-    // TODO
-    throw UnimplementedError();
+  Future<void> endTournament() async {
+    final List<UIFinalScore> finalScores = await repository.finishTournament(_activeTournament);
+
+    // TODO: decide what to do!
+    print(finalScores);
+
+    return;
   }
 
   void _computeTempPodium() {
     List<UIPlayer> players = List<UIPlayer>();
 
+    // TODO: it's not working correctly when you open the app from session 3
     _currentMatch.matchSessions.forEach((session) {
       players.addAll(session.sessionPlayers);
     });

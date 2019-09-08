@@ -1,11 +1,14 @@
 import 'package:friends_tournament/src/data/database/dao/tournament_dao.dart';
+import 'package:friends_tournament/src/data/database/dao/tournament_player_dao.dart';
 import 'package:friends_tournament/src/data/database/db_data_source.dart';
+import 'package:friends_tournament/src/data/model/app/ui_final_score.dart';
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/app/ui_session.dart';
 import 'package:friends_tournament/src/data/model/db/match.dart' as tournament;
 import 'package:friends_tournament/src/data/model/db/player_session.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
+import 'package:friends_tournament/src/data/model/db/tournament_player.dart';
 
 class TournamentRepository {
   // Implement singleton
@@ -123,16 +126,39 @@ class TournamentRepository {
         final PlayerSession playerSession =
             PlayerSession(player.id, session.id, player.score);
         await dbDataSource.updatePlayerSession(playerSession);
-
-        // TODO: update also the global score
       });
     });
 
     return;
   }
 
+  Future<List<UIFinalScore>> finishTournament(Tournament tournament) async {
+    final List<Map> results = await dbDataSource.getFinalScore();
+    final List<UIFinalScore> finalScores = List<UIFinalScore>();
+    await Future.forEach(results, (row) async {
+      final idPlayer = row['id_player'];
+      final finalScore = row['final_score'];
+      final playerName = row['name'];
+      finalScores.add(
+        UIFinalScore(
+          id: idPlayer,
+          name: playerName,
+          score: finalScore,
+        ),
+      );
+
+      final tournamentPlayer =
+          TournamentPlayer(idPlayer, tournament.id, finalScore);
+      await dbDataSource.updateTournamentPlayer(tournamentPlayer);
+    });
+
+    tournament.isActive = 0;
+    await dbDataSource.updateTournament(tournament);
+
+    return finalScores;
+  }
+
   Future<void> updateMatch(UIMatch uiMatch) async {
-    // TODO: delete
     // put inactive the current match
     final tournament.Match match = uiMatch.getParent();
     await dbDataSource.updateMatch(match);

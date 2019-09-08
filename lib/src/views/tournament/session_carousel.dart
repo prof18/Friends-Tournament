@@ -110,7 +110,7 @@ class _SessionCarouselState extends State<SessionCarousel> {
                           child: SingleChildScrollView(
                             child: Column(
                               children: <Widget>[
-                                // TODO: localize 
+                                // TODO: localize
                                 Text("Podium of the last match"),
                                 snapshot.hasData && snapshot.data.length > 0
                                     ? ListView.builder(

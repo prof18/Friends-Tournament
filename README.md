@@ -2,7 +2,7 @@
 
 ## 🚧 Work in Progress
 
-I'm currently working on this application
+I'm currently working on this application.
 It is still in its early stages of development, so things can heavily change!
 
 ## License

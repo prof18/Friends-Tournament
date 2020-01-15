@@ -27,13 +27,7 @@ void main() {
   group('Tournament Setup Tests', () {
     final SetupRepository setupRepository = SetupRepository();
 
-    test("check tournament data", () {
-      assert(TestTournament.playersNumber >= TestTournament.playersAstNumber);
-      expect(TestTournament.playersNumber, TestTournament.playersName.length);
-      expect(TestTournament.matchesNumber, TestTournament.matchesName.length);
-    });
-
-    test("create tournament", () {
+    setUp(() {
       setupRepository.createTournament(
           TestTournament.playersNumber,
           TestTournament.playersAstNumber,
@@ -41,6 +35,12 @@ void main() {
           TestTournament.tournamentName,
           TestTournament.playersName,
           TestTournament.matchesName);
+    });
+
+    test("check tournament data", () {
+      assert(TestTournament.playersNumber >= TestTournament.playersAstNumber);
+      expect(TestTournament.playersNumber, TestTournament.playersName.length);
+      expect(TestTournament.matchesNumber, TestTournament.matchesName.length);
     });
 
     test("players number is correct", () {

@@ -17,6 +17,7 @@
 import 'dart:core';
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/data/database/dao/match_dao.dart';
 import 'package:friends_tournament/src/data/database/dao/match_session_dao.dart';
 import 'package:friends_tournament/src/data/database/dao/player_dao.dart';
@@ -58,12 +59,16 @@ class SetupRepository {
   * Internal Variables
   *
   * ************** */
-
-  List<Player> _players = List<Player>();
-  List<Session> _sessions = List<Session>();
-  List<Match> _matches = List<Match>();
-  List<PlayerSession> _playerSessionList = List<PlayerSession>();
-  List<MatchSession> _matchSessionList = List<MatchSession>();
+  @visibleForTesting
+  List<Player> players = List<Player>();
+  @visibleForTesting
+  List<Session> sessions = List<Session>();
+  @visibleForTesting
+  List<Match> matches = List<Match>();
+  @visibleForTesting
+  List<PlayerSession> playerSessionList = List<PlayerSession>();
+  @visibleForTesting
+  List<MatchSession> matchSessionList = List<MatchSession>();
   List<TournamentMatch> _tournamentMatchList = List<TournamentMatch>();
   List<TournamentPlayer> _tournamentPlayerList = List<TournamentPlayer>();
 
@@ -84,6 +89,22 @@ class SetupRepository {
       String tournamentName,
       Map<int, String> playersName,
       Map<int, String> matchesName) async {
+    createTournament(playersNumber, playersAstNumber, matchesNumber,
+        tournamentName, playersName, matchesName);
+    await _save();
+  }
+
+  void createTournament(
+      int playersNumber,
+      int playersAstNumber,
+      int matchesNumber,
+      String tournamentName,
+      Map<int, String> playersName,
+      Map<int, String> matchesName) {
+
+
+    // TODO: maybe add a sanity check with sizes
+
     this._playersNumber = playersNumber;
     this._playersAstNumber = playersAstNumber;
     this._matchesNumber = matchesNumber;
@@ -95,14 +116,13 @@ class SetupRepository {
     _setupPlayers(playersName);
     _setupMatches(matchesName);
     _generateTournament();
-    await _save();
   }
 
   void _setupPlayers(Map<int, String> playersName) {
     playersName.forEach((_, playerName) {
       var playerId = generatePlayerId(playerName);
       var player = Player(playerId, playerName);
-      _players.add(player);
+      players.add(player);
       var tournamentPlayer = TournamentPlayer(playerId, _tournament.id, 0);
       _tournamentPlayerList.add(tournamentPlayer);
     });
@@ -112,14 +132,14 @@ class SetupRepository {
     matchesName.forEach((index, matchName) {
       var matchId = generateMatchId(_tournamentName, matchName);
       var isActiveMatch = 0;
-      if (index == 0 ) {
+      if (index == 0) {
         isActiveMatch = 1;
       }
       var match = Match(matchId, matchName, isActiveMatch, index);
-      if (_matches.contains(match)) {
+      if (matches.contains(match)) {
         throw Exception("Two matches has the same name");
       } else {
-        _matches.add(match);
+        matches.add(match);
         var tournamentMatch = TournamentMatch(_tournament.id, matchId);
         _tournamentMatchList.add(tournamentMatch);
       }
@@ -127,28 +147,29 @@ class SetupRepository {
   }
 
   void _generateTournament() {
-    _matches.forEach((match) {
+    matches.forEach((match) {
       // number of sessions for the same match
-      int sessions = (_matchesNumber / _playersAstNumber).ceil();
+      int sessionsNumber = (_matchesNumber / _playersAstNumber).ceil();
       var currentSessionPlayers = List<String>();
-      for (int i = 0; i < sessions; i++) {
+      for (int i = 0; i < sessionsNumber; i++) {
         // TODO: localize
-        var sessionName = "Session ${i+1}";
+        var sessionName = "Session ${i + 1}";
         var sessionId = generateSessionId(match.id, sessionName);
         var session = Session(sessionId, sessionName, i);
-        _sessions.add(session);
+        sessions.add(session);
         var matchSession = MatchSession(match.id, sessionId);
-        _matchSessionList.add(matchSession);
+        matchSessionList.add(matchSession);
         for (int j = 0; j < _playersAstNumber; j++) {
           while (true) {
             int playerIndex = _random.nextInt(_playersNumber);
-            final playerCandidate = _players[playerIndex];
+            final playerCandidate = players[playerIndex];
             if (currentSessionPlayers.contains(playerCandidate.id)) {
               continue;
             } else {
               currentSessionPlayers.add(playerCandidate.id);
-              var playerSession = PlayerSession(playerCandidate.id, sessionId, 0);
-              _playerSessionList.add(playerSession);
+              var playerSession =
+                  PlayerSession(playerCandidate.id, sessionId, 0);
+              playerSessionList.add(playerSession);
               break;
             }
           }
@@ -158,7 +179,6 @@ class SetupRepository {
   }
 
   Future _save() async {
-
     print("Launching the save process");
 
     await setupDataSource.createBatch();
@@ -171,21 +191,21 @@ class SetupRepository {
 
     // save players
     var playerDao = PlayerDao();
-    _players.forEach((player) {
+    players.forEach((player) {
       setupDataSource.insertIgnoreToBatch(player, playerDao);
       print(player.toString());
     });
 
     // save sessions
     var sessionDao = SessionDao();
-    _sessions.forEach((session) {
+    sessions.forEach((session) {
       setupDataSource.insertToBatch(session, sessionDao);
       print(session.toString());
     });
 
     // save matches
     var matchDao = MatchDao();
-    _matches.forEach((match) {
+    matches.forEach((match) {
       setupDataSource.insertToBatch(match, matchDao);
       print(match.toString());
     });
@@ -199,14 +219,14 @@ class SetupRepository {
 
     // save player session
     var playerSessionDao = PlayerSessionDao();
-    _playerSessionList.forEach((playerSession) {
+    playerSessionList.forEach((playerSession) {
       setupDataSource.insertToBatch(playerSession, playerSessionDao);
       print(playerSession.toString());
     });
 
     // save match session
     var matchSessionDao = MatchSessionDao();
-    _matchSessionList.forEach((matchSession) {
+    matchSessionList.forEach((matchSession) {
       setupDataSource.insertToBatch(matchSession, matchSessionDao);
       print(matchSession.toString());
     });

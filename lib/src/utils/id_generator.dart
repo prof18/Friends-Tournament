@@ -14,25 +14,30 @@
  * limitations under the License.
  */
 
+/// Generate a tournament id from the hash code of "${DateTime.now()}-$idName"
 String generateTournamentId(String tournamentName) {
   var idName = _generateGenericId(tournamentName);
   return "${DateTime.now()}-$idName".hashCode.toString();
 }
 
+/// Generate a match id from the hash code of "$tournamentId-$idName"
 String generateMatchId(String tournamentId, String matchName) {
   var idName = _generateGenericId(matchName);
   return "$tournamentId-$idName".hashCode.toString();
 }
 
+/// Generate a Session id from the hashCode of "$matchId-$idName"
 String generateSessionId(String matchId, String sessionName) {
   var idName = _generateGenericId(sessionName);
   return "$matchId-$idName".hashCode.toString();
 }
 
+/// Generate a Player Id starting from the name
 String generatePlayerId(String playerName) {
   return _generateGenericId(playerName);
 }
 
+/// Generate a generic id using hash code
 String _generateGenericId(String name){
   return name
       .toLowerCase()

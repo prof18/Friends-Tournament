@@ -27,7 +27,7 @@ void main() {
   group('Tournament Setup Tests', () {
     final SetupRepository setupRepository = SetupRepository();
 
-    setUp(() {
+    setUpAll(() {
       setupRepository.createTournament(
           TestTournament.playersNumber,
           TestTournament.playersAstNumber,

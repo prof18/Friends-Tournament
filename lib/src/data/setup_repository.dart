@@ -91,7 +91,7 @@ class SetupRepository {
       Map<int, String> matchesName) async {
     createTournament(playersNumber, playersAstNumber, matchesNumber,
         tournamentName, playersName, matchesName);
-    await _save();
+    await save();
   }
 
   ///
@@ -222,7 +222,8 @@ class SetupRepository {
     });
   }
 
-  Future _save() async {
+  @visibleForTesting
+  Future save() async {
     print("Launching the save process");
 
     await setupDataSource.createBatch();

@@ -17,6 +17,9 @@
 import 'dart:collection';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:friends_tournament/src/data/database/database_provider.dart';
+import 'package:friends_tournament/src/data/database/database_provider_impl.dart';
+import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/model/db/match_session.dart';
 import 'package:friends_tournament/src/data/model/db/player_session.dart';
 import 'package:friends_tournament/src/data/setup_repository.dart';
@@ -25,7 +28,11 @@ import 'test_tournament.dart';
 
 void main() {
   group('Tournament Setup Tests', () {
-    final SetupRepository setupRepository = SetupRepository();
+
+    // We provide these dependendies even if here is not used
+    DatabaseProvider databaseProvider = DatabaseProviderImpl.get;
+    LocalDataSource localDataSource = LocalDataSource(databaseProvider);
+    final SetupRepository setupRepository = SetupRepository(localDataSource);
 
     setUpAll(() {
       setupRepository.createTournament(

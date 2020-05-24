@@ -16,7 +16,7 @@
 
 import 'package:friends_tournament/src/data/database/dao/tournament_dao.dart';
 import 'package:friends_tournament/src/data/database/dao/tournament_player_dao.dart';
-import 'package:friends_tournament/src/data/database/db_data_source.dart';
+import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/model/app/ui_final_score.dart';
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
@@ -26,6 +26,9 @@ import 'package:friends_tournament/src/data/model/db/player_session.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/data/model/db/tournament_player.dart';
 
+import 'database/database_provider.dart';
+import 'database/database_provider_impl.dart';
+
 class TournamentRepository {
   // Implement singleton
   // To get back it, simple call: MyClass myObj = new MyClass();
@@ -33,7 +36,10 @@ class TournamentRepository {
   static final TournamentRepository _singleton =
       new TournamentRepository._internal();
 
-  factory TournamentRepository() {
+  LocalDataSource localDataSource;
+
+  factory TournamentRepository(LocalDataSource localDataSource) {
+    _singleton.localDataSource = localDataSource;
     return _singleton;
   }
 
@@ -41,11 +47,9 @@ class TournamentRepository {
 
   /// -------
 
-  var dbDataSource = DBDataSource();
-
   Future<bool> isTournamentActive() async {
     final dao = TournamentDao();
-    final tournament = await dbDataSource.getActiveTournament(dao);
+    final tournament = await localDataSource.getActiveTournament(dao);
     if (tournament != null) {
       return true;
     }
@@ -54,14 +58,14 @@ class TournamentRepository {
 
   Future<Tournament> getCurrentActiveTournament() async {
     final dao = TournamentDao();
-    final tournament = await dbDataSource.getActiveTournament(dao);
+    final tournament = await localDataSource.getActiveTournament(dao);
     return tournament;
   }
 
   Future<List<UIMatch>> getTournamentMatches(String tournamentID) async {
     // Query to get the matches
     final List<Map> dbMatches =
-        await dbDataSource.getTournamentMatches(tournamentID);
+        await localDataSource.getTournamentMatches(tournamentID);
 
     // For each match, query to get the different sessions
     List<UIMatch> uiMatchList = List<UIMatch>();
@@ -73,7 +77,7 @@ class TournamentRepository {
       final int matchOrder = row['match_order'];
 
       final List<Map> dbMatchSessions =
-          await dbDataSource.getMatchSessions(idMatch);
+          await localDataSource.getMatchSessions(idMatch);
 
       // For each session, get the players
       List<UISession> uiSessionList = List<UISession>();
@@ -84,7 +88,7 @@ class TournamentRepository {
         final order = row['session_order'];
 
         final List<Map> dbPlayers =
-            await dbDataSource.getSessionPlayers(idSession);
+            await localDataSource.getSessionPlayers(idSession);
 
         // create the UIPlayerObject
         List<UIPlayer> uiPlayerList = List<UIPlayer>();
@@ -131,7 +135,7 @@ class TournamentRepository {
   Future<void> finishMatch(UIMatch uiMatch) async {
     // put inactive the current match
     final tournament.Match match = uiMatch.getParent();
-    await dbDataSource.updateMatch(match);
+    await localDataSource.updateMatch(match);
 
     // update the scores of the player
     await Future.forEach(uiMatch.matchSessions, (session) async {
@@ -141,7 +145,7 @@ class TournamentRepository {
         print("Player: ${player.toString()}");
         final PlayerSession playerSession =
             PlayerSession(player.id, session.id, player.score);
-        await dbDataSource.updatePlayerSession(playerSession);
+        await localDataSource.updatePlayerSession(playerSession);
       });
     });
 
@@ -149,7 +153,7 @@ class TournamentRepository {
   }
 
   Future<List<UIFinalScore>> finishTournament(Tournament tournament) async {
-    final List<Map> results = await dbDataSource.getFinalScore();
+    final List<Map> results = await localDataSource.getFinalScore();
     final List<UIFinalScore> finalScores = List<UIFinalScore>();
     await Future.forEach(results, (row) async {
       final idPlayer = row['id_player'];
@@ -165,11 +169,11 @@ class TournamentRepository {
 
       final tournamentPlayer =
           TournamentPlayer(idPlayer, tournament.id, finalScore);
-      await dbDataSource.updateTournamentPlayer(tournamentPlayer);
+      await localDataSource.updateTournamentPlayer(tournamentPlayer);
     });
 
     tournament.isActive = 0;
-    await dbDataSource.updateTournament(tournament);
+    await localDataSource.updateTournament(tournament);
 
     return finalScores;
   }
@@ -177,7 +181,7 @@ class TournamentRepository {
   Future<void> updateMatch(UIMatch uiMatch) async {
     // put inactive the current match
     final tournament.Match match = uiMatch.getParent();
-    await dbDataSource.updateMatch(match);
+    await localDataSource.updateMatch(match);
     return;
   }
 }

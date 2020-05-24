@@ -14,28 +14,26 @@
  * limitations under the License.
  */
 
-import 'dart:io';
-
+import 'package:friends_tournament/src/data/database/database_provider.dart';
+import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/setup_repository.dart';
-import 'package:path/path.dart';
-//import 'package:pedantic/pedantic.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:test/test.dart';
 
+import 'FakeDatabaseProvider.dart';
 import 'test_tournament.dart';
 
 void main() {
-
   Future sleep([int milliseconds]) =>
       Future.delayed(Duration(milliseconds: milliseconds));
 
-  group('sqflite', () {
+  group('Tournament setup database checks', () {
+    SetupRepository setupRepository;
 
-    test('add tournament', () async {
+    setUpAll(() {
+      DatabaseProvider databaseProvider = FakeDatabaseProvider.get;
+      LocalDataSource localDataSource = LocalDataSource(databaseProvider);
 
-      var db = await openDatabase(inMemoryDatabasePath);
-
-      final SetupRepository setupRepository = SetupRepository();
+      setupRepository = SetupRepository(localDataSource);
       setupRepository.createTournament(
           TestTournament.playersNumber,
           TestTournament.playersAstNumber,
@@ -43,16 +41,14 @@ void main() {
           TestTournament.tournamentName,
           TestTournament.playersName,
           TestTournament.matchesName);
-
-      // TODO: we need to inject the db in the repository
-//       await setupRepository.save();
-
-
-
     });
 
-
-
+    test('add new tournament with an active one in the db throws excetion',
+        () async {
+      await setupRepository.save();
+      expect(() => setupRepository.save(),
+          throwsA(isA<AlreadyActiveTournamentException>()));
+    });
 
 //    test('open null', () async {
 //      var exception;

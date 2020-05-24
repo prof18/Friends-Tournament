@@ -17,6 +17,9 @@
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/tournament_bloc_provider.dart';
+import 'package:friends_tournament/src/data/database/database_provider.dart';
+import 'package:friends_tournament/src/data/database/database_provider_impl.dart';
+import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/tournament_repository.dart';
 import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
 import 'package:friends_tournament/src/views/welcome_screen.dart';
@@ -38,7 +41,9 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     // TODO: add error handling
-    var repository = TournamentRepository();
+    DatabaseProvider databaseProvider = DatabaseProviderImpl.get;
+    LocalDataSource localDataSource = LocalDataSource(databaseProvider);
+    var repository = TournamentRepository(localDataSource);
     repository.isTournamentActive().then((active) {
       setState(() {
         _isActive = active;

@@ -26,8 +26,7 @@ import 'package:friends_tournament/src/data/database/dao/session_dao.dart';
 import 'package:friends_tournament/src/data/database/dao/tournament_dao.dart';
 import 'package:friends_tournament/src/data/database/dao/tournament_match_dao.dart';
 import 'package:friends_tournament/src/data/database/dao/tournament_player_dao.dart';
-import 'package:friends_tournament/src/data/database/database_provider.dart';
-import 'package:friends_tournament/src/data/database/db_data_source.dart';
+import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/model/db/match.dart';
 import 'package:friends_tournament/src/data/model/db/match_session.dart';
 import 'package:friends_tournament/src/data/model/db/player.dart';
@@ -44,7 +43,10 @@ class SetupRepository {
   /// -------
   static final SetupRepository _singleton = new SetupRepository._internal();
 
-  factory SetupRepository() {
+  LocalDataSource localDataSource;
+  
+  factory SetupRepository(LocalDataSource localDataSource) {
+    _singleton.localDataSource = localDataSource;
     return _singleton;
   }
 
@@ -79,8 +81,7 @@ class SetupRepository {
   int _matchesNumber;
   String _tournamentName;
 
-  DatabaseProvider databaseProvider = DatabaseProvider.get;
-  var setupDataSource = DBDataSource();
+
 
   Future setupTournament(
       int playersNumber,
@@ -226,52 +227,64 @@ class SetupRepository {
   Future save() async {
     print("Launching the save process");
 
-    await setupDataSource.createBatch();
-
     // TODO: add first a check to control if there is a current tournament active. Just for control
 
+    final dao = TournamentDao();
+    final tournament = await localDataSource.getActiveTournament(dao);
+    if (tournament != null) {
+      // There is an active tournament that should not be there!
+      // TODO: capture and handle exception
+      throw AlreadyActiveTournamentException();
+    }
+
+    await localDataSource.createBatch();
+
+
+
+
+
     // save tournament
-    setupDataSource.insertToBatch(_tournament, TournamentDao());
+    localDataSource.insertToBatch(_tournament, TournamentDao());
     print(_tournament.toString());
 
     var playerDao = PlayerDao();
     players.forEach((player) {
-      setupDataSource.insertIgnoreToBatch(player, playerDao);
+      localDataSource.insertIgnoreToBatch(player, playerDao);
       print(player.toString());
     });
 
     // save sessions
     var sessionDao = SessionDao();
     sessions.forEach((session) {
-      setupDataSource.insertToBatch(session, sessionDao);
+      localDataSource.insertToBatch(session, sessionDao);
       print(session.toString());
     });
 
     // save matches
     var matchDao = MatchDao();
     matches.forEach((match) {
-      setupDataSource.insertToBatch(match, matchDao);
+      localDataSource.insertToBatch(match, matchDao);
       print(match.toString());
     });
 
     // save tournament player
     var tournamentPlayerDao = TournamentPlayerDao();
     _tournamentPlayerList.forEach((tournamentPlayer) {
-      setupDataSource.insertToBatch(tournamentPlayer, tournamentPlayerDao);
+      localDataSource.insertToBatch(tournamentPlayer, tournamentPlayerDao);
       print(tournamentPlayer.toString());
     });
 
     // save player session
     var playerSessionDao = PlayerSessionDao();
     playerSessionList.forEach((playerSession) {
-      setupDataSource.insertToBatch(playerSession, playerSessionDao);
+      localDataSource.insertToBatch(playerSession, playerSessionDao);
       print(playerSession.toString());
     });
 
     // save match session
     var matchSessionDao = MatchSessionDao();
     matchSessionList.forEach((matchSession) {
-      setupDataSource.insertToBatch(matchSession, matchSessionDao);
+      localDataSource.insertToBatch(matchSession, matchSessionDao);
       print(matchSession.toString());
     });
 
@@ -279,9 +292,14 @@ class SetupRepository {
     var tournamentMatchDao = TournamentMatchDao();
     _tournamentMatchList.forEach((tournamentMatch) {
       print(tournamentMatch.toString());
-      setupDataSource.insertToBatch(tournamentMatch, tournamentMatchDao);
+      localDataSource.insertToBatch(tournamentMatch, tournamentMatchDao);
     });
 
-    await setupDataSource.flushBatch();
+    await localDataSource.flushBatch();
   }
 }
+
+class AlreadyActiveTournamentException implements Exception {
+
+}
+

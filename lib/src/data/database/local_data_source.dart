@@ -20,6 +20,7 @@ import 'package:friends_tournament/src/data/database/dao/player_session_dao.dart
 import 'package:friends_tournament/src/data/database/dao/tournament_dao.dart';
 import 'package:friends_tournament/src/data/database/dao/tournament_player_dao.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
+import 'package:friends_tournament/src/data/database/database_provider_impl.dart';
 import 'package:friends_tournament/src/data/database/db_queries.dart';
 import 'package:friends_tournament/src/data/model/db/match.dart' as tournament;
 import 'package:friends_tournament/src/data/model/db/player_session.dart';
@@ -28,23 +29,26 @@ import 'package:friends_tournament/src/data/model/db/tournament_player.dart';
 import 'package:friends_tournament/src/utils/utils.dart';
 import 'package:sqflite/sqflite.dart';
 
-class DBDataSource {
+class LocalDataSource {
   // Implement singleton
   // To get back it, simple call: MyClass myObj = new MyClass();
   /// -------
-  static final DBDataSource _singleton = new DBDataSource._internal();
+  static final LocalDataSource _singleton = new LocalDataSource._internal();
 
-  factory DBDataSource() {
+  DatabaseProvider databaseProvider;
+
+  LocalDataSource._internal();
+
+  factory LocalDataSource(DatabaseProvider databaseProvider) {
+    _singleton.databaseProvider = databaseProvider;
     return _singleton;
   }
 
-  DBDataSource._internal();
 
   /// -------
 
   // TODO: close db connection
 
-  var databaseProvider = DatabaseProvider.get;
   Batch _batch;
 
   Future insert(dynamic object, Dao dao) async {

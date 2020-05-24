@@ -16,6 +16,9 @@
 
 import 'dart:async';
 
+import 'package:friends_tournament/src/data/database/database_provider.dart';
+import 'package:friends_tournament/src/data/database/database_provider_impl.dart';
+import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/setup_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -123,7 +126,9 @@ class SetupBloc {
   }
 
   Future<void> setupTournament() async {
-    SetupRepository repository = new SetupRepository();
+    DatabaseProvider databaseProvider = DatabaseProviderImpl.get;
+    LocalDataSource localDataSource = LocalDataSource(databaseProvider);
+    SetupRepository repository = new SetupRepository(localDataSource);
     await repository.setupTournament(_playersNumber, _playersAstNumber,
         _matchesNumber, _tournamentName, _playersName, _matchesName);
   }

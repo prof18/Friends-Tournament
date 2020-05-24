@@ -16,6 +16,9 @@
 
 import 'dart:async';
 
+import 'package:friends_tournament/src/data/database/database_provider.dart';
+import 'package:friends_tournament/src/data/database/database_provider_impl.dart';
+import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/model/app/ui_final_score.dart';
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
@@ -91,7 +94,9 @@ class TournamentBloc {
   /// The match that is actually selected and visible in the UI.
   UIMatch _currentMatch;
 
-  final repository = TournamentRepository();
+  static DatabaseProvider databaseProvider = DatabaseProviderImpl.get;
+  static LocalDataSource localDataSource = LocalDataSource(databaseProvider);
+  final repository = TournamentRepository(localDataSource);
 
   _fetchInitialData() {
     // Current tournament

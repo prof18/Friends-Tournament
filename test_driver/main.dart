@@ -19,7 +19,8 @@ import 'dart:async';
 import 'package:flutter_driver/driver_extension.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'tournament_setup_db_tests.dart' as sqflite_test;
+import 'tournament_setup_db_tests.dart' as tournament_setup_db_tests;
+import 'tournament_repository_test.dart' as tournament_repository_test;
 
 void main() {
   final completer = Completer<String>();
@@ -27,7 +28,9 @@ void main() {
   tearDownAll(() => completer.complete(null));
 
   group('driver', () {
-    sqflite_test.main();
+    // TODO: enable again
+//    tournament_setup_db_tests.main();
+    tournament_repository_test.main();
   });
 }
 

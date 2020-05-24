@@ -227,8 +227,6 @@ class SetupRepository {
   Future save() async {
     print("Launching the save process");
 
-    // TODO: add first a check to control if there is a current tournament active. Just for control
-
     final dao = TournamentDao();
     final tournament = await localDataSource.getActiveTournament(dao);
     if (tournament != null) {
@@ -238,10 +236,6 @@ class SetupRepository {
     }
 
     await localDataSource.createBatch();
-
-
-
-
 
     // save tournament
     localDataSource.insertToBatch(_tournament, TournamentDao());
@@ -299,7 +293,5 @@ class SetupRepository {
   }
 }
 
-class AlreadyActiveTournamentException implements Exception {
-
-}
+class AlreadyActiveTournamentException implements Exception {}
 

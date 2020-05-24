@@ -19,7 +19,7 @@ import 'dart:async';
 import 'package:flutter_driver/driver_extension.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'sqflite_test.dart' as sqflite_test;
+import 'tournament_setup_db_tests.dart' as sqflite_test;
 
 void main() {
   final completer = Completer<String>();

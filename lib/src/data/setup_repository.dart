@@ -37,6 +37,8 @@ import 'package:friends_tournament/src/data/model/db/tournament_match.dart';
 import 'package:friends_tournament/src/data/model/db/tournament_player.dart';
 import 'package:friends_tournament/src/utils/id_generator.dart';
 
+import 'errors.dart';
+
 class SetupRepository {
   // Implement singleton
   // To get back it, simple call: MyClass myObj = new MyClass();
@@ -44,7 +46,7 @@ class SetupRepository {
   static final SetupRepository _singleton = new SetupRepository._internal();
 
   LocalDataSource localDataSource;
-  
+
   factory SetupRepository(LocalDataSource localDataSource) {
     _singleton.localDataSource = localDataSource;
     return _singleton;
@@ -81,8 +83,6 @@ class SetupRepository {
   int _matchesNumber;
   String _tournamentName;
 
-
-
   Future setupTournament(
       int playersNumber,
       int playersAstNumber,
@@ -116,9 +116,11 @@ class SetupRepository {
       String tournamentName,
       Map<int, String> playersName,
       Map<int, String> matchesName) {
+    if (playersAstNumber > playersNumber) {
+      throw TooMuchPlayersASTException();
+    }
 
-
-    // TODO: maybe add a sanity check with sizes
+    // TODO: check players AST number not equal to zero. Maybe do this check on the UI.
 
     this._playersNumber = playersNumber;
     this._playersAstNumber = playersAstNumber;
@@ -167,7 +169,7 @@ class SetupRepository {
       }
       var match = Match(matchId, matchName, isActiveMatch, index);
       if (matches.contains(match)) {
-        throw Exception("Two matches has the same id");
+        throw MatchesWithSameIdException();
       } else {
         matches.add(match);
         var tournamentMatch = TournamentMatch(_tournament.id, matchId);
@@ -225,14 +227,12 @@ class SetupRepository {
 
   @visibleForTesting
   Future save() async {
-    // TODO: launch exception is something happens?
     print("Launching the save process");
 
     final dao = TournamentDao();
     final tournament = await localDataSource.getActiveTournament(dao);
     if (tournament != null) {
       // There is an active tournament that should not be there!
-      // TODO: capture and handle exception
       throw AlreadyActiveTournamentException();
     }
 
@@ -293,6 +293,3 @@ class SetupRepository {
     await localDataSource.flushBatch();
   }
 }
-
-class AlreadyActiveTournamentException implements Exception {}
-

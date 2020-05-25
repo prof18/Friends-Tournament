@@ -24,12 +24,12 @@ import 'package:friends_tournament/src/data/model/db/match_session.dart';
 import 'package:friends_tournament/src/data/model/db/player_session.dart';
 import 'package:friends_tournament/src/data/setup_repository.dart';
 
-import 'test_tournament.dart';
+import '../utils/test_tournament.dart';
 
 void main() {
   group('Tournament Setup Tests', () {
 
-    // We provide these dependendies even if here is not used
+    // We provide these dependencies even if here is not used
     DatabaseProvider databaseProvider = DatabaseProviderImpl.get;
     LocalDataSource localDataSource = LocalDataSource(databaseProvider);
     final SetupRepository setupRepository = SetupRepository(localDataSource);

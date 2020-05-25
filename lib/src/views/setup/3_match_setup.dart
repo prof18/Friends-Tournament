@@ -18,8 +18,8 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc.dart';
-import 'package:friends_tournament/src/bloc/setup_bloc_provider.dart';
-import 'package:friends_tournament/src/bloc/tournament_bloc_provider.dart';
+import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
+import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
 import 'package:friends_tournament/src/ui/dialog_loader.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';

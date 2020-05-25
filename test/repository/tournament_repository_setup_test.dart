@@ -19,11 +19,14 @@ import 'package:friends_tournament/src/data/database/database_provider.dart';
 import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/setup_repository.dart';
 import 'package:friends_tournament/src/data/tournament_repository.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import 'fake_database_provider.dart';
-import 'test_tournament.dart';
+import '../utils/db/fake_database_provider.dart';
+import '../utils/test_tournament.dart';
 
 void main() {
+  sqfliteFfiInit();
+
   group('Tournament repository setup tests ->', () {
     TournamentRepository tournamentRepository;
     LocalDataSource localDataSource;
@@ -42,39 +45,41 @@ void main() {
           TestTournament.matchesName);
 
       tournamentRepository = TournamentRepository(localDataSource);
-
     });
 
     test('Number of UI Matches is correct', () async {
-      final tournament = await tournamentRepository.getCurrentActiveTournament();
-      final uiMatches = await tournamentRepository.getTournamentMatches(tournament.id);
+      final tournament =
+          await tournamentRepository.getCurrentActiveTournament();
+      final uiMatches =
+          await tournamentRepository.getTournamentMatches(tournament.id);
 
       expect(uiMatches.length, TestTournament.matchesNumber);
-
     });
 
     test('Number of UI Sessions is correct', () async {
-      final tournament = await tournamentRepository.getCurrentActiveTournament();
-      final uiMatches = await tournamentRepository.getTournamentMatches(tournament.id);
+      final tournament =
+          await tournamentRepository.getCurrentActiveTournament();
+      final uiMatches =
+          await tournamentRepository.getTournamentMatches(tournament.id);
 
       uiMatches.forEach((uiMatch) {
-
         final uiSessions = uiMatch.matchSessions;
 
         int sessionPerMatch =
-        (TestTournament.playersNumber / TestTournament.playersAstNumber)
-            .ceil();
+            (TestTournament.playersNumber / TestTournament.playersAstNumber)
+                .ceil();
 
         expect(uiSessions.length, sessionPerMatch);
-
       });
     });
 
     test('First match should be active', () async {
-      final tournament = await tournamentRepository.getCurrentActiveTournament();
-      final uiMatches = await tournamentRepository.getTournamentMatches(tournament.id);
+      final tournament =
+          await tournamentRepository.getCurrentActiveTournament();
+      final uiMatches =
+          await tournamentRepository.getTournamentMatches(tournament.id);
 
-      uiMatches.asMap().forEach((index, uiMatch)  {
+      uiMatches.asMap().forEach((index, uiMatch) {
         // The first match is active by default
         if (index == 0) {
           expect(uiMatch.isActive, 1);
@@ -85,10 +90,12 @@ void main() {
     });
 
     test('Players number for session is correct', () async {
-      final tournament = await tournamentRepository.getCurrentActiveTournament();
-      final uiMatches = await tournamentRepository.getTournamentMatches(tournament.id);
+      final tournament =
+          await tournamentRepository.getCurrentActiveTournament();
+      final uiMatches =
+          await tournamentRepository.getTournamentMatches(tournament.id);
 
-      uiMatches.forEach((uiMatch)  {
+      uiMatches.forEach((uiMatch) {
         final uiSessions = uiMatch.matchSessions;
 
         uiSessions.forEach((uiSession) {
@@ -99,10 +106,12 @@ void main() {
     });
 
     test('Players score should be zero', () async {
-      final tournament = await tournamentRepository.getCurrentActiveTournament();
-      final uiMatches = await tournamentRepository.getTournamentMatches(tournament.id);
+      final tournament =
+          await tournamentRepository.getCurrentActiveTournament();
+      final uiMatches =
+          await tournamentRepository.getTournamentMatches(tournament.id);
 
-      uiMatches.forEach((uiMatch)  {
+      uiMatches.forEach((uiMatch) {
         final uiSessions = uiMatch.matchSessions;
 
         uiSessions.forEach((uiSession) {
@@ -116,11 +125,12 @@ void main() {
     });
 
     test('Players combinations are correct', () async {
-      final tournament = await tournamentRepository.getCurrentActiveTournament();
-      final uiMatches = await tournamentRepository.getTournamentMatches(tournament.id);
+      final tournament =
+          await tournamentRepository.getCurrentActiveTournament();
+      final uiMatches =
+          await tournamentRepository.getTournamentMatches(tournament.id);
 
-      uiMatches.forEach((uiMatch)  {
-
+      uiMatches.forEach((uiMatch) {
         final matchPlayers = List<String>();
         final uiSessions = uiMatch.matchSessions;
 
@@ -134,7 +144,6 @@ void main() {
           });
 
           expect(sessionPlayers.length, TestTournament.playersAstNumber);
-
         });
 
         expect(matchPlayers.length, TestTournament.playersNumber);
@@ -142,6 +151,5 @@ void main() {
     });
 
     // TODO: add test to end the match and the tournament
-
   });
 }

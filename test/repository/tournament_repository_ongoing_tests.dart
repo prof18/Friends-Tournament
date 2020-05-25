@@ -19,12 +19,19 @@ import 'package:friends_tournament/src/data/database/database_provider.dart';
 import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/model/app/ui_final_score.dart';
 import 'package:friends_tournament/src/data/tournament_repository.dart';
+import 'package:sqflite_common/sqlite_api.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import 'ongoing_database_provider.dart';
-import 'test_tournament.dart';
+import '../utils/db/ongoing_database_provider.dart';
+import '../utils/test_tournament.dart';
+
 
 void main() {
-  group('Tournament repository ongoing tests ->', () {
+  // Init ffi loader if needed.
+  sqfliteFfiInit();
+
+  group('Tournament repository ongoing tests', () {
+
     LocalDataSource localDataSource;
     DatabaseProvider databaseProvider = DatabaseProviderFromSQL.get;
     localDataSource = LocalDataSource(databaseProvider);
@@ -58,5 +65,6 @@ void main() {
       expect(scores[3].score, uiScores[3].score);
 
     });
+
   });
 }

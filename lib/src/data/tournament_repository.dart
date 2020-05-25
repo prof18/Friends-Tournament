@@ -47,8 +47,6 @@ class TournamentRepository {
 
   /// -------
 
-  // TODO: handle error!
-
   Future<bool> isTournamentActive() async {
     final dao = TournamentDao();
     final tournament = await localDataSource.getActiveTournament(dao);
@@ -156,7 +154,6 @@ class TournamentRepository {
   }
 
   Future<List<UIScore>> getScore() async {
-    // TODO: handle error
     final List<Map> results = await localDataSource.getTournamentScore();
     final List<UIScore> finalScores = List<UIScore>();
     await Future.forEach(results, (row) async {
@@ -175,7 +172,6 @@ class TournamentRepository {
   }
 
   Future<List<UIScore>> finishTournament(Tournament tournament) async {
-    // TODO: extract tournament score
     final List<Map> results = await localDataSource.getTournamentScore();
     final List<UIScore> finalScores = List<UIScore>();
     await Future.forEach(results, (row) async {

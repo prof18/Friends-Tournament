@@ -25,6 +25,7 @@ import 'package:friends_tournament/src/data/database/dao/tournament_player_dao.d
 import 'package:friends_tournament/src/data/database/database_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common/sqlite_api.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class FakeDatabaseProvider implements DatabaseProvider {
   static final _instance = FakeDatabaseProvider._internal();
@@ -38,17 +39,23 @@ class FakeDatabaseProvider implements DatabaseProvider {
   Future _init() async {
 //    Sqflite.devSetDebugModeOn(true);
 
-    _db = await openDatabase(inMemoryDatabasePath, version: 1,
+    var factory = databaseFactoryFfi;
+    _db = await factory.openDatabase(
+      inMemoryDatabasePath,
+      options: OpenDatabaseOptions(
+        version: 1,
         onCreate: (Database db, int version) async {
-      await db.execute(MatchDao().createTableQuery);
-      await db.execute(MatchSessionDao().createTableQuery);
-      await db.execute(PlayerDao().createTableQuery);
-      await db.execute(PlayerSessionDao().createTableQuery);
-      await db.execute(SessionDao().createTableQuery);
-      await db.execute(TournamentDao().createTableQuery);
-      await db.execute(TournamentMatchDao().createTableQuery);
-      await db.execute(TournamentPlayerDao().createTableQuery);
-    });
+          await db.execute(MatchDao().createTableQuery);
+          await db.execute(MatchSessionDao().createTableQuery);
+          await db.execute(PlayerDao().createTableQuery);
+          await db.execute(PlayerSessionDao().createTableQuery);
+          await db.execute(SessionDao().createTableQuery);
+          await db.execute(TournamentDao().createTableQuery);
+          await db.execute(TournamentMatchDao().createTableQuery);
+          await db.execute(TournamentPlayerDao().createTableQuery);
+        },
+      ),
+    );
   }
 
   @override

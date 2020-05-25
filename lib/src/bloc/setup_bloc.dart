@@ -129,6 +129,12 @@ class SetupBloc {
     DatabaseProvider databaseProvider = DatabaseProviderImpl.get;
     LocalDataSource localDataSource = LocalDataSource(databaseProvider);
     SetupRepository repository = new SetupRepository(localDataSource);
+
+    // TODO: add a try/catch and report the error on a stream. In the UI, the setup process is restarted from scratch
+    //  - MatchesWithSameIdException
+    //  - TooMuchPlayersASTException -> do not start setup process from scratch
+    //  - AlreadyActiveTournamentException -> it should never happen! A setup process never starts if there is another ongoing tournament
+
     await repository.setupTournament(_playersNumber, _playersAstNumber,
         _matchesNumber, _tournamentName, _playersName, _matchesName);
   }

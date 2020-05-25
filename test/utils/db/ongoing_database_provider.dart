@@ -24,8 +24,9 @@ import 'package:friends_tournament/src/data/database/dao/tournament_match_dao.da
 import 'package:friends_tournament/src/data/database/dao/tournament_player_dao.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import 'test_tournament.dart';
+import '../test_tournament.dart';
 
 class DatabaseProviderFromSQL implements DatabaseProvider {
   static final _instance = DatabaseProviderFromSQL._internal();
@@ -39,32 +40,39 @@ class DatabaseProviderFromSQL implements DatabaseProvider {
   Future _init() async {
 //    Sqflite.devSetDebugModeOn(true);
 
-    _db = await openDatabase(inMemoryDatabasePath, version: 1,
+    var factory = databaseFactoryFfi;
+
+    _db = await factory.openDatabase(
+      inMemoryDatabasePath,
+      options: OpenDatabaseOptions(
+        version: 1,
         onCreate: (Database db, int version) async {
-      await db.execute(MatchDao().createTableQuery);
-      await db.execute(TestTournament.onGoingMatchesInsertQuery);
+          await db.execute(MatchDao().createTableQuery);
+          await db.execute(TestTournament.onGoingMatchesInsertQuery);
 
-      await db.execute(MatchSessionDao().createTableQuery);
-      await db.execute(TestTournament.onGoingMatchesSessionInsertQuery);
+          await db.execute(MatchSessionDao().createTableQuery);
+          await db.execute(TestTournament.onGoingMatchesSessionInsertQuery);
 
-      await db.execute(PlayerSessionDao().createTableQuery);
-      await db.execute(TestTournament.onGoingPlayerSessionInsertQuery);
+          await db.execute(PlayerSessionDao().createTableQuery);
+          await db.execute(TestTournament.onGoingPlayerSessionInsertQuery);
 
-      await db.execute(PlayerDao().createTableQuery);
-      await db.execute(TestTournament.onGoingPlayerInsertQuery);
+          await db.execute(PlayerDao().createTableQuery);
+          await db.execute(TestTournament.onGoingPlayerInsertQuery);
 
-      await db.execute(SessionDao().createTableQuery);
-      await db.execute(TestTournament.onGoingSessionInsertQuery);
+          await db.execute(SessionDao().createTableQuery);
+          await db.execute(TestTournament.onGoingSessionInsertQuery);
 
-      await db.execute(TournamentMatchDao().createTableQuery);
-      await db.execute(TestTournament.onGoingTournamentMatchInsertQuery);
+          await db.execute(TournamentMatchDao().createTableQuery);
+          await db.execute(TestTournament.onGoingTournamentMatchInsertQuery);
 
-      await db.execute(TournamentPlayerDao().createTableQuery);
-      await db.execute(TestTournament.onGoingTournamentPlayerInsertQuery);
+          await db.execute(TournamentPlayerDao().createTableQuery);
+          await db.execute(TestTournament.onGoingTournamentPlayerInsertQuery);
 
-      await db.execute(TournamentDao().createTableQuery);
-      await db.execute(TestTournament.onGoingTournamentInsertQuery);
-    });
+          await db.execute(TournamentDao().createTableQuery);
+          await db.execute(TestTournament.onGoingTournamentInsertQuery);
+        },
+      ),
+    );
   }
 
   @override

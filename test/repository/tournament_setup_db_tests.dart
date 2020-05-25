@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
+import 'package:flutter_test/flutter_test.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
 import 'package:friends_tournament/src/data/database/local_data_source.dart';
+import 'package:friends_tournament/src/data/errors.dart';
 import 'package:friends_tournament/src/data/setup_repository.dart';
 import 'package:friends_tournament/src/data/tournament_repository.dart';
-import 'package:test/test.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import 'fake_database_provider.dart';
-import 'test_tournament.dart';
+import '../utils/db/fake_database_provider.dart';
+import '../utils/test_tournament.dart';
 
 void main() {
+
+  sqfliteFfiInit();
 
   group('Tournament setup database checks ->', () {
     SetupRepository setupRepository;

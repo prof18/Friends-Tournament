@@ -71,4 +71,5 @@ class TestTournament {
   static final onGoingTournamentInsertQuery = '''
     INSERT INTO tournaments (id, name, players_number, players_ast_number, matches_number, is_active) VALUES ('945687886', 'Tournament	', '4', '2', '3', '1');  
   ''';
+
 }

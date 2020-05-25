@@ -101,6 +101,9 @@ class TournamentBloc {
   /// Retrieve the current active active tournament. Then fetches all the data
   /// required to show it to the user
   _fetchInitialData() {
+
+    // TODO: add a try/catch and report the result on a stream. Maybe show "something is wrong" and return to the setup process
+
     // Current tournament
     repository.getCurrentActiveTournament().then((tournament) {
       _activeTournament = tournament;
@@ -113,6 +116,10 @@ class TournamentBloc {
 
   /// Retrieves the UI objects of the current tournament
   _fetchTournamentMatches(Tournament tournament) {
+
+    // TODO: add a try/catch and report the result on a stream. Maybe show "something is wrong" and return to the setup process
+
+
     repository.getTournamentMatches(tournament.id).then((matchesList) {
       _tournamentMatches = matchesList;
 
@@ -128,7 +135,6 @@ class TournamentBloc {
       _currentMatchController.add(_currentMatch);
     }).catchError((error) {
       print(error);
-      // TODO: handle error?
     });
   }
 
@@ -153,8 +159,11 @@ class TournamentBloc {
     _tournamentMatchesController.add(_tournamentMatches);
   }
 
-  // TODO: handle error!
   Future<void> endMatch() async {
+
+    // TODO: add a try/catch and report the result on a stream. Maybe show "something is wrong" and return to the setup process
+
+
     // save the current progress on the database
     _currentMatch.isActive = 0;
     _currentMatch.isSelected = false;
@@ -182,6 +191,9 @@ class TournamentBloc {
   }
 
   Future<void> endTournament() async {
+
+    // TODO: add a try/catch and report the result on a stream. Maybe show "something is wrong" and return to the setup process
+
     final List<UIScore> finalScores =
         await repository.finishTournament(_activeTournament);
 
@@ -192,6 +204,9 @@ class TournamentBloc {
   }
 
   void _computeTempPodium() async {
+
+    // TODO: add a try/catch and report the result on a stream. Maybe show "something is wrong" and return to the setup process
+
     final List<UIScore> scores = await repository.getScore();
 
     List<UIPlayer> players =

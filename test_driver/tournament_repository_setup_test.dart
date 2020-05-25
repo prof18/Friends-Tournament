@@ -20,11 +20,11 @@ import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/setup_repository.dart';
 import 'package:friends_tournament/src/data/tournament_repository.dart';
 
-import 'FakeDatabaseProvider.dart';
+import 'fake_database_provider.dart';
 import 'test_tournament.dart';
 
 void main() {
-  group('Tournament repository tests ->', () {
+  group('Tournament repository setup tests ->', () {
     TournamentRepository tournamentRepository;
     LocalDataSource localDataSource;
 
@@ -42,8 +42,6 @@ void main() {
           TestTournament.matchesName);
 
       tournamentRepository = TournamentRepository(localDataSource);
-
-
 
     });
 

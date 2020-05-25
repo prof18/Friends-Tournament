@@ -98,6 +98,8 @@ class TournamentBloc {
   static LocalDataSource localDataSource = LocalDataSource(databaseProvider);
   final repository = TournamentRepository(localDataSource);
 
+  /// Retrieve the current active active tournament. Then fetches all the data
+  /// required to show it to the user
   _fetchInitialData() {
     // Current tournament
     repository.getCurrentActiveTournament().then((tournament) {
@@ -109,6 +111,7 @@ class TournamentBloc {
     });
   }
 
+  /// Retrieves the UI objects of the current tournament
   _fetchTournamentMatches(Tournament tournament) {
     repository.getTournamentMatches(tournament.id).then((matchesList) {
       _tournamentMatches = matchesList;
@@ -179,7 +182,8 @@ class TournamentBloc {
   }
 
   Future<void> endTournament() async {
-    final List<UIFinalScore> finalScores = await repository.finishTournament(_activeTournament);
+    final List<UIScore> finalScores =
+        await repository.finishTournament(_activeTournament);
 
     // TODO: decide what to do!
     print(finalScores);
@@ -187,16 +191,13 @@ class TournamentBloc {
     return;
   }
 
-  void _computeTempPodium() {
-    List<UIPlayer> players = List<UIPlayer>();
+  void _computeTempPodium() async {
+    final List<UIScore> scores = await repository.getScore();
 
-    // TODO: it's not working correctly when you open the app from session 3
-    _currentMatch.matchSessions.forEach((session) {
-      players.addAll(session.sessionPlayers);
-    });
+    List<UIPlayer> players =
+        scores.map((uiScore) => UIPlayer(id: uiScore.id, name: uiScore.name, score: uiScore.score));
 
-    players.sort((a, b) => a.score.compareTo(b.score));
-    players = players.reversed.toList().take(3).toList();
+    players = players.toList().take(3).toList();
 
     if (players.length == 3 &&
         players[0].score == 0 &&

@@ -16,8 +16,8 @@
 
 import 'package:friends_tournament/src/data/model/db/player.dart';
 
-class UIFinalScore extends Player {
+class UIScore extends Player {
   int score;
 
-  UIFinalScore({this.score, id, name}) : super(id, name);
+  UIScore({this.score, id, name}) : super(id, name);
 }

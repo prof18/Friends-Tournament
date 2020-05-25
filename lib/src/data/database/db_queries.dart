@@ -37,7 +37,7 @@ const getSessionPlayersQuery =
     "WHERE sessions.id = '<>' "
     "ORDER BY player_name;";
 
-const getFinalScoreQuery =
+const getTournamentScoreQuery =
     "SELECT id_player, sum(score) as final_score, players.name "
     "FROM player_session "
     "INNER JOIN players ON player_session.id_player = players.id "

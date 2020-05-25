@@ -225,6 +225,7 @@ class SetupRepository {
 
   @visibleForTesting
   Future save() async {
+    // TODO: launch exception is something happens?
     print("Launching the save process");
 
     final dao = TournamentDao();

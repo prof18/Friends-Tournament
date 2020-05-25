@@ -47,6 +47,8 @@ class TournamentRepository {
 
   /// -------
 
+  // TODO: handle error!
+
   Future<bool> isTournamentActive() async {
     final dao = TournamentDao();
     final tournament = await localDataSource.getActiveTournament(dao);
@@ -62,6 +64,7 @@ class TournamentRepository {
     return tournament;
   }
 
+  /// Retrieve the tournament data from the database and prepare the data for the UI
   Future<List<UIMatch>> getTournamentMatches(String tournamentID) async {
     // Query to get the matches
     final List<Map> dbMatches =
@@ -152,15 +155,35 @@ class TournamentRepository {
     return;
   }
 
-  Future<List<UIFinalScore>> finishTournament(Tournament tournament) async {
-    final List<Map> results = await localDataSource.getFinalScore();
-    final List<UIFinalScore> finalScores = List<UIFinalScore>();
+  Future<List<UIScore>> getScore() async {
+    // TODO: handle error
+    final List<Map> results = await localDataSource.getTournamentScore();
+    final List<UIScore> finalScores = List<UIScore>();
     await Future.forEach(results, (row) async {
       final idPlayer = row['id_player'];
       final finalScore = row['final_score'];
       final playerName = row['name'];
       finalScores.add(
-        UIFinalScore(
+        UIScore(
+          id: idPlayer,
+          name: playerName,
+          score: finalScore,
+        ),
+      );
+    });
+    return finalScores;
+  }
+
+  Future<List<UIScore>> finishTournament(Tournament tournament) async {
+    // TODO: extract tournament score
+    final List<Map> results = await localDataSource.getTournamentScore();
+    final List<UIScore> finalScores = List<UIScore>();
+    await Future.forEach(results, (row) async {
+      final idPlayer = row['id_player'];
+      final finalScore = row['final_score'];
+      final playerName = row['name'];
+      finalScores.add(
+        UIScore(
           id: idPlayer,
           name: playerName,
           score: finalScore,

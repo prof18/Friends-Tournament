@@ -20,7 +20,10 @@ import 'package:flutter_driver/driver_extension.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'tournament_setup_db_tests.dart' as tournament_setup_db_tests;
-import 'tournament_repository_test.dart' as tournament_repository_test;
+import 'tournament_repository_setup_test.dart'
+    as tournament_repository_setup_test;
+import 'tournament_repository_ongoing_tests.dart'
+    as tournament_repository_ongoing_test;
 
 void main() {
   final completer = Completer<String>();
@@ -30,7 +33,8 @@ void main() {
   group('driver', () {
     // TODO: enable again
 //    tournament_setup_db_tests.main();
-    tournament_repository_test.main();
+    // TODO: enable again
+//    tournament_repository_test.main();
+    tournament_repository_ongoing_test.main();
   });
 }
-

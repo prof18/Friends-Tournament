@@ -20,7 +20,7 @@ import 'package:friends_tournament/src/data/setup_repository.dart';
 import 'package:friends_tournament/src/data/tournament_repository.dart';
 import 'package:test/test.dart';
 
-import 'FakeDatabaseProvider.dart';
+import 'fake_database_provider.dart';
 import 'test_tournament.dart';
 
 void main() {

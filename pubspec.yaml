@@ -60,6 +60,7 @@ flutter:
     - players_icon.svg
     - players_ast_icon.svg
     - matches_icon.svg
+    - intro-art.svg
 
   fonts:
    - family:  CustomIcons

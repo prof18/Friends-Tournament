@@ -15,6 +15,8 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
@@ -24,7 +26,17 @@ import 'package:friends_tournament/src/data/tournament_repository.dart';
 import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
 import 'package:friends_tournament/src/views/welcome_screen.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // TODO: add here all the svg to preload
+  await precachePicture(
+      ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/intro-art.svg'),
+      null);
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   // This widget is the root of your application.

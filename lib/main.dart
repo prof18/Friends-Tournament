@@ -25,9 +25,10 @@ import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/tournament_repository.dart';
 import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
 import 'package:friends_tournament/src/views/welcome_screen.dart';
+import 'package:friends_tournament/style/app_style.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
 
   // TODO: add here all the svg to preload
@@ -72,7 +73,10 @@ class _MyAppState extends State<MyApp> {
             title: 'Flutter Demo',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
-              primarySwatch: Colors.blue,
+              primarySwatch: AppColors.blue,
+              textTheme: GoogleFonts.montserratTextTheme(
+                Theme.of(context).textTheme,
+              ),
             ),
             home: _isLoading
                 ? buildLoader()

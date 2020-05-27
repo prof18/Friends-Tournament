@@ -17,8 +17,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:friends_tournament/src/ui/utils.dart';
 import 'package:friends_tournament/src/views/setup/1_number_setup.dart';
+import 'package:friends_tournament/style/app_style.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Welcome extends StatefulWidget {
   @override
@@ -27,15 +28,12 @@ class Welcome extends StatefulWidget {
 
 // TODO: extract all design stuff into something
 class _WelcomeState extends State<Welcome> {
-  // TODO: extract to a generic file
-  final blue = hexToColor("#1838F9");
-
-
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Scaffold(
-        body: Container(
+    return Scaffold(
+      body: Padding(
+        padding: Margins.regular,
+        child: Container(
           width: double.infinity,
           height: double.infinity,
           child: Column(
@@ -44,7 +42,11 @@ class _WelcomeState extends State<Welcome> {
               Expanded(
                 flex: 4,
                 child: Container(
-                  padding: const EdgeInsets.only(top: 24, left: 24, right: 24),
+                  padding: const EdgeInsets.only(
+                    top: MarginsRaw.medium,
+                    left: MarginsRaw.medium,
+                    right: MarginsRaw.medium,
+                  ),
                   child: SvgPicture.asset(
                     'assets/intro-art.svg',
                   ),
@@ -53,7 +55,7 @@ class _WelcomeState extends State<Welcome> {
               Expanded(
                 flex: 6,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
+                  padding: Margins.regular,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -61,60 +63,71 @@ class _WelcomeState extends State<Welcome> {
                       FittedBox(
                         alignment: Alignment.centerLeft,
                         fit: BoxFit.scaleDown,
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.only(top: 12, left: 24, right: 24),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Friends",
-                                style: TextStyle(
-                                    fontSize: 54, fontWeight: FontWeight.bold),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Friends",
+                              style: GoogleFonts.nunito(
+                                textStyle: TextStyle(
+                                  fontSize: 48,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                              Text(
-                                "Tournament",
-                                style: TextStyle(
-                                    fontSize: 54, fontWeight: FontWeight.bold),
-                              )
-                            ],
-                          ),
+                            ),
+                            Text(
+                              "Tournament",
+                              style: GoogleFonts.nunito(
+                                textStyle: TextStyle(
+                                  fontSize: 48,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       Padding(
-                        padding:
-                            const EdgeInsets.only(left: 24, top: 12, bottom: 12),
+                        padding: const EdgeInsets.only(
+                          top: MarginsRaw.regular,
+                        ),
                         child: Container(
                           alignment: Alignment.topLeft,
                           decoration: BoxDecoration(
-                            color: blue,
-                            borderRadius: BorderRadius.circular(18.0),
+                            color: AppColors.blue,
+                            borderRadius:
+                                BorderRadius.circular(MarginsRaw.borderRadius),
                           ),
                           height: 6,
                           width: 60,
                         ),
                       ),
                       Padding(
-                        padding:
-                            const EdgeInsets.only(top: 8, left: 24, right: 24),
+                        padding: const EdgeInsets.only(
+                          top: MarginsRaw.regular,
+                        ),
                         child: Text(
                           "Start a new tournament with your friends",
-                          style: TextStyle(fontSize: 28),
+                          style: GoogleFonts.nunito(
+                            textStyle: TextStyle(fontSize: 28),
+                          ),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 24, top: 28),
+                        padding: const EdgeInsets.only(top: MarginsRaw.medium),
                         child: RaisedButton(
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                              side: BorderSide(color: blue)),
-                          color: blue,
+                              borderRadius: BorderRadius.circular(
+                                  MarginsRaw.borderRadius),
+                              side: BorderSide(color: AppColors.blue)),
+                          color: AppColors.blue,
                           textColor: Colors.white,
-                          padding: const EdgeInsets.all(16),
+                          padding: Margins.regular,
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => NumberSetup()),
+                              MaterialPageRoute(
+                                  builder: (context) => NumberSetup()),
                             );
                           },
                           child: Text(

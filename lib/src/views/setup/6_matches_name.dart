@@ -17,6 +17,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
@@ -24,13 +25,14 @@ import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
 import 'package:friends_tournament/src/ui/dialog_loader.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
 import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
+import 'package:friends_tournament/style/app_style.dart';
 
-class MatchSetup extends StatefulWidget {
+class MatchesName extends StatefulWidget {
   @override
-  _MatchSetupState createState() => _MatchSetupState();
+  _MatchesNameState createState() => _MatchesNameState();
 }
 
-class _MatchSetupState extends State<MatchSetup>
+class _MatchesNameState extends State<MatchesName>
     with SingleTickerProviderStateMixin {
   List<TextFieldWrapper> _textFieldsList = new List<TextFieldWrapper>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -82,10 +84,7 @@ class _MatchSetupState extends State<MatchSetup>
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: createBottomBar(),
-            )
+
           ],
         ),
       ),
@@ -105,17 +104,49 @@ class _MatchSetupState extends State<MatchSetup>
       }
     }
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+        Expanded(
+          flex: 3,
+          child: Padding(
+            padding: const EdgeInsets.only(top: MarginsRaw.regular),
+            child: SvgPicture.asset(
+              'assets/matches-art.svg',
+            ),
+          ),
+        ),
         Padding(
-          padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+          padding: const EdgeInsets.only(
+            top: MarginsRaw.regular,
+            bottom: MarginsRaw.small,
+          ),
           child: Text(
+            // TODO: localize
             "Matches",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 32),
+            style: TextStyle(
+              fontSize: 36,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+            top: MarginsRaw.regular,
+          ),
+          child: Container(
+            alignment: Alignment.topLeft,
+            decoration: BoxDecoration(
+              color: AppColors.blue,
+              borderRadius: BorderRadius.circular(
+                MarginsRaw.borderRadius,
+              ),
+            ),
+            height: 6,
+            width: 60,
           ),
         ),
         Expanded(
-          flex: 1,
+          flex: 7,
           child: ListView.builder(
             itemBuilder: (BuildContext context, int index) {
               return TextFieldTile(textFieldWrapper: _textFieldsList[index]);

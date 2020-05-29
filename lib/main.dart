@@ -25,19 +25,9 @@ import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/tournament_repository.dart';
 import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
 import 'package:friends_tournament/src/views/welcome_screen.dart';
-import 'package:friends_tournament/style/app_style.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  // TODO: add here all the svg to preload
-  await precachePicture(
-      ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/intro-art.svg'),
-      null);
-
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
   // This widget is the root of your application.
@@ -53,19 +43,47 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    // TODO: add error handling
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadData();
+    });
+  }
+
+  _loadData() async {
     DatabaseProvider databaseProvider = DatabaseProviderImpl.get;
     LocalDataSource localDataSource = LocalDataSource(databaseProvider);
     var repository = TournamentRepository(localDataSource);
-    repository.isTournamentActive().then((active) {
-      setState(() {
-        _isActive = active;
-        _isLoading = false;
-      });
+
+    var isActive = false;
+    try {
+      isActive = await repository.isTournamentActive();
+    } on Exception catch (_) {
+      // do nothing, we assume that the tournament is not active
+    }
+
+    await precachePicture(
+        ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/intro-art.svg'),
+        null);
+    await precachePicture(
+        ExactAssetPicture(
+            SvgPicture.svgStringDecoder, 'assets/players_art.svg'),
+        null);
+    await precachePicture(
+        ExactAssetPicture(
+            SvgPicture.svgStringDecoder, 'assets/player-ast-art.svg'),
+        null);
+    await precachePicture(
+        ExactAssetPicture(
+            SvgPicture.svgStringDecoder, 'assets/matches-art.svg'),
+        null);
+
+    setState(() {
+      _isActive = isActive;
+      _isLoading = false;
     });
   }
 
   @override
+  // TODO: change theme and name
   Widget build(BuildContext context) {
     return SetupBlocProvider(
       child: TournamentBlocProvider(
@@ -73,7 +91,7 @@ class _MyAppState extends State<MyApp> {
             title: 'Flutter Demo',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
-              primarySwatch: AppColors.blue,
+              primarySwatch: Colors.blue,
               textTheme: GoogleFonts.montserratTextTheme(
                 Theme.of(context).textTheme,
               ),

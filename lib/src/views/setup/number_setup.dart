@@ -19,7 +19,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/ui/slide_left_route.dart';
 import 'package:friends_tournament/src/ui/utils.dart';
-import 'package:friends_tournament/src/views/setup/2_player_setup.dart';
+import 'package:friends_tournament/src/views/setup/5_players_name.dart';
+import 'package:friends_tournament/style/app_style.dart';
 
 class NumberSetup extends StatefulWidget {
   @override
@@ -30,9 +31,11 @@ class _NumberSetupState extends State<NumberSetup> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   // Text Fields Controllers
-  final TextEditingController _tournamentController = new TextEditingController();
+  final TextEditingController _tournamentController =
+      new TextEditingController();
   final TextEditingController _playersController = new TextEditingController();
-  final TextEditingController _playersAstController = new TextEditingController();
+  final TextEditingController _playersAstController =
+      new TextEditingController();
   final TextEditingController _matchesController = new TextEditingController();
 
   // Text Fields Focus
@@ -44,10 +47,10 @@ class _NumberSetupState extends State<NumberSetup> {
   @override
   void initState() {
     super.initState();
-   _tournamentFocusNode = FocusNode();
-   _playersFocusNode = FocusNode();
-   _playersAstFocusNode = FocusNode();
-   _matchesFocusNode = FocusNode();
+    _tournamentFocusNode = FocusNode();
+    _playersFocusNode = FocusNode();
+    _playersAstFocusNode = FocusNode();
+    _matchesFocusNode = FocusNode();
   }
 
   @override
@@ -100,7 +103,7 @@ class _NumberSetupState extends State<NumberSetup> {
 
     Navigator.push(
       context,
-      SlideLeftRoute(page: PlayerSetup()),
+      SlideLeftRoute(page: PlayersName()),
     );
   }
 
@@ -144,7 +147,8 @@ class _NumberSetupState extends State<NumberSetup> {
                         textInputAction: TextInputAction.next,
                         focusNode: _tournamentFocusNode,
                         onSubmitted: (value) {
-                          changeTextFieldFocus(context, _tournamentFocusNode, _playersFocusNode);
+                          changeTextFieldFocus(
+                              context, _tournamentFocusNode, _playersFocusNode);
                         },
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
@@ -163,17 +167,49 @@ class _NumberSetupState extends State<NumberSetup> {
                       Flexible(
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),
-                          child: TextField(
-                            controller: _playersController,
-                            keyboardType: TextInputType.number,
-                            textInputAction: TextInputAction.next,
-                            focusNode: _playersFocusNode,
-                            onSubmitted: (value) {
-                              changeTextFieldFocus(context, _playersFocusNode, _playersAstFocusNode);
-                            },
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Number of players',
+                          child: Material(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(16.0)),
+                            elevation: 16,
+                            child: TextField(
+                              controller: _playersController,
+                              keyboardType: TextInputType.number,
+                              textInputAction: TextInputAction.next,
+                              focusNode: _playersFocusNode,
+                              onSubmitted: (value) {
+                                changeTextFieldFocus(context, _playersFocusNode,
+                                    _playersAstFocusNode);
+                              },
+                              decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(16.0),
+                                      ),
+                                      borderSide:
+                                          BorderSide(color: Colors.transparent)),
+                                  border: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(16.0),
+                                      ),
+                                      borderSide:
+                                          BorderSide(color: Colors.transparent)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(16.0),
+                                      ),
+                                      borderSide:
+                                          BorderSide(color: Colors.transparent)),
+                                  filled: true,
+                                  hintStyle: TextStyle(color: Colors.grey[800]),
+                                  // TODO: localize
+                                  hintText: 'Number of players',
+                                  fillColor: Colors.white70),
+//                              decoration: InputDecoration(
+//                                filled: true,
+//                                fillColor: Colors.white,
+//                                border: InputBorder.none,
+//                                labelText: 'Number of players',
+//                              ),
                             ),
                           ),
                         ),
@@ -198,7 +234,8 @@ class _NumberSetupState extends State<NumberSetup> {
                             textInputAction: TextInputAction.next,
                             focusNode: _playersAstFocusNode,
                             onSubmitted: (value) {
-                              changeTextFieldFocus(context, _playersAstFocusNode, _matchesFocusNode);
+                              changeTextFieldFocus(context,
+                                  _playersAstFocusNode, _matchesFocusNode);
                             },
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),

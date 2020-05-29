@@ -18,19 +18,21 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
 import 'package:friends_tournament/src/ui/slide_left_route.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
-import 'package:friends_tournament/src/views/setup/3_match_setup.dart';
+import 'package:friends_tournament/src/views/setup/6_matches_name.dart';
+import 'package:friends_tournament/style/app_style.dart';
 
-class PlayerSetup extends StatefulWidget {
+class PlayersName extends StatefulWidget {
   @override
-  _PlayerSetupState createState() => _PlayerSetupState();
+  _PlayersNameState createState() => _PlayersNameState();
 }
 
-class _PlayerSetupState extends State<PlayerSetup> {
+class _PlayersNameState extends State<PlayersName> {
   List<TextFieldWrapper> _textFieldsList = new List<TextFieldWrapper>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   SetupBloc _setupBloc;
@@ -64,10 +66,6 @@ class _PlayerSetupState extends State<PlayerSetup> {
                         return renderTextFields(playersNumber, snapshot.data);
                       })),
             ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: createBottomBar(),
-            )
           ],
         ),
       ),
@@ -86,25 +84,64 @@ class _PlayerSetupState extends State<PlayerSetup> {
         _textFieldsList.add(textFieldWrapper);
       }
     }
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
-          child: Text(
-            "Players",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 32),
+    return Padding(
+      padding: Margins.regular,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            flex: 3,
+            child: Padding(
+              padding: const EdgeInsets.only(top: MarginsRaw.regular),
+              child: SvgPicture.asset(
+                'assets/players_art.svg',
+              ),
+            ),
           ),
-        ),
-        Expanded(
-          flex: 1,
-          child: ListView.builder(
-              itemBuilder: (BuildContext context, int index) {
-                return TextFieldTile(textFieldWrapper: _textFieldsList[index]);
-              },
-              itemCount: _textFieldsList.length),
-        ),
-      ],
+          Padding(
+            padding: const EdgeInsets.only(
+              top: MarginsRaw.regular,
+              bottom: MarginsRaw.small,
+            ),
+            child: Text(
+              // TODO: localize
+              "Players",
+              style: TextStyle(
+                fontSize: 36,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              top: MarginsRaw.regular,
+            ),
+            child: Container(
+              alignment: Alignment.topLeft,
+              decoration: BoxDecoration(
+                color: AppColors.blue,
+                borderRadius: BorderRadius.circular(
+                  MarginsRaw.borderRadius,
+                ),
+              ),
+              height: 6,
+              width: 60,
+            ),
+          ),
+          Expanded(
+            flex: 7,
+            child: Padding(
+              padding: const EdgeInsets.only(top: MarginsRaw.regular),
+              child: ListView.builder(
+                  itemBuilder: (BuildContext context, int index) {
+                    return TextFieldTile(
+                        textFieldWrapper: _textFieldsList[index]);
+                  },
+                  itemCount: _textFieldsList.length),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -153,6 +190,6 @@ class _PlayerSetupState extends State<PlayerSetup> {
           .showSnackBar(SnackBar(content: Text('Complete all the fields')));
       return;
     }
-    Navigator.push(context, SlideLeftRoute(page: MatchSetup()));
+    Navigator.push(context, SlideLeftRoute(page: MatchesName()));
   }
 }

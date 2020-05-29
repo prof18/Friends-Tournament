@@ -27,6 +27,6 @@ Color hexToColor(String code) {
 
 BoxDecoration getWidgetBorder() {
   return BoxDecoration(
-      border: new Border.all(color: Colors.blueAccent)
+      border: new Border.all(color: Colors.blueAccent, width: 5)
   );
 }

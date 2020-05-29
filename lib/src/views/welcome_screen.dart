@@ -17,7 +17,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:friends_tournament/src/views/setup/1_number_setup.dart';
+import 'package:friends_tournament/src/views/setup/1_tournament_name.dart';
+import 'package:friends_tournament/src/views/setup/number_setup.dart';
+import 'package:friends_tournament/src/views/setup/setup_container.dart';
 import 'package:friends_tournament/style/app_style.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -70,7 +72,7 @@ class _WelcomeState extends State<Welcome> {
                               "Friends",
                               style: GoogleFonts.nunito(
                                 textStyle: TextStyle(
-                                  fontSize: 48,
+                                  fontSize: 42,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -79,7 +81,7 @@ class _WelcomeState extends State<Welcome> {
                               "Tournament",
                               style: GoogleFonts.nunito(
                                 textStyle: TextStyle(
-                                  fontSize: 48,
+                                  fontSize: 42,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -109,12 +111,12 @@ class _WelcomeState extends State<Welcome> {
                         child: Text(
                           "Start a new tournament with your friends",
                           style: GoogleFonts.nunito(
-                            textStyle: TextStyle(fontSize: 28),
+                            textStyle: TextStyle(fontSize: 24),
                           ),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: MarginsRaw.medium),
+                        padding: const EdgeInsets.only(top: MarginsRaw.regular),
                         child: RaisedButton(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
@@ -127,7 +129,7 @@ class _WelcomeState extends State<Welcome> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => NumberSetup()),
+                                  builder: (context) => SetupContainer()),
                             );
                           },
                           child: Text(

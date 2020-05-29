@@ -16,6 +16,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
+import 'package:friends_tournament/style/app_style.dart';
 
 class TextFieldTile extends StatefulWidget {
   final TextFieldWrapper textFieldWrapper;
@@ -37,7 +38,10 @@ class _TextFieldTileState extends State<TextFieldTile> {
   Widget build(BuildContext context) {
     return Material(
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.only(
+          top: MarginsRaw.small,
+          bottom: MarginsRaw.small,
+        ),
         child: Container(
           child: TextField(
               controller: widget.textFieldWrapper.textEditingController,

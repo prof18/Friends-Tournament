@@ -16,6 +16,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
+import 'package:friends_tournament/src/ui/text_field_decoration.dart';
 import 'package:friends_tournament/style/app_style.dart';
 
 class TextFieldTile extends StatefulWidget {
@@ -36,19 +37,21 @@ class TextFieldTile extends StatefulWidget {
 class _TextFieldTileState extends State<TextFieldTile> {
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Padding(
-        padding: const EdgeInsets.only(
-          top: MarginsRaw.small,
-          bottom: MarginsRaw.small,
-        ),
-        child: Container(
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: MarginsRaw.small,
+        bottom: MarginsRaw.small,
+      ),
+      child: Container(
+        child: Material(
+          elevation: MarginsRaw.elevation,
+          borderRadius: BorderRadius.all(
+            Radius.circular(MarginsRaw.borderRadius),
+          ),
           child: TextField(
-              controller: widget.textFieldWrapper.textEditingController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: widget.textFieldWrapper.label,
-              )),
+            controller: widget.textFieldWrapper.textEditingController,
+            decoration: getTextFieldDecoration(widget.textFieldWrapper.label),
+          ),
         ),
       ),
     );

@@ -86,7 +86,7 @@ class TournamentName extends StatelessWidget implements SetupPage {
                     ),
                   ),
                   Material(
-                    elevation: 8,
+                    elevation: MarginsRaw.elevation,
                     borderRadius: BorderRadius.all(
                       Radius.circular(MarginsRaw.borderRadius),
                     ),

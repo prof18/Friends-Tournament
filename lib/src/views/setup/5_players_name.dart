@@ -29,10 +29,12 @@ import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/style/app_style.dart';
 
 class PlayersName extends StatelessWidget implements SetupPage {
-  List<TextFieldWrapper> _textFieldsList = new List<TextFieldWrapper>();
+  final List<TextFieldWrapper> _textFieldsList = new List<TextFieldWrapper>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   SetupBloc _setupBloc;
-  Map<int, String> _savedValues = new HashMap();
+  final Map<int, String> _savedValues = new HashMap();
+
+  PlayersName(this._setupBloc);
 
   @override
   Widget build(BuildContext context) {
@@ -55,12 +57,14 @@ class PlayersName extends StatelessWidget implements SetupPage {
           children: <Widget>[
             Expanded(
               child: Container(
-                  child: StreamBuilder(
-                      initialData: Map<int, String>(),
-                      stream: _setupBloc.getPlayersName,
-                      builder: (context, snapshot) {
-                        return renderTextFields(playersNumber, snapshot.data);
-                      })),
+                child: StreamBuilder(
+                  initialData: Map<int, String>(),
+                  stream: _setupBloc.getPlayersName,
+                  builder: (context, snapshot) {
+                    return renderTextFields(playersNumber, snapshot.data);
+                  },
+                ),
+              ),
             ),
           ],
         ),
@@ -70,6 +74,7 @@ class PlayersName extends StatelessWidget implements SetupPage {
 
   Widget renderTextFields(int playersNumber, Map<int, String> playersName) {
     if (_textFieldsList.length != playersNumber) {
+      _textFieldsList.clear();
       for (int i = 0; i < playersNumber; i++) {
         TextFieldWrapper textFieldWrapper =
             new TextFieldWrapper(TextEditingController(), "Player ${i + 1}");
@@ -141,29 +146,6 @@ class PlayersName extends StatelessWidget implements SetupPage {
     );
   }
 
-  Widget createBottomBar() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
-        FloatingActionButton(
-          heroTag: "btn1",
-          child: Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            saveValues();
-//            Navigator.pop(context);
-          },
-        ),
-        FloatingActionButton(
-          heroTag: "btn2",
-          child: Icon(Icons.arrow_forward_ios),
-          onPressed: () {
-            goToNextPage();
-          },
-        )
-      ],
-    );
-  }
-
   void saveValues() {
     for (int i = 0; i < _textFieldsList.length; i++) {
       TextFieldWrapper textField = _textFieldsList[i];
@@ -180,24 +162,28 @@ class PlayersName extends StatelessWidget implements SetupPage {
   }
 
   void goToNextPage() {
-    saveValues();
-    if (_savedValues.length != _textFieldsList.length) {
-      _scaffoldKey.currentState
-          .showSnackBar(SnackBar(content: Text('Complete all the fields')));
-      return;
-    }
 //    Navigator.push(context, SlideLeftRoute(page: MatchesName()));
   }
 
   @override
   bool onBackPressed() {
-    // TODO: implement onBackPressed
-    throw UnimplementedError();
+    saveValues();
+    return true;
   }
 
   @override
   bool onNextPressed() {
     // TODO: implement onNextPressed
-    throw UnimplementedError();
+    saveValues();
+    if (_savedValues.length != _textFieldsList.length) {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          // TODO: localize
+          content: Text("Please, don't leave the player anonymous 🙏🏻"),
+        ),
+      );
+      return false;
+    }
+    return true;
   }
 }

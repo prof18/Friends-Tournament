@@ -29,6 +29,8 @@ class MarginsRaw {
   static const medium = 24.0;
 
   static const borderRadius = 18.0;
+
+  static const elevation = 6.0;
 }
 
 class AppColors {

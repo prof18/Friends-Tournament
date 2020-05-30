@@ -37,7 +37,7 @@ class SetupCounterWidget extends StatelessWidget {
       initialData: minValue,
       builder: (context, snapshot) {
         return Material(
-          elevation: 6,
+          elevation: MarginsRaw.elevation,
           borderRadius: BorderRadius.all(
             Radius.circular(MarginsRaw.borderRadius),
           ),

@@ -101,10 +101,10 @@ class _NumberSetupState extends State<NumberSetup> {
     setupBloc.setPlayersAstNumber.add(int.parse(_playersAstController.text));
     setupBloc.setMatchesNumber.add(int.parse(_matchesController.text));
 
-    Navigator.push(
-      context,
-      SlideLeftRoute(page: PlayersName()),
-    );
+//    Navigator.push(
+//      context,
+//      SlideLeftRoute(page: PlayersName()),
+//    );
   }
 
   Widget renderBottomBar() {

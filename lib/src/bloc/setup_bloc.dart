@@ -125,6 +125,8 @@ class SetupBloc {
     _matchesName = value;
   }
 
+  int getCurrentPlayersNumber() => _playersNumber != null ? _playersNumber : 0;
+
   Future<void> setupTournament() async {
     DatabaseProvider databaseProvider = DatabaseProviderImpl.get;
     LocalDataSource localDataSource = LocalDataSource(databaseProvider);

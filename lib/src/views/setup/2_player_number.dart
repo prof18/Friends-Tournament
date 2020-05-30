@@ -17,23 +17,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:friends_tournament/src/bloc/setup_bloc.dart';
+import 'package:friends_tournament/src/ui/setup_counter_widget.dart';
 import 'package:friends_tournament/src/ui/utils.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/style/app_style.dart';
 
 class PlayersNumber extends StatelessWidget implements SetupPage {
+  final SetupBloc _setupBloc;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  PlayersNumber(this._setupBloc);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white12,
       body: SafeArea(
-        child: Container(
-          decoration: getWidgetBorder(),
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                  child: Padding(
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: Padding(
                 padding: Margins.regular,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,50 +83,9 @@ class PlayersNumber extends StatelessWidget implements SetupPage {
                         width: 60,
                       ),
                     ),
-                    Material(
-                      elevation: 16,
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(MarginsRaw.borderRadius)),
-                      child: TextField(
-//                      controller: _playersController,
-                        keyboardType: TextInputType.number,
-                        textInputAction: TextInputAction.next,
-//                      focusNode: _playersFocusNode,
-//                      onSubmitted: (value) {
-//                        changeTextFieldFocus(context, _playersFocusNode,
-//                            _playersAstFocusNode);
-//                      },
-                        decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(16.0),
-                                ),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                            border: OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(16.0),
-                                ),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(16.0),
-                                ),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                            filled: true,
-                            hintStyle: TextStyle(color: Colors.grey[800]),
-                            // TODO: localize
-                            hintText: 'Number of players',
-                            fillColor: Colors.white70),
-//                              decoration: InputDecoration(
-//                                filled: true,
-//                                fillColor: Colors.white,
-//                                border: InputBorder.none,
-//                                labelText: 'Number of players',
-//                              ),
-                      ),
+                    SetupCounterWidget(
+                      inputStream: _setupBloc.setPlayersNumber,
+                      outputStream: _setupBloc.getPlayersNumber,
                     ),
                     Expanded(
                       flex: 4,
@@ -129,10 +93,9 @@ class PlayersNumber extends StatelessWidget implements SetupPage {
                     )
                   ],
                 ),
-              )),
-//            createBottomBar()
-            ],
-          ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -140,15 +103,18 @@ class PlayersNumber extends StatelessWidget implements SetupPage {
 
   @override
   bool onBackPressed() {
-    // TODO: implement onBackPressed
-    throw UnimplementedError();
+    return true;
   }
 
   @override
   bool onNextPressed() {
-    // TODO: implement onNextPressed
-    throw UnimplementedError();
+    if (_setupBloc.getCurrentPlayersNumber() != 0) {
+      return true;
+    } else {
+      // TODO: localize
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text("You can't play a tournament with zero players :(")));
+      return false;
+    }
   }
-
-
 }

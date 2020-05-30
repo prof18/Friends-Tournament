@@ -53,7 +53,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer> {
       setState(() {
         _allPages = <SetupPage>[
           TournamentName(setupBloc),
-          PlayersNumber(),
+          PlayersNumber(setupBloc),
           PlayersAST(),
           MatchesNumber(),
           PlayersName(),

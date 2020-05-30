@@ -69,8 +69,14 @@ class SetupBloc {
   * ************** */
 
   SetupBloc() {
+    // Default values
+
     /// The min value for a meaningful match is two players
     _playersAstNumberController.value = 2;
+    /// The min value for a meaningful tournament is one
+
+    _matchesNumberController.value = 1;
+
     _playersNumberController.stream.listen(_setPlayersNumber);
     _playersAstNumberController.stream.listen(_setPlayersAstNumber);
     _matchesNumberController.stream.listen(_setMatchesNumber);

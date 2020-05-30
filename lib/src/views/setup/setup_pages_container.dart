@@ -55,7 +55,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer> {
           TournamentName(setupBloc),
           PlayersNumber(setupBloc),
           PlayersAST(setupBloc),
-          MatchesNumber(),
+          MatchesNumber(setupBloc),
           PlayersName(),
           MatchesName()
         ];

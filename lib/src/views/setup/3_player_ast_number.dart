@@ -96,7 +96,6 @@ class PlayersAST extends StatelessWidget implements SetupPage {
                 ],
               ),
             )),
-//            createBottomBar()
           ],
         ),
       ),

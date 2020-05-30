@@ -18,14 +18,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/ui/utils.dart';
+import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/style/app_style.dart';
 
-class PlayersNumber extends StatefulWidget {
-  @override
-  _PlayersNumberState createState() => _PlayersNumberState();
-}
+class PlayersNumber extends StatelessWidget implements SetupPage {
 
-class _PlayersNumberState extends State<PlayersNumber> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,102 +34,102 @@ class _PlayersNumberState extends State<PlayersNumber> {
             children: <Widget>[
               Expanded(
                   child: Padding(
-                    padding: Margins.regular,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Expanded(
-                          flex: 6,
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: MarginsRaw.regular),
-                            child: SvgPicture.asset(
-                              'assets/players_art.svg',
-                            ),
+                padding: Margins.regular,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 6,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: MarginsRaw.regular),
+                        child: SvgPicture.asset(
+                          'assets/players_art.svg',
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: MarginsRaw.regular,
+                        bottom: MarginsRaw.small,
+                      ),
+                      child: Text(
+                        // TODO: localize
+                        "Number of players",
+                        style: TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: MarginsRaw.medium,
+                        bottom: MarginsRaw.medium,
+                      ),
+                      child: Container(
+                        alignment: Alignment.topLeft,
+                        decoration: BoxDecoration(
+                          color: AppColors.blue,
+                          borderRadius: BorderRadius.circular(
+                            MarginsRaw.borderRadius,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: MarginsRaw.regular,
-                            bottom: MarginsRaw.small,
-                          ),
-                          child: Text(
-                            // TODO: localize
-                            "Number of players",
-                            style: TextStyle(
-                              fontSize: 36,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: MarginsRaw.medium,
-                            bottom: MarginsRaw.medium,
-                          ),
-                          child: Container(
-                            alignment: Alignment.topLeft,
-                            decoration: BoxDecoration(
-                              color: AppColors.blue,
-                              borderRadius: BorderRadius.circular(
-                                MarginsRaw.borderRadius,
-                              ),
-                            ),
-                            height: 6,
-                            width: 60,
-                          ),
-                        ),
-                        Material(
-                          elevation: 16,
-                          borderRadius: BorderRadius.all(Radius.circular(MarginsRaw.borderRadius)),
-                          child: TextField(
+                        height: 6,
+                        width: 60,
+                      ),
+                    ),
+                    Material(
+                      elevation: 16,
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(MarginsRaw.borderRadius)),
+                      child: TextField(
 //                      controller: _playersController,
-                            keyboardType: TextInputType.number,
-                            textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
 //                      focusNode: _playersFocusNode,
 //                      onSubmitted: (value) {
 //                        changeTextFieldFocus(context, _playersFocusNode,
 //                            _playersAstFocusNode);
 //                      },
-                            decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                    borderRadius: const BorderRadius.all(
-                                      const Radius.circular(16.0),
-                                    ),
-                                    borderSide:
+                        decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(16.0),
+                                ),
+                                borderSide:
                                     BorderSide(color: Colors.transparent)),
-                                border: OutlineInputBorder(
-                                    borderRadius: const BorderRadius.all(
-                                      const Radius.circular(16.0),
-                                    ),
-                                    borderSide:
+                            border: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(16.0),
+                                ),
+                                borderSide:
                                     BorderSide(color: Colors.transparent)),
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius: const BorderRadius.all(
-                                      const Radius.circular(16.0),
-                                    ),
-                                    borderSide:
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(16.0),
+                                ),
+                                borderSide:
                                     BorderSide(color: Colors.transparent)),
-                                filled: true,
-                                hintStyle: TextStyle(color: Colors.grey[800]),
-                                // TODO: localize
-                                hintText: 'Number of players',
-                                fillColor: Colors.white70),
+                            filled: true,
+                            hintStyle: TextStyle(color: Colors.grey[800]),
+                            // TODO: localize
+                            hintText: 'Number of players',
+                            fillColor: Colors.white70),
 //                              decoration: InputDecoration(
 //                                filled: true,
 //                                fillColor: Colors.white,
 //                                border: InputBorder.none,
 //                                labelText: 'Number of players',
 //                              ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 4,
-                          child: Container(),
-                        )
-                      ],
+                      ),
                     ),
-                  )
-              ),
+                    Expanded(
+                      flex: 4,
+                      child: Container(),
+                    )
+                  ],
+                ),
+              )),
 //            createBottomBar()
             ],
           ),
@@ -140,4 +137,18 @@ class _PlayersNumberState extends State<PlayersNumber> {
       ),
     );
   }
+
+  @override
+  bool onBackPressed() {
+    // TODO: implement onBackPressed
+    throw UnimplementedError();
+  }
+
+  @override
+  bool onNextPressed() {
+    // TODO: implement onNextPressed
+    throw UnimplementedError();
+  }
+
+
 }

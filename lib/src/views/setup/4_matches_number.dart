@@ -18,14 +18,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/ui/utils.dart';
+import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/style/app_style.dart';
 
-class MatchesNumber extends StatefulWidget {
-  @override
-  _MatchesNumberState createState() => _MatchesNumberState();
-}
+class MatchesNumber extends StatelessWidget implements SetupPage {
 
-class _MatchesNumberState extends State<MatchesNumber> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,5 +136,17 @@ class _MatchesNumberState extends State<MatchesNumber> {
         ),
       ),
     );
+  }
+
+  @override
+  bool onBackPressed() {
+    // TODO: implement onBackPressed
+    throw UnimplementedError();
+  }
+
+  @override
+  bool onNextPressed() {
+    // TODO: implement onNextPressed
+    throw UnimplementedError();
   }
 }

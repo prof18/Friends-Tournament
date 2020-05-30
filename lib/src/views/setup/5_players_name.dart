@@ -25,14 +25,10 @@ import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
 import 'package:friends_tournament/src/ui/slide_left_route.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
 import 'package:friends_tournament/src/views/setup/6_matches_name.dart';
+import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/style/app_style.dart';
 
-class PlayersName extends StatefulWidget {
-  @override
-  _PlayersNameState createState() => _PlayersNameState();
-}
-
-class _PlayersNameState extends State<PlayersName> {
+class PlayersName extends StatelessWidget implements SetupPage {
   List<TextFieldWrapper> _textFieldsList = new List<TextFieldWrapper>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   SetupBloc _setupBloc;
@@ -154,7 +150,7 @@ class _PlayersNameState extends State<PlayersName> {
           child: Icon(Icons.arrow_back_ios),
           onPressed: () {
             saveValues();
-            Navigator.pop(context);
+//            Navigator.pop(context);
           },
         ),
         FloatingActionButton(
@@ -190,6 +186,18 @@ class _PlayersNameState extends State<PlayersName> {
           .showSnackBar(SnackBar(content: Text('Complete all the fields')));
       return;
     }
-    Navigator.push(context, SlideLeftRoute(page: MatchesName()));
+//    Navigator.push(context, SlideLeftRoute(page: MatchesName()));
+  }
+
+  @override
+  bool onBackPressed() {
+    // TODO: implement onBackPressed
+    throw UnimplementedError();
+  }
+
+  @override
+  bool onNextPressed() {
+    // TODO: implement onNextPressed
+    throw UnimplementedError();
   }
 }

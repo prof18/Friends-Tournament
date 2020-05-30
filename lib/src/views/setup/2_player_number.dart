@@ -19,7 +19,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/ui/setup_counter_widget.dart';
-import 'package:friends_tournament/src/ui/utils.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/style/app_style.dart';
 

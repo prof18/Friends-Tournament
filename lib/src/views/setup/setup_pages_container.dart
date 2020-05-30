@@ -18,6 +18,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
+import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
+import 'package:friends_tournament/src/bloc/setup_bloc.dart';
+import 'package:friends_tournament/src/ui/dialog_loader.dart';
 import 'package:friends_tournament/src/ui/slide_dots.dart';
 import 'package:friends_tournament/src/views/setup/1_tournament_name.dart';
 import 'package:friends_tournament/src/views/setup/2_player_number.dart';
@@ -25,6 +28,8 @@ import 'package:friends_tournament/src/views/setup/3_player_ast_number.dart';
 import 'package:friends_tournament/src/views/setup/5_players_name.dart';
 import 'package:friends_tournament/src/views/setup/6_matches_name.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
+import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
+import 'package:friends_tournament/style/app_style.dart';
 
 import '4_matches_number.dart';
 
@@ -36,7 +41,8 @@ class SetupPagesContainer extends StatefulWidget {
 
 // TODO: remember to dispose the bloc when exit
 
-class _SetupPagesContainerState extends State<SetupPagesContainer> {
+class _SetupPagesContainerState extends State<SetupPagesContainer>
+    with SingleTickerProviderStateMixin {
   int _currentPageIndex = 0;
   final PageController _pageController = PageController(initialPage: 0);
 
@@ -45,19 +51,26 @@ class _SetupPagesContainerState extends State<SetupPagesContainer> {
 
   List<SetupPage> _allPages;
 
+  SetupBloc _setupBloc;
+
+  AnimationController _controller;
+
   @override
   void initState() {
     super.initState();
+    _controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 450));
+
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      var setupBloc = SetupBlocProvider.of(context);
+      _setupBloc = SetupBlocProvider.of(context);
       setState(() {
         _allPages = <SetupPage>[
-          TournamentName(setupBloc),
-          PlayersNumber(setupBloc),
-          PlayersAST(setupBloc),
-          MatchesNumber(setupBloc),
-          PlayersName(setupBloc),
-          MatchesName()
+          TournamentName(_setupBloc),
+          PlayersNumber(_setupBloc),
+          PlayersAST(_setupBloc),
+          MatchesNumber(_setupBloc),
+          PlayersName(_setupBloc),
+          MatchesName(_setupBloc)
         ];
       });
     });
@@ -67,6 +80,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer> {
   void dispose() {
     super.dispose();
     _pageController.dispose();
+    _controller.dispose();
   }
 
   _onPageChanged(int index) {
@@ -87,7 +101,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 42.0),
                     child: PageView.builder(
-                      scrollDirection: Axis.horizontal,
+                      physics: NeverScrollableScrollPhysics(),
                       controller: _pageController,
                       onPageChanged: _onPageChanged,
                       itemCount: _allPages.length,
@@ -122,7 +136,6 @@ class _SetupPagesContainerState extends State<SetupPagesContainer> {
                                 // TODO: localize
                                 "Back",
                                 style: TextStyle(
-//                          fontFamily: Constants.OPEN_SANS,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14.0,
                                 ),
@@ -144,6 +157,9 @@ class _SetupPagesContainerState extends State<SetupPagesContainer> {
                                     _currentPageIndex += 1,
                                     duration: Duration(milliseconds: 250),
                                     curve: Curves.ease);
+                              } else {
+                                // TODO: end the setup process
+                                _showAlertDialog();
                               }
                             }
                           },
@@ -151,7 +167,9 @@ class _SetupPagesContainerState extends State<SetupPagesContainer> {
                             padding: EdgeInsets.only(right: 15.0, bottom: 15.0),
                             child: Text(
                               // TODO: localize
-                              "Next",
+                              _currentPageIndex == _allPages.length - 1
+                                  ? "Done"
+                                  : "Next",
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 14.0,
@@ -189,6 +207,76 @@ class _SetupPagesContainerState extends State<SetupPagesContainer> {
           child: CircularProgressIndicator(),
         ),
       ),
+    );
+  }
+
+  _showAlertDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(MarginsRaw.borderRadius),
+            ),
+          ),
+          // TODO: localize
+          title: Text('Tournament building'),
+          content: const Text(
+              "This will start the generation of the tournament. "
+              "Please be sure that all the data are correct since you can't "
+              "modify it later"),
+          actions: <Widget>[
+            FlatButton(
+              // TODO: localize
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              // TODO: localize
+              child: const Text('Proceed'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _showLoaderAndStartProcess();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  _showLoaderAndStartProcess() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => DialogLoader(
+        controller: _controller,
+        // TODO: localize
+        text: "Generating the tournament",
+      ),
+    );
+
+    _setupBloc.setupTournament().then(
+      (_) {
+        print("I'm over on saving data on the db");
+        _controller.reverse().then(
+          (_) {
+            _setupBloc.dispose();
+            Navigator.pop(context);
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => TournamentBlocProvider(
+                    child: TournamentScreen(),
+                  ),
+                ),
+                (Route<dynamic> route) => false);
+          },
+        );
+      },
     );
   }
 }

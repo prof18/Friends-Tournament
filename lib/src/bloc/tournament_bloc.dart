@@ -209,6 +209,7 @@ class TournamentBloc {
 
     final List<UIScore> scores = await repository.getScore();
 
+    // TODO: There is crash -> Unhandled Exception: type 'MappedListIterable<UIScore, UIPlayer>' is not a subtype of type 'List<UIPlayer>'
     List<UIPlayer> players =
         scores.map((uiScore) => UIPlayer(id: uiScore.id, name: uiScore.name, score: uiScore.score));
 

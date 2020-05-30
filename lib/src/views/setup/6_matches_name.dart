@@ -19,27 +19,21 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc.dart';
-import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
-import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
-import 'package:friends_tournament/src/ui/dialog_loader.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
-import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
 import 'package:friends_tournament/style/app_style.dart';
 
 class MatchesName extends StatelessWidget implements SetupPage {
-
-  List<TextFieldWrapper> _textFieldsList = new List<TextFieldWrapper>();
+  final List<TextFieldWrapper> _textFieldsList = new List<TextFieldWrapper>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  SetupBloc _setupBloc;
-  Map<int, String> _savedValues = new HashMap();
+  final Map<int, String> _savedValues = new HashMap();
+  final SetupBloc _setupBloc;
 
+  MatchesName(this._setupBloc);
 
   @override
   Widget build(BuildContext context) {
-    _setupBloc = SetupBlocProvider.of(context);
-
     return StreamBuilder(
       initialData: 0,
       stream: _setupBloc.getMatchesNumber,
@@ -66,7 +60,6 @@ class MatchesName extends StatelessWidget implements SetupPage {
                 ),
               ),
             ),
-
           ],
         ),
       ),
@@ -85,85 +78,65 @@ class MatchesName extends StatelessWidget implements SetupPage {
         _textFieldsList.add(textFieldWrapper);
       }
     }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Expanded(
-          flex: 3,
-          child: Padding(
-            padding: const EdgeInsets.only(top: MarginsRaw.regular),
-            child: SvgPicture.asset(
-              'assets/matches-art.svg',
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(
-            top: MarginsRaw.regular,
-            bottom: MarginsRaw.small,
-          ),
-          child: Text(
-            // TODO: localize
-            "Matches",
-            style: TextStyle(
-              fontSize: 36,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(
-            top: MarginsRaw.regular,
-          ),
-          child: Container(
-            alignment: Alignment.topLeft,
-            decoration: BoxDecoration(
-              color: AppColors.blue,
-              borderRadius: BorderRadius.circular(
-                MarginsRaw.borderRadius,
+    return Padding(
+      padding: Margins.regular,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            flex: 3,
+            child: Padding(
+              padding: const EdgeInsets.only(top: MarginsRaw.regular),
+              child: SvgPicture.asset(
+                'assets/matches-art.svg',
               ),
             ),
-            height: 6,
-            width: 60,
           ),
-        ),
-        Expanded(
-          flex: 7,
-          child: ListView.builder(
-            itemBuilder: (BuildContext context, int index) {
-              return TextFieldTile(textFieldWrapper: _textFieldsList[index]);
-            },
-            itemCount: _textFieldsList.length,
+          Padding(
+            padding: const EdgeInsets.only(
+              top: MarginsRaw.regular,
+              bottom: MarginsRaw.small,
+            ),
+            child: Text(
+              // TODO: localize
+              "Matches Name",
+              style: TextStyle(
+                fontSize: 36,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
-        )
-      ],
+          Padding(
+            padding: const EdgeInsets.only(
+              top: MarginsRaw.regular,
+            ),
+            child: Container(
+              alignment: Alignment.topLeft,
+              decoration: BoxDecoration(
+                color: AppColors.blue,
+                borderRadius: BorderRadius.circular(
+                  MarginsRaw.borderRadius,
+                ),
+              ),
+              height: 6,
+              width: 60,
+            ),
+          ),
+          Expanded(
+            flex: 7,
+            child: Padding(
+              padding: const EdgeInsets.only(top: MarginsRaw.regular),              child: ListView.builder(
+                itemBuilder: (BuildContext context, int index) {
+                  return TextFieldTile(textFieldWrapper: _textFieldsList[index]);
+                },
+                itemCount: _textFieldsList.length,
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
-
-  Widget createBottomBar() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
-        FloatingActionButton(
-          heroTag: "btn1",
-          child: Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            saveValues();
-//            Navigator.pop(context);
-          },
-        ),
-        FloatingActionButton(
-          heroTag: "btn2",
-          child: Icon(Icons.done),
-          onPressed: () {
-            saveValues();
-            goToNextPage();
-          },
-        )
-      ],
-    );
-  }
-
   void saveValues() {
     for (int i = 0; i < _textFieldsList.length; i++) {
       TextFieldWrapper textField = _textFieldsList[i];
@@ -179,88 +152,25 @@ class MatchesName extends StatelessWidget implements SetupPage {
     _setupBloc.setMatchesName.add(_savedValues);
   }
 
-  void goToNextPage() {
-    if (_savedValues.length != _textFieldsList.length) {
-      _scaffoldKey.currentState
-          .showSnackBar(SnackBar(content: Text('Complete all the fields')));
-      return;
-    }
-//    _showAlertDialog();
 
 
-  }
 
-//  _showAlertDialog() {
-//    showDialog(
-//      context: context,
-//      barrierDismissible: false, // user must tap button for close dialog!
-//      builder: (BuildContext context) {
-//        return AlertDialog(
-//          // TODO: localize
-//          title: Text('Tournament building'),
-//          content: const Text(
-//              "This will start the generation of the tournament. "
-//              "Please be sure that all the data are correct since you can't "
-//              "modify it later"),
-//          actions: <Widget>[
-//            FlatButton(
-//              child: const Text('Cancel'),
-//              onPressed: () {
-//                Navigator.of(context).pop();
-//              },
-//            ),
-//            FlatButton(
-//              child: const Text('Proceed'),
-//              onPressed: () {
-//                Navigator.of(context).pop();
-//                _showLoaderAndStartProcess();
-//              },
-//            )
-//          ],
-//        );
-//      },
-//    );
-//  }
-
-  _showLoaderAndStartProcess() {
-//    showDialog(
-//      context: context,
-//      barrierDismissible: false,
-//      builder: (_) => DialogLoader(
-//        controller: _controller,
-//        // TODO: localize
-//        text: "Generating the tournament",
-//      ),
-//    );
-
-    _setupBloc.setupTournament().then(
-      (_) {
-        print("I'm over on saving data on the db");
-//        _controller.reverse().then(
-//          (_) {
-//            Navigator.pop(context);
-//            Navigator.of(context).pushAndRemoveUntil(
-//                MaterialPageRoute(
-//                  builder: (context) => TournamentBlocProvider(
-//                    child: TournamentScreen(),
-//                  ),
-//                ),
-//                (Route<dynamic> route) => false);
-//          },
-//        );
-      },
-    );
-  }
 
   @override
   bool onBackPressed() {
-    // TODO: implement onBackPressed
-    throw UnimplementedError();
+    saveValues();
+    return true;
   }
 
   @override
   bool onNextPressed() {
-    // TODO: implement onNextPressed
-    throw UnimplementedError();
+    saveValues();
+    if (_savedValues.length != _textFieldsList.length) {
+      _scaffoldKey.currentState
+      // TODO: localize
+          .showSnackBar(SnackBar(content: Text("Please, don't leave the matches anonymous 🙏🏻")));
+      return false;
+    }
+    return true;
   }
 }

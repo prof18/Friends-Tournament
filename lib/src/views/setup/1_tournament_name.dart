@@ -17,7 +17,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/ui/text_field_decoration.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';

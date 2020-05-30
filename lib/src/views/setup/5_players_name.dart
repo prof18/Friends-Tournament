@@ -19,12 +19,10 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
+import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
-import 'package:friends_tournament/src/ui/slide_left_route.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
-import 'package:friends_tournament/src/views/setup/6_matches_name.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/style/app_style.dart';
 
@@ -106,7 +104,7 @@ class PlayersName extends StatelessWidget implements SetupPage {
             ),
             child: Text(
               // TODO: localize
-              "Players",
+              "Players Name",
               style: TextStyle(
                 fontSize: 36,
                 fontWeight: FontWeight.bold,

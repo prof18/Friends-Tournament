@@ -32,7 +32,7 @@ class SetupBloc {
   // Controllers of input and output
   // Behaviour subjects emits the latest item when a new listener is added
   final _playersNumberController = BehaviorSubject<int>();
-  final _playersAstNumberController = StreamController<int>();
+  final _playersAstNumberController = BehaviorSubject<int>();
   final _matchesNumberController = BehaviorSubject<int>();
   final _tournamentNameController = StreamController<String>();
   final _playersNameController = BehaviorSubject<Map<int, String>>();
@@ -56,6 +56,8 @@ class SetupBloc {
 
   Stream<int> get getMatchesNumber => _matchesNumberController.stream;
 
+  Stream<int> get getPlayersAstNumber => _playersAstNumberController.stream;
+
   Stream<Map<int, String>> get getPlayersName => _playersNameController.stream;
 
   Stream<Map<int, String>> get getMatchesName => _matchesNameController.stream;
@@ -67,6 +69,8 @@ class SetupBloc {
   * ************** */
 
   SetupBloc() {
+    /// The min value for a meaningful match is two players
+    _playersAstNumberController.value = 2;
     _playersNumberController.stream.listen(_setPlayersNumber);
     _playersAstNumberController.stream.listen(_setPlayersAstNumber);
     _matchesNumberController.stream.listen(_setMatchesNumber);
@@ -126,6 +130,9 @@ class SetupBloc {
   }
 
   int getCurrentPlayersNumber() => _playersNumber != null ? _playersNumber : 0;
+
+  int getCurrentPlayersAstNumber() =>
+      _playersAstNumber != null ? _playersAstNumber : 2;
 
   Future<void> setupTournament() async {
     DatabaseProvider databaseProvider = DatabaseProviderImpl.get;

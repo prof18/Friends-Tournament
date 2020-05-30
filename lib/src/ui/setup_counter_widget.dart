@@ -21,13 +21,20 @@ import 'package:friends_tournament/style/app_style.dart';
 class SetupCounterWidget extends StatelessWidget {
   final Sink<int> inputStream;
   final Stream<int> outputStream;
+  final int minValue;
+  final int maxValue;
 
-  SetupCounterWidget({@required this.inputStream, @required this.outputStream});
+  SetupCounterWidget({
+    @required this.inputStream,
+    @required this.outputStream,
+    this.minValue = 0,
+    this.maxValue,
+  });
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<int>(
-      initialData: 0,
+      initialData: minValue,
       builder: (context, snapshot) {
         return Material(
           elevation: 6,
@@ -54,7 +61,7 @@ class SetupCounterWidget extends StatelessWidget {
                   child: Row(
                     children: [
                       Visibility(
-                        visible: snapshot.data == 0 ? false : true,
+                        visible: snapshot.data == minValue ? false : true,
                         child: Padding(
                           padding:
                               const EdgeInsets.only(right: MarginsRaw.small),
@@ -68,14 +75,17 @@ class SetupCounterWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: MarginsRaw.small),
-                        child: GestureDetector(
-                          onTap: () => inputStream.add(snapshot.data + 1),
-                          child: Icon(
-                            Icons.add,
-                            size: 36,
-                            color: Colors.black,
+                      Visibility(
+                        visible: maxValue != null ? snapshot.data < maxValue : true,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: MarginsRaw.small),
+                          child: GestureDetector(
+                            onTap: () => inputStream.add(snapshot.data + 1),
+                            child: Icon(
+                              Icons.add,
+                              size: 36,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
                       )

@@ -54,7 +54,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer> {
         _allPages = <SetupPage>[
           TournamentName(setupBloc),
           PlayersNumber(setupBloc),
-          PlayersAST(),
+          PlayersAST(setupBloc),
           MatchesNumber(),
           PlayersName(),
           MatchesName()
@@ -105,6 +105,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer> {
                             final canGoBack = page.onBackPressed();
                             if (canGoBack) {
                               if (_currentPageIndex != _allPages.length - 1) {
+                                FocusScope.of(context).unfocus();
                                 _pageController.animateToPage(
                                     _currentPageIndex -= 1,
                                     duration: Duration(milliseconds: 250),
@@ -138,6 +139,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer> {
                             final canGoForward = page.onNextPressed();
                             if (canGoForward) {
                               if (_currentPageIndex != _allPages.length - 1) {
+                                FocusScope.of(context).unfocus();
                                 _pageController.animateToPage(
                                     _currentPageIndex += 1,
                                     duration: Duration(milliseconds: 250),

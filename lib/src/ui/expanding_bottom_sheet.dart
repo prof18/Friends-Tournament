@@ -283,7 +283,7 @@ class _ExpandingBottomSheetState extends State<ExpandingBottomSheet>
                   child: Padding(
                     padding: const EdgeInsets.only(top: 16.0),
                     child: Icon(
-                      CustomIcons.award,
+                      CustomIcons.podium,
                       color: Colors.white,
                     ),
                   ),

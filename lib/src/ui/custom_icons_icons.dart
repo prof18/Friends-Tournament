@@ -20,5 +20,11 @@ class CustomIcons {
 
   static const _kFontFam = 'CustomIcons';
 
-  static const IconData award = const IconData(0xe800, fontFamily: _kFontFam);
-  static const IconData flag_checkered = const IconData(0xf11e, fontFamily: _kFontFam);}
+  static const _kFontPkg = null;
+
+  static const IconData podium = IconData(
+      0xea70, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData flag_checkered = IconData(
+      0xf11e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+
+}

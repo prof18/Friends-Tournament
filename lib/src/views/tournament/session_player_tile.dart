@@ -30,7 +30,7 @@ class SessionPlayerTile extends StatefulWidget {
   final double buttonSize = 20;
   final double iconSize = 16;
 
-    SessionPlayerTile({this.player, this.session, this.step = 1});
+  SessionPlayerTile({this.player, this.session, this.step = 1});
 
   @override
   _SessionPlayerTileState createState() => _SessionPlayerTileState();
@@ -44,52 +44,80 @@ class _SessionPlayerTileState extends State<SessionPlayerTile> {
     tournamentBloc = TournamentBlocProvider.of(context);
 
     return Padding(
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            widget.player.name,
-            style: TextStyle(fontSize: 22),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              GestureDetector(
-                onTap: _decrementScore,
-                child: Icon(
-                  Icons.remove,
-                  size: 36,
-                  color: Colors.black38,
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 16.0),
+      child: Material(
+        elevation: MarginsRaw.elevation,
+        borderRadius: BorderRadius.circular(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: MarginsRaw.regular, left: MarginsRaw.regular),
+              child: Text(
+                widget.player.name,
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: MarginsRaw.small),
+                  child: Padding(
+                    padding: Margins.regular,
+                    child: Column(
+                      children: [
+                        Text(
+                          widget.player.score.toString(),
+                          style: TextStyle(fontSize: 32),
+                        ),
+                        Text(
+                          // TODO: localize
+                          "score",
+                          style: TextStyle(fontSize: 12),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-              Text(
-                widget.player.score.toString(),
-                style: TextStyle(fontSize: 28),
-              ),
-//              SizedBox(
-//                width: widget.buttonSize,
-//                height: widget.buttonSize,
-//                child: FloatingActionButton(
-//                  onPressed: _incrementScore,
-//                  elevation: 2,
-//                  child: Icon(
-//                    Icons.add,
-//                    size: widget.iconSize,
-//                  ),
-//                ),
-//              ),
-              GestureDetector(
-                onTap: _incrementScore,
-                child: Icon(
-                  Icons.add,
-                  size: 36,
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          )
-        ],
+                Padding(
+                  padding: const EdgeInsets.only(right: MarginsRaw.small),
+                  child: Row(
+                    children: [
+                      Visibility(
+                        visible: widget.player.score == 0 ? false : true,
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.only(right: MarginsRaw.small),
+                          child: GestureDetector(
+                            onTap: _decrementScore,
+                            child: Icon(
+                              Icons.remove,
+                              size: 36,
+                              color: Colors.black38,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: MarginsRaw.small),
+                        child: GestureDetector(
+                          onTap: () => _incrementScore(),
+                          child: Icon(
+                            Icons.add,
+                            size: 36,
+                            color: Colors.black,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -111,3 +139,52 @@ class _SessionPlayerTileState extends State<SessionPlayerTile> {
     }
   }
 }
+
+/*
+Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              widget.player.name,
+              style: TextStyle(fontSize: 22),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: _decrementScore,
+                  child: Icon(
+                    Icons.remove,
+                    size: 36,
+                    color: Colors.black38,
+                  ),
+                ),
+                Text(
+                  widget.player.score.toString(),
+                  style: TextStyle(fontSize: 28),
+                ),
+//              SizedBox(
+//                width: widget.buttonSize,
+//                height: widget.buttonSize,
+//                child: FloatingActionButton(
+//                  onPressed: _incrementScore,
+//                  elevation: 2,
+//                  child: Icon(
+//                    Icons.add,
+//                    size: widget.iconSize,
+//                  ),
+//                ),
+//              ),
+                GestureDetector(
+                  onTap: _incrementScore,
+                  child: Icon(
+                    Icons.add,
+                    size: 36,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            )
+          ],
+        )
+ */

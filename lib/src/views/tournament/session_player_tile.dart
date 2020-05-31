@@ -30,7 +30,7 @@ class SessionPlayerTile extends StatefulWidget {
   final double buttonSize = 20;
   final double iconSize = 16;
 
-  SessionPlayerTile({this.player, this.session, this.step = 1});
+    SessionPlayerTile({this.player, this.session, this.step = 1});
 
   @override
   _SessionPlayerTileState createState() => _SessionPlayerTileState();
@@ -53,28 +53,19 @@ class _SessionPlayerTileState extends State<SessionPlayerTile> {
             style: TextStyle(fontSize: 22),
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              Padding(
-                padding:
-                const EdgeInsets.only(right: MarginsRaw.small),
-                child: GestureDetector(
-                  onTap: _decrementScore,
-                  child: Icon(
-                    Icons.remove,
-                    size: 36,
-                    color: Colors.black38,
-                  ),
+              GestureDetector(
+                onTap: _decrementScore,
+                child: Icon(
+                  Icons.remove,
+                  size: 36,
+                  color: Colors.black38,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: MarginsRaw.small),
-                child: Padding(
-                  padding: Margins.regular,
-                  child: Text(
-                    widget.player.score.toString(),
-                    style: TextStyle(fontSize: 28),
-                  ),
-                ),
+              Text(
+                widget.player.score.toString(),
+                style: TextStyle(fontSize: 28),
               ),
 //              SizedBox(
 //                width: widget.buttonSize,
@@ -88,15 +79,12 @@ class _SessionPlayerTileState extends State<SessionPlayerTile> {
 //                  ),
 //                ),
 //              ),
-              Padding(
-                padding: const EdgeInsets.only(left: MarginsRaw.small),
-                child: GestureDetector(
-                  onTap: _incrementScore,
-                  child: Icon(
-                    Icons.add,
-                    size: 36,
-                    color: Colors.black,
-                  ),
+              GestureDetector(
+                onTap: _incrementScore,
+                child: Icon(
+                  Icons.add,
+                  size: 36,
+                  color: Colors.black,
                 ),
               ),
             ],

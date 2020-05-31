@@ -76,6 +76,11 @@ class _MyAppState extends State<MyApp> {
             SvgPicture.svgStringDecoder, 'assets/matches-art.svg'),
         null);
 
+    await precachePicture(
+        ExactAssetPicture(
+            SvgPicture.svgStringDecoder, 'assets/podium-art.svg'),
+        null);
+
     setState(() {
       _isActive = isActive;
       _isLoading = false;

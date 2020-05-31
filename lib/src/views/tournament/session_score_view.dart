@@ -15,24 +15,26 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/app/ui_session.dart';
 import 'package:friends_tournament/src/ui/utils.dart';
 import 'package:friends_tournament/src/views/tournament/session_item_widget.dart';
+import 'package:friends_tournament/style/app_style.dart';
 
-class SessionCarousel extends StatefulWidget {
+class SessionScoreView extends StatefulWidget {
   final List<UISession> sessions;
   final AnimationController controller;
 
-  SessionCarousel({this.sessions, this.controller});
+  SessionScoreView({this.sessions, this.controller});
 
   @override
-  _SessionCarouselState createState() => _SessionCarouselState();
+  _SessionScoreViewState createState() => _SessionScoreViewState();
 }
 
-class _SessionCarouselState extends State<SessionCarousel> {
+class _SessionScoreViewState extends State<SessionScoreView> {
   bool _panelExpanded = false;
   TournamentBloc _tournamentBloc;
 
@@ -54,18 +56,22 @@ class _SessionCarouselState extends State<SessionCarousel> {
 
   @override
   Widget build(BuildContext context) {
+
     _tournamentBloc = TournamentBlocProvider.of(context);
 
     return Scaffold(
-      backgroundColor: hexToColor("#eeeeee"),
+//      backgroundColor: hexToColor("#eeeeee"),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: AnimatedOpacity(
         opacity: _panelExpanded ? 0.0 : 1.0,
         duration: Duration(milliseconds: 100),
-        child: FloatingActionButton.extended(
-          // TODO: localize me
-          label: Text("Finish this match"),
-          icon: Icon(Icons.save),
+        child: RaisedButton(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(MarginsRaw.borderRadius),
+              side: BorderSide(color: AppColors.blue)),
+          color: AppColors.blue,
+          textColor: Colors.white,
+          padding: Margins.regular,
           onPressed: () {
             // TODO
             // TODO: show a loader or a popup. Say also that automatically
@@ -74,6 +80,10 @@ class _SessionCarouselState extends State<SessionCarousel> {
               // TODO: hide the loader and change app state
             });
           },
+          child: Text(
+            'Finish current match',
+            style: TextStyle(fontSize: 18),
+          ),
         ),
       ),
       body: renderBody(context),
@@ -82,7 +92,7 @@ class _SessionCarouselState extends State<SessionCarousel> {
 
   Widget renderBody(BuildContext context) {
     return Container(
-      color: Colors.blue,
+      color: AppColors.blue,
       child: Container(
         decoration: new BoxDecoration(
           color: hexToColor("#eeeeee"),
@@ -91,7 +101,28 @@ class _SessionCarouselState extends State<SessionCarousel> {
             topRight: const Radius.circular(20.0),
           ),
         ),
-        child: ListView(
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 80),
+          child: ListView.builder(
+            itemCount: widget.sessions.length,
+            itemBuilder: (context, index) {
+              return Container(
+                width: MediaQuery.of(context).size.width * 0.75,
+                child: SessionItemWidget(
+                  session: widget.sessions[index],
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/*
+
+ListView(
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
@@ -151,8 +182,6 @@ class _SessionCarouselState extends State<SessionCarousel> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
+        )
+
+ */

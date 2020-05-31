@@ -20,6 +20,7 @@ import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.d
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/app/ui_session.dart';
 import 'package:friends_tournament/src/data/model/db/player_session.dart';
+import 'package:friends_tournament/style/app_style.dart';
 
 class SessionPlayerTile extends StatefulWidget {
   final UIPlayer player;
@@ -53,34 +54,48 @@ class _SessionPlayerTileState extends State<SessionPlayerTile> {
           ),
           Row(
             children: <Widget>[
-              SizedBox(
-                width: widget.buttonSize,
-                height: widget.buttonSize,
-                child: FloatingActionButton(
-                  onPressed: _decrementScore,
-                  elevation: 2,
+              Padding(
+                padding:
+                const EdgeInsets.only(right: MarginsRaw.small),
+                child: GestureDetector(
+                  onTap: _decrementScore,
                   child: Icon(
                     Icons.remove,
-                    size: widget.iconSize,
+                    size: 36,
+                    color: Colors.black38,
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  widget.player.score.toString(),
-                  style: TextStyle(fontSize: 18),
+                padding: const EdgeInsets.only(left: MarginsRaw.small),
+                child: Padding(
+                  padding: Margins.regular,
+                  child: Text(
+                    widget.player.score.toString(),
+                    style: TextStyle(fontSize: 28),
+                  ),
                 ),
               ),
-              SizedBox(
-                width: widget.buttonSize,
-                height: widget.buttonSize,
-                child: FloatingActionButton(
-                  onPressed: _incrementScore,
-                  elevation: 2,
+//              SizedBox(
+//                width: widget.buttonSize,
+//                height: widget.buttonSize,
+//                child: FloatingActionButton(
+//                  onPressed: _incrementScore,
+//                  elevation: 2,
+//                  child: Icon(
+//                    Icons.add,
+//                    size: widget.iconSize,
+//                  ),
+//                ),
+//              ),
+              Padding(
+                padding: const EdgeInsets.only(left: MarginsRaw.small),
+                child: GestureDetector(
+                  onTap: _incrementScore,
                   child: Icon(
                     Icons.add,
-                    size: widget.iconSize,
+                    size: 36,
+                    color: Colors.black,
                   ),
                 ),
               ),

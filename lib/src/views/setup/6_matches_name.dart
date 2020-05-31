@@ -125,9 +125,11 @@ class MatchesName extends StatelessWidget implements SetupPage {
           Expanded(
             flex: 7,
             child: Padding(
-              padding: const EdgeInsets.only(top: MarginsRaw.regular),              child: ListView.builder(
+              padding: const EdgeInsets.only(top: MarginsRaw.regular),
+              child: ListView.builder(
                 itemBuilder: (BuildContext context, int index) {
-                  return TextFieldTile(textFieldWrapper: _textFieldsList[index]);
+                  return TextFieldTile(
+                      textFieldWrapper: _textFieldsList[index]);
                 },
                 itemCount: _textFieldsList.length,
               ),
@@ -137,6 +139,7 @@ class MatchesName extends StatelessWidget implements SetupPage {
       ),
     );
   }
+
   void saveValues() {
     for (int i = 0; i < _textFieldsList.length; i++) {
       TextFieldWrapper textField = _textFieldsList[i];
@@ -152,10 +155,6 @@ class MatchesName extends StatelessWidget implements SetupPage {
     _setupBloc.setMatchesName.add(_savedValues);
   }
 
-
-
-
-
   @override
   bool onBackPressed() {
     saveValues();
@@ -167,8 +166,9 @@ class MatchesName extends StatelessWidget implements SetupPage {
     saveValues();
     if (_savedValues.length != _textFieldsList.length) {
       _scaffoldKey.currentState
-      // TODO: localize
-          .showSnackBar(SnackBar(content: Text("Please, don't leave the matches anonymous 🙏🏻")));
+          // TODO: localize
+          .showSnackBar(SnackBar(
+              content: Text("Please, don't leave the matches anonymous 🙏🏻")));
       return false;
     }
     return true;

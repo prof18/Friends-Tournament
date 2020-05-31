@@ -22,7 +22,7 @@ import 'package:friends_tournament/src/data/model/app/ui_session.dart';
 import 'package:friends_tournament/src/ui/backdrop.dart';
 import 'package:friends_tournament/src/ui/expanding_bottom_sheet.dart';
 import 'package:friends_tournament/src/views/tournament/match_selection_tile.dart';
-import 'package:friends_tournament/src/views/tournament/session_carousel.dart';
+import 'package:friends_tournament/src/views/tournament/session_score_view.dart';
 
 class TournamentScreen extends StatefulWidget {
   TournamentScreen();
@@ -99,7 +99,7 @@ class _TournamentScreenState extends State<TournamentScreen>
     return StreamBuilder<UIMatch>(
       stream: _tournamentBloc.currentMatch,
       builder: (context, snapshot) {
-        return SessionCarousel(
+        return SessionScoreView(
           sessions: snapshot.hasData
               ? snapshot.data.matchSessions
               : List<UISession>(),

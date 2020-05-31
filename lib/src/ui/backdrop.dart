@@ -20,6 +20,7 @@ import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
 import 'package:friends_tournament/src/ui/custom_icons_icons.dart';
+import 'package:friends_tournament/style/app_style.dart';
 
 class Backdrop extends StatefulWidget {
   final Widget dropdownWidget;
@@ -82,14 +83,14 @@ class _BackdropState extends State<Backdrop>
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.blue.shade500,
+      statusBarColor: AppColors.blue,
     ));
 
     TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: AppColors.blue,
         elevation: 0.0,
         title: AnimatedOpacity(
           opacity: _panelExpanded ? 0.0 : 1.0,
@@ -134,7 +135,7 @@ class _BackdropState extends State<Backdrop>
     final animation = _getPanelAnimation(constraints);
     final theme = Theme.of(context);
     return Container(
-      color: theme.primaryColor,
+      color: AppColors.blue,
       child: Stack(
         children: <Widget>[
           widget.dropdownWidget,

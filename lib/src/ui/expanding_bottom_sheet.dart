@@ -21,7 +21,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:friends_tournament/src/ui/custom_icons_icons.dart';
-import 'package:friends_tournament/src/views/leaderboard_page.dart';
+import 'package:friends_tournament/src/views/tournament/leaderboard_page.dart';
+import 'package:friends_tournament/style/app_style.dart';
 import 'package:meta/meta.dart';
 
 // These curves define the emphasized easing curve.
@@ -149,7 +150,8 @@ class _ExpandingBottomSheetState extends State<ExpandingBottomSheet>
   Animation<double> _getWidthAnimation(double screenWidth) {
     if (_controller.status == AnimationStatus.forward) {
       // Opening animation
-      return Tween<double>(begin: _kWidthForBottomIcon, end: screenWidth).animate(
+      return Tween<double>(begin: _kWidthForBottomIcon, end: screenWidth)
+          .animate(
         CurvedAnimation(
           parent: _controller.view,
           curve: const Interval(0.0, 0.3, curve: Curves.fastOutSlowIn),
@@ -248,12 +250,20 @@ class _ExpandingBottomSheetState extends State<ExpandingBottomSheet>
   void open() {
     if (!_isOpen) {
       _controller.forward();
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Colors.white12,
+        statusBarIconBrightness: Brightness.dark, // status bar icons' color
+      ));
     }
   }
 
   // Closes the ExpandingBottomSheet if it's open or opening, otherwise does nothing.
   void close() {
     if (_isOpen) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: AppColors.blue,
+        statusBarIconBrightness: Brightness.light,
+      ));
       _controller.reverse();
     }
   }
@@ -272,7 +282,10 @@ class _ExpandingBottomSheetState extends State<ExpandingBottomSheet>
                   padding: EdgeInsetsDirectional.only(start: 20.0, end: 8.0),
                   child: Padding(
                     padding: const EdgeInsets.only(top: 16.0),
-                    child: Icon(CustomIcons.award),
+                    child: Icon(
+                      CustomIcons.award,
+                      color: Colors.white,
+                    ),
                   ),
                   duration: const Duration(milliseconds: 225),
                 ),
@@ -311,13 +324,13 @@ class _ExpandingBottomSheetState extends State<ExpandingBottomSheet>
         height: _heightAnimation.value,
         child: Material(
           animationDuration: const Duration(milliseconds: 0),
-          shape: ContinuousRectangleBorder (
+          shape: ContinuousRectangleBorder(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(_shapeAnimation.value),
             ),
           ),
           elevation: 4.0,
-          color: Colors.pinkAccent,
+          color: AppColors.blue,
           child: _cartIsVisible ? _buildLeaderboardPage() : _buildBottomIcon(),
         ),
       ),

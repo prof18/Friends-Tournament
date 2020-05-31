@@ -42,7 +42,7 @@ class TournamentBloc {
   final _currentMatchController = BehaviorSubject<UIMatch>();
   final _updateCurrentMatchController = BehaviorSubject<UIMatch>();
   final _updatePlayerScoreController = StreamController<PlayerSession>();
-  final _podiumPlayersController = BehaviorSubject<List<UIPlayer>>();
+  final _leaderboardPlayersController = BehaviorSubject<List<UIPlayer>>();
 
   // Input
   Sink<UIMatch> get setCurrentMatch => _updateCurrentMatchController.sink;
@@ -57,7 +57,7 @@ class TournamentBloc {
 
   Stream<UIMatch> get currentMatch => _currentMatchController.stream;
 
-  Stream<List<UIPlayer>> get podiumPlayers => _podiumPlayersController.stream;
+  Stream<List<UIPlayer>> get leaderboardPlayers => _leaderboardPlayersController.stream;
 
   /* *************
   *
@@ -76,7 +76,7 @@ class TournamentBloc {
     _currentMatchController.close();
     _updateCurrentMatchController.close();
     _updatePlayerScoreController.close();
-    _podiumPlayersController.close();
+    _leaderboardPlayersController.close();
   }
 
   /* *************
@@ -128,7 +128,7 @@ class TournamentBloc {
       currentMatch.isSelected = true;
       _currentMatch = currentMatch;
 
-      _computeTempPodium();
+      _computeLeaderboard();
 
       _activeTournamentController.add(_activeTournament);
       _tournamentMatchesController.add(_tournamentMatches);
@@ -170,7 +170,7 @@ class TournamentBloc {
 
     await repository.finishMatch(_currentMatch);
 
-    _computeTempPodium();
+    _computeLeaderboard();
 
     // the current match is no active. Select another as active
     int currentMatchIndex = _tournamentMatches.indexOf(_currentMatch);
@@ -203,25 +203,16 @@ class TournamentBloc {
     return;
   }
 
-  void _computeTempPodium() async {
+  void _computeLeaderboard() async {
 
     // TODO: add a try/catch and report the result on a stream. Maybe show "something is wrong" and return to the setup process
 
     final List<UIScore> scores = await repository.getScore();
 
-    // TODO: There is crash -> Unhandled Exception: type 'MappedListIterable<UIScore, UIPlayer>' is not a subtype of type 'List<UIPlayer>'
     List<UIPlayer> players =
-        scores.map((uiScore) => UIPlayer(id: uiScore.id, name: uiScore.name, score: uiScore.score));
+        scores.map((uiScore) => UIPlayer(id: uiScore.id, name: uiScore.name, score: uiScore.score)).toList();
 
-    players = players.toList().take(3).toList();
+    _leaderboardPlayersController.add(players);
 
-    if (players.length == 3 &&
-        players[0].score == 0 &&
-        players[1].score == 0 &&
-        players[2].score == 0) {
-      _podiumPlayersController.add(List<UIPlayer>());
-    } else {
-      _podiumPlayersController.add(players);
-    }
   }
 }

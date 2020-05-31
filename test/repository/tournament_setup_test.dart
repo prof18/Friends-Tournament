@@ -95,7 +95,7 @@ void main() {
 
     test('sessions number are correct', () {
       final sessionsNumber =
-          TestTournament.matchesNumber / TestTournament.playersAstNumber;
+      (TestTournament.playersNumber / TestTournament.playersAstNumber).ceil();
       expect(sessionsNumber * TestTournament.matchesNumber,
           setupRepository.sessions.length);
     });

@@ -15,13 +15,11 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
+import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
-import 'package:friends_tournament/src/data/model/app/ui_session.dart';
 import 'package:friends_tournament/src/ui/backdrop.dart';
 import 'package:friends_tournament/src/ui/center_loader.dart';
-import 'package:friends_tournament/src/ui/expanding_bottom_sheet.dart';
 import 'package:friends_tournament/src/views/tournament/match_selection_tile.dart';
 import 'package:friends_tournament/src/views/tournament/session_score_view.dart';
 
@@ -69,9 +67,6 @@ class _TournamentScreenState extends State<TournamentScreen>
     return Stack(
       children: <Widget>[
         Backdrop(_buildDropdownWidget(), _buildContentWidget(), _controller),
-        Align(
-            child: ExpandingBottomSheet(hideController: _controller),
-            alignment: Alignment.bottomRight),
       ],
     );
   }

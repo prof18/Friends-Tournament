@@ -27,6 +27,8 @@ class MarginsRaw {
   static const small = 8.0;
   static const regular = 16.0;
   static const medium = 24.0;
+  static const large = 48.0;
+  static const xlarge = 60.0;
 
   static const borderRadius = 18.0;
 

@@ -15,6 +15,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
@@ -36,7 +37,11 @@ class SessionScoreView extends StatefulWidget {
 
 class _SessionScoreViewState extends State<SessionScoreView> {
   bool _panelExpanded = false;
+
+  bool hideFab = false;
   TournamentBloc _tournamentBloc;
+
+  ScrollController _scrollController;
 
   @override
   void initState() {
@@ -52,26 +57,47 @@ class _SessionScoreViewState extends State<SessionScoreView> {
         });
       }
     });
+    _scrollController = ScrollController();
+
+    _scrollController.addListener(() {
+      switch (_scrollController.position.userScrollDirection) {
+        // Scrolling up - forward the animation (value goes to 1)
+        case ScrollDirection.forward:
+//          _hideFabAnimController.forward();
+          setState(() {
+            hideFab = false;
+          });
+          break;
+        // Scrolling down - reverse the animation (value goes to 0)
+        case ScrollDirection.reverse:
+//          _hideFabAnimController.reverse();
+          setState(() {
+            hideFab = true;
+          });
+          break;
+        // Idle - keep FAB visibility unchanged
+        case ScrollDirection.idle:
+          break;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-
     _tournamentBloc = TournamentBlocProvider.of(context);
 
     return Scaffold(
-//      backgroundColor: hexToColor("#eeeeee"),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: AnimatedOpacity(
-        opacity: _panelExpanded ? 0.0 : 1.0,
+        opacity: _panelExpanded || hideFab ? 0.0 : 1.0,
         duration: Duration(milliseconds: 100),
-        child: RaisedButton(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(MarginsRaw.borderRadius),
-              side: BorderSide(color: AppColors.blue)),
-          color: AppColors.blue,
-          textColor: Colors.white,
-          padding: Margins.regular,
+        child: FloatingActionButton(
+          backgroundColor: AppColors.blue,
           onPressed: () {
             // TODO
             // TODO: show a loader or a popup. Say also that automatically
@@ -80,10 +106,7 @@ class _SessionScoreViewState extends State<SessionScoreView> {
               // TODO: hide the loader and change app state
             });
           },
-          child: Text(
-            'Finish current match',
-            style: TextStyle(fontSize: 18),
-          ),
+          child: Icon(Icons.save),
         ),
       ),
       body: renderBody(context),
@@ -101,87 +124,26 @@ class _SessionScoreViewState extends State<SessionScoreView> {
             topRight: const Radius.circular(20.0),
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 80),
-          child: ListView.builder(
-            itemCount: widget.sessions.length,
-            itemBuilder: (context, index) {
-              return Container(
-                width: MediaQuery.of(context).size.width * 0.75,
+        child: ListView.builder(
+          controller: _scrollController,
+          itemCount: widget.sessions.length,
+          itemBuilder: (context, index) {
+            return Container(
+              width: MediaQuery.of(context).size.width * 0.75,
+              child: Padding(
+                padding: index == widget.sessions.length - 1
+                    ? const EdgeInsets.only(
+                        bottom: MarginsRaw.large,
+                      )
+                    : const EdgeInsets.all(0.0),
                 child: SessionItemWidget(
                   session: widget.sessions[index],
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
   }
 }
-
-/*
-
-ListView(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.4,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: widget.sessions.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        width: MediaQuery.of(context).size.width * 0.75,
-                        child: SessionItemWidget(
-                          session: widget.sessions[index],
-                        ),
-                      );
-                    }),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.3,
-                child: Container(
-                  child: Material(
-                    borderRadius: BorderRadius.circular(10.0),
-                    elevation: 8.0,
-                    child: StreamBuilder<List<UIPlayer>>(
-                      stream: _tournamentBloc.podiumPlayers,
-                      builder: (context, snapshot) {
-                        return Center(
-                          // TODO: make better looking!
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: <Widget>[
-                                // TODO: localize
-                                Text("Podium of the last match"),
-                                snapshot.hasData && snapshot.data.length > 0
-                                    ? ListView.builder(
-                                        physics: ScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return Text(
-                                              snapshot.data[index].name);
-                                        },
-                                        itemCount: snapshot.data.length,
-                                      )
-                                    : Text("No players. Finish first a match"),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        )
-
- */

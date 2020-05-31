@@ -115,9 +115,20 @@ class _BackdropState extends State<Backdrop>
           Visibility(
             visible: !_panelExpanded,
             child: IconButton(
+              icon: Icon(CustomIcons.podium),
+              onPressed: () {
+                // TODO: go to leaderboard screen
+              },
+              // TODO: localize me
+              tooltip: "Show Leaderboard",
+            ),
+          ),
+          Visibility(
+            visible: !_panelExpanded,
+            child: IconButton(
               icon: Icon(CustomIcons.flag_checkered),
               onPressed: () {
-                // TODO
+                // TODO: show a popup and finish the tournament
               },
               // TODO: localize me
               tooltip: "Finish the tournament",

@@ -28,6 +28,8 @@ class PlayersAST extends StatelessWidget implements SetupPage {
 
   PlayersAST(this._setupBloc);
 
+  // TODO: add some check. For example If there is 5 player and 2 ast player, its not possible
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

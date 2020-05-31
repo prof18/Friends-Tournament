@@ -41,6 +41,10 @@ class SetupPagesContainer extends StatefulWidget {
 
 // TODO: remember to dispose the bloc when exit
 
+// TODO: make lighter the hint message
+
+// TODO: fix padding on text fields
+
 class _SetupPagesContainerState extends State<SetupPagesContainer>
     with SingleTickerProviderStateMixin {
   int _currentPageIndex = 0;

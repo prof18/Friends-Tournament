@@ -17,7 +17,7 @@
 class TestTournament {
   static final int playersNumber = 4;
   static final int playersAstNumber = 2;
-  static final int matchesNumber = 4;
+  static final int matchesNumber = 5;
   static final String tournamentName = "Test Tournament";
   static final Map<int, String> playersName = {
     0: "Player1",
@@ -30,6 +30,7 @@ class TestTournament {
     1: "Match2",
     2: "Match3",
     3: "Match4",
+    4: "Match5",
   };
 
   // Matches

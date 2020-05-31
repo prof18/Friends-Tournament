@@ -21,9 +21,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
-import 'package:friends_tournament/src/ui/expanding_bottom_sheet.dart';
-import 'package:friends_tournament/src/ui/text_field_decoration.dart';
-import 'package:friends_tournament/src/ui/utils.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_item_tile.dart';
 import 'package:friends_tournament/style/app_style.dart';
 
@@ -56,8 +53,9 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                           width: _leftColumnWidth,
                           child: IconButton(
                             icon: const Icon(Icons.keyboard_arrow_down),
-                            onPressed: () =>
-                                ExpandingBottomSheet.of(context).close(),
+                            onPressed: () => {
+                              // TODO: delete
+                            },
                           ),
                         ),
                       ),

@@ -196,7 +196,7 @@ class SetupRepository {
   void _generateTournament() {
     matches.forEach((match) {
       // number of sessions for the same match
-      int sessionsNumber = (_matchesNumber / _playersAstNumber).ceil();
+      int sessionsNumber = (_playersNumber / _playersAstNumber).ceil();
       var currentSessionPlayers = List<String>();
       for (int i = 0; i < sessionsNumber; i++) {
         // TODO: localize

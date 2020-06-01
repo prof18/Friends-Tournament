@@ -81,6 +81,21 @@ class _MyAppState extends State<MyApp> {
             SvgPicture.svgStringDecoder, 'assets/podium-art.svg'),
         null);
 
+    await precachePicture(
+        ExactAssetPicture(
+            SvgPicture.svgStringDecoder, 'assets/error-art.svg'),
+        null);
+
+    await precachePicture(
+        ExactAssetPicture(
+            SvgPicture.svgStringDecoder, 'assets/finish-art.svg'),
+        null);
+
+    await precachePicture(
+        ExactAssetPicture(
+            SvgPicture.svgStringDecoder, 'assets/save-art.svg'),
+        null);
+
     setState(() {
       _isActive = isActive;
       _isLoading = false;

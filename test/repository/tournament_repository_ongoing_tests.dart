@@ -39,12 +39,14 @@ void main() {
     final tournamentRepository = TournamentRepository(localDataSource);
 
     test('Number of scores is equal to number of players', () async {
-      final scores = await tournamentRepository.getScore();
+      final currentTournament = await tournamentRepository.getCurrentActiveTournament();
+      final scores = await tournamentRepository.getScore(currentTournament);
       expect(scores.length, TestTournament.playersNumber);
     });
 
     test('list of scores is correct', () async {
-      final scores = await tournamentRepository.getScore();
+      final currentTournament = await tournamentRepository.getCurrentActiveTournament();
+      final scores = await tournamentRepository.getScore(currentTournament);
 
       List<UIScore> uiScores = List<UIScore>();
       uiScores.add(UIScore(score: 5, id: "761153207", name: "Player 1"));

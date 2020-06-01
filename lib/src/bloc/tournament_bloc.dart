@@ -43,6 +43,7 @@ class TournamentBloc {
   final _updateCurrentMatchController = BehaviorSubject<UIMatch>();
   final _updatePlayerScoreController = StreamController<PlayerSession>();
   final _leaderboardPlayersController = BehaviorSubject<List<UIPlayer>>();
+  final _currentMatchNameController = BehaviorSubject<String>();
 
   // Input
   Sink<UIMatch> get setCurrentMatch => _updateCurrentMatchController.sink;
@@ -58,6 +59,8 @@ class TournamentBloc {
   Stream<UIMatch> get currentMatch => _currentMatchController.stream;
 
   Stream<List<UIPlayer>> get leaderboardPlayers => _leaderboardPlayersController.stream;
+
+  Stream<String> get currentMatchName => _currentMatchNameController.stream;
 
   /* *************
   *
@@ -77,6 +80,7 @@ class TournamentBloc {
     _updateCurrentMatchController.close();
     _updatePlayerScoreController.close();
     _leaderboardPlayersController.close();
+    _currentMatchNameController.close();
   }
 
   /* *************
@@ -164,6 +168,9 @@ class TournamentBloc {
     // TODO: add a try/catch and report the result on a stream. Maybe show "something is wrong" and return to the setup process
 
 
+    // TODO: pay attention if we are not saving the current match
+
+
     // save the current progress on the database
     _currentMatch.isActive = 0;
     _currentMatch.isSelected = false;
@@ -178,6 +185,7 @@ class TournamentBloc {
     int nextMatchIndex = currentMatchIndex + 1;
     if (nextMatchIndex > _tournamentMatches.length - 1) {
       // we can finish the entire tournament
+      // TODO: don't do this!! Notify something to the UI and then take the decision!
       await endTournament();
     } else {
       UIMatch nextMatch = _tournamentMatches[nextMatchIndex];
@@ -187,6 +195,8 @@ class TournamentBloc {
       _currentMatch = nextMatch;
       _currentMatchController.add(_currentMatch);
       _tournamentMatchesController.add(_tournamentMatches);
+      _currentMatchNameController.add(_currentMatch.name);
+
     }
   }
 
@@ -207,7 +217,7 @@ class TournamentBloc {
 
     // TODO: add a try/catch and report the result on a stream. Maybe show "something is wrong" and return to the setup process
 
-    final List<UIScore> scores = await repository.getScore();
+    final List<UIScore> scores = await repository.getScore(_activeTournament);
 
     List<UIPlayer> players =
         scores.map((uiScore) => UIPlayer(id: uiScore.id, name: uiScore.name, score: uiScore.score)).toList();

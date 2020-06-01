@@ -15,6 +15,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
@@ -22,6 +23,7 @@ import 'package:friends_tournament/src/ui/backdrop.dart';
 import 'package:friends_tournament/src/ui/center_loader.dart';
 import 'package:friends_tournament/src/views/tournament/match_selection_tile.dart';
 import 'package:friends_tournament/src/views/tournament/session_score_view.dart';
+import 'package:friends_tournament/style/app_style.dart';
 
 class TournamentScreen extends StatefulWidget {
   TournamentScreen();
@@ -35,6 +37,8 @@ class _TournamentScreenState extends State<TournamentScreen>
   AnimationController _controller;
   TournamentBloc _tournamentBloc;
 
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -43,6 +47,16 @@ class _TournamentScreenState extends State<TournamentScreen>
       duration: const Duration(milliseconds: 450),
       value: 1.0,
     );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
+
+      tournamentBloc.currentMatchName.listen((matchName) {
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text("Match \"$matchName\" selected."),
+        ));
+      });
+    });
   }
 
   @override
@@ -56,9 +70,18 @@ class _TournamentScreenState extends State<TournamentScreen>
   Widget build(BuildContext context) {
     _tournamentBloc = TournamentBlocProvider.of(context);
 
-    return Material(
-      child: SafeArea(
-        child: buildBody(),
+    return Scaffold(
+      key: _scaffoldKey,
+      body: AnnotatedRegion(
+        value: SystemUiOverlayStyle(
+          statusBarColor: AppColors.blue,
+          statusBarIconBrightness: Brightness.light,
+        ),
+        child: Material(
+          child: SafeArea(
+            child: buildBody(),
+          ),
+        ),
       ),
     );
   }

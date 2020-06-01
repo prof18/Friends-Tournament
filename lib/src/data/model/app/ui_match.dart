@@ -24,6 +24,21 @@ class UIMatch extends tournament.Match {
   List<UISession> matchSessions;
   bool isSelected = false;
 
+  /// If there is at least one player with a score different than zero, it means
+  /// that that match has been saved once
+  bool hasAlreadyScore() {
+    bool hasScore = false;
+
+    matchSessions.forEach((matchSession) {
+      final playersWithScore = matchSession.sessionPlayers.where((element) => element.score != 0).toList();
+      if (playersWithScore.isNotEmpty) {
+        hasScore = true;
+      }
+    });
+
+    return hasScore;
+  }
+
   UIMatch({this.matchSessions, id, name, isActive, order})
       : super(id, name, isActive, order);
 

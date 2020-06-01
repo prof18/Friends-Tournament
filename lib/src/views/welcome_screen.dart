@@ -16,6 +16,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:friends_tournament/src/views/setup/setup_pages_container.dart';
 import 'package:friends_tournament/style/app_style.dart';
@@ -31,116 +32,122 @@ class _WelcomeState extends State<Welcome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: Margins.regular,
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                flex: 4,
-                child: Container(
-                  padding: const EdgeInsets.only(
-                    top: MarginsRaw.medium,
-                    left: MarginsRaw.medium,
-                    right: MarginsRaw.medium,
-                  ),
-                  child: SvgPicture.asset(
-                    'assets/intro-art.svg',
+      body: AnnotatedRegion(
+        value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+    ),
+        child: Padding(
+          padding: Margins.regular,
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Expanded(
+                  flex: 4,
+                  child: Container(
+                    padding: const EdgeInsets.only(
+                      top: MarginsRaw.medium,
+                      left: MarginsRaw.medium,
+                      right: MarginsRaw.medium,
+                    ),
+                    child: SvgPicture.asset(
+                      'assets/intro-art.svg',
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                flex: 6,
-                child: Padding(
-                  padding: Margins.regular,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      FittedBox(
-                        alignment: Alignment.centerLeft,
-                        fit: BoxFit.scaleDown,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Friends",
-                              style: GoogleFonts.nunito(
-                                textStyle: TextStyle(
-                                  fontSize: 42,
-                                  fontWeight: FontWeight.bold,
+                Expanded(
+                  flex: 6,
+                  child: Padding(
+                    padding: Margins.regular,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        FittedBox(
+                          alignment: Alignment.centerLeft,
+                          fit: BoxFit.scaleDown,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Friends",
+                                style: GoogleFonts.nunito(
+                                  textStyle: TextStyle(
+                                    fontSize: 42,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Text(
-                              "Tournament",
-                              style: GoogleFonts.nunito(
-                                textStyle: TextStyle(
-                                  fontSize: 42,
-                                  fontWeight: FontWeight.bold,
+                              Text(
+                                "Tournament",
+                                style: GoogleFonts.nunito(
+                                  textStyle: TextStyle(
+                                    fontSize: 42,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: MarginsRaw.regular,
+                          ),
+                          child: Container(
+                            alignment: Alignment.topLeft,
+                            decoration: BoxDecoration(
+                              color: AppColors.blue,
+                              borderRadius:
+                                  BorderRadius.circular(MarginsRaw.borderRadius),
                             ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: MarginsRaw.regular,
-                        ),
-                        child: Container(
-                          alignment: Alignment.topLeft,
-                          decoration: BoxDecoration(
-                            color: AppColors.blue,
-                            borderRadius:
-                                BorderRadius.circular(MarginsRaw.borderRadius),
-                          ),
-                          height: 6,
-                          width: 60,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: MarginsRaw.regular,
-                        ),
-                        child: Text(
-                          "Start a new tournament with your friends",
-                          style: GoogleFonts.nunito(
-                            textStyle: TextStyle(fontSize: 24),
+                            height: 6,
+                            width: 60,
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: MarginsRaw.regular),
-                        child: RaisedButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  MarginsRaw.borderRadius),
-                              side: BorderSide(color: AppColors.blue)),
-                          color: AppColors.blue,
-                          textColor: Colors.white,
-                          padding: Margins.regular,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SetupPagesContainer()),
-                            );
-                          },
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: MarginsRaw.regular,
+                          ),
                           child: Text(
-                            'Start Tournament',
-                            style: TextStyle(fontSize: 20),
+                            "Start a new tournament with your friends",
+                            style: GoogleFonts.nunito(
+                              textStyle: TextStyle(fontSize: 24),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.only(top: MarginsRaw.regular),
+                          child: RaisedButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    MarginsRaw.borderRadius),
+                                side: BorderSide(color: AppColors.blue)),
+                            color: AppColors.blue,
+                            textColor: Colors.white,
+                            padding: Margins.regular,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SetupPagesContainer()),
+                              );
+                            },
+                            child: Text(
+                              'Start Tournament',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

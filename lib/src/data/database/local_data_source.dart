@@ -147,9 +147,9 @@ class LocalDataSource {
     return;
   }
 
-  Future<List<Map>> getTournamentScore() async {
+  Future<List<Map>> getTournamentScore(String tournamentId) async {
     final db = await databaseProvider.db();
-    List<Map> results = await db.rawQuery(getTournamentScoreQuery);
+    List<Map> results = await db.rawQuery(format(getTournamentScoreQuery, tournamentId));
     return results;
   }
 

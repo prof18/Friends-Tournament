@@ -16,6 +16,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
@@ -97,48 +98,89 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
   Widget build(BuildContext context) {
     return _allPages == null
         ? buildLoader()
-        : Scaffold(
-            body: Container(
-              child: Stack(
-                alignment: AlignmentDirectional.bottomCenter,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 42.0),
-                    child: PageView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      controller: _pageController,
-                      onPageChanged: _onPageChanged,
-                      itemCount: _allPages.length,
-                      itemBuilder: (ctx, i) => _allPages[i],
+        : AnnotatedRegion(
+            value: SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.dark,
+            ),
+            child: Scaffold(
+              body: Container(
+                child: Stack(
+                  alignment: AlignmentDirectional.bottomCenter,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 42.0),
+                      child: PageView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        controller: _pageController,
+                        onPageChanged: _onPageChanged,
+                        itemCount: _allPages.length,
+                        itemBuilder: (ctx, i) => _allPages[i],
+                      ),
                     ),
-                  ),
-                  Stack(
-                    alignment: AlignmentDirectional.topStart,
-                    children: <Widget>[
-                      Visibility(
-                        visible: _currentPageIndex != 0,
-                        child: GestureDetector(
-                          onTap: () {
-                            final page = _allPages[_currentPageIndex];
-                            final canGoBack = page.onBackPressed();
-                            if (canGoBack) {
-                              if (_currentPageIndex != _allPages.length - 1) {
-                                FocusScope.of(context).unfocus();
-                                _pageController.animateToPage(
-                                    _currentPageIndex -= 1,
-                                    duration: Duration(milliseconds: 250),
-                                    curve: Curves.ease);
+                    Stack(
+                      alignment: AlignmentDirectional.topStart,
+                      children: <Widget>[
+                        Visibility(
+                          visible: _currentPageIndex != 0,
+                          child: GestureDetector(
+                            onTap: () {
+                              final page = _allPages[_currentPageIndex];
+                              final canGoBack = page.onBackPressed();
+                              if (canGoBack) {
+                                if (_currentPageIndex != _allPages.length - 1) {
+                                  FocusScope.of(context).unfocus();
+                                  _pageController.animateToPage(
+                                      _currentPageIndex -= 1,
+                                      duration: Duration(milliseconds: 250),
+                                      curve: Curves.ease);
+                                }
                               }
-                            }
-                          },
-                          child: Align(
-                            alignment: Alignment.bottomLeft,
+                            },
+                            child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Padding(
+                                padding:
+                                    EdgeInsets.only(left: 15.0, bottom: 15.0),
+                                child: Text(
+                                  // TODO: localize
+                                  "Back",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: GestureDetector(
+                            onTap: () {
+                              final page = _allPages[_currentPageIndex];
+                              final canGoForward = page.onNextPressed();
+                              if (canGoForward) {
+                                if (_currentPageIndex != _allPages.length - 1) {
+                                  FocusScope.of(context).unfocus();
+                                  _pageController.animateToPage(
+                                      _currentPageIndex += 1,
+                                      duration: Duration(milliseconds: 250),
+                                      curve: Curves.ease);
+                                } else {
+                                  // TODO: end the setup process
+                                  _showAlertDialog();
+                                }
+                              }
+                            },
                             child: Padding(
                               padding:
-                                  EdgeInsets.only(left: 15.0, bottom: 15.0),
+                                  EdgeInsets.only(right: 15.0, bottom: 15.0),
                               child: Text(
                                 // TODO: localize
-                                "Back",
+                                _currentPageIndex == _allPages.length - 1
+                                    ? "Done"
+                                    : "Next",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14.0,
@@ -147,58 +189,24 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
                             ),
                           ),
                         ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: GestureDetector(
-                          onTap: () {
-                            final page = _allPages[_currentPageIndex];
-                            final canGoForward = page.onNextPressed();
-                            if (canGoForward) {
-                              if (_currentPageIndex != _allPages.length - 1) {
-                                FocusScope.of(context).unfocus();
-                                _pageController.animateToPage(
-                                    _currentPageIndex += 1,
-                                    duration: Duration(milliseconds: 250),
-                                    curve: Curves.ease);
-                              } else {
-                                // TODO: end the setup process
-                                _showAlertDialog();
-                              }
-                            }
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.only(right: 15.0, bottom: 15.0),
-                            child: Text(
-                              // TODO: localize
-                              _currentPageIndex == _allPages.length - 1
-                                  ? "Done"
-                                  : "Next",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14.0,
-                              ),
-                            ),
+                        Container(
+                          alignment: AlignmentDirectional.bottomCenter,
+                          margin: EdgeInsets.only(bottom: 20.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              for (int i = 0; i < _allPages.length; i++)
+                                if (i == _currentPageIndex)
+                                  SlideDots(true)
+                                else
+                                  SlideDots(false)
+                            ],
                           ),
                         ),
-                      ),
-                      Container(
-                        alignment: AlignmentDirectional.bottomCenter,
-                        margin: EdgeInsets.only(bottom: 20.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            for (int i = 0; i < _allPages.length; i++)
-                              if (i == _currentPageIndex)
-                                SlideDots(true)
-                              else
-                                SlideDots(false)
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                ],
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           );

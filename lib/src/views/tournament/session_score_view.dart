@@ -17,8 +17,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
+import 'package:friends_tournament/src/data/model/app/ui_match.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/app/ui_session.dart';
 import 'package:friends_tournament/src/ui/utils.dart';
@@ -42,6 +44,8 @@ class _SessionScoreViewState extends State<SessionScoreView> {
   TournamentBloc _tournamentBloc;
 
   ScrollController _scrollController;
+
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -93,20 +97,25 @@ class _SessionScoreViewState extends State<SessionScoreView> {
     _tournamentBloc = TournamentBlocProvider.of(context);
 
     return Scaffold(
+      key: _scaffoldKey,
       floatingActionButton: AnimatedOpacity(
         opacity: _panelExpanded || hideFab ? 0.0 : 1.0,
         duration: Duration(milliseconds: 100),
-        child: FloatingActionButton(
-          backgroundColor: AppColors.blue,
-          onPressed: () {
-            // TODO
-            // TODO: show a loader or a popup. Say also that automatically
-            // TODO: we skip to the following match
-            _tournamentBloc.endMatch().then((_) {
-              // TODO: hide the loader and change app state
-            });
+        child: StreamBuilder<UIMatch>(
+          stream: _tournamentBloc.currentMatch,
+          builder: (context, snapshot) {
+            return FloatingActionButton(
+                backgroundColor: AppColors.blue,
+                onPressed: () {
+                  _showAlertDialog(
+                      snapshot.data.hasAlreadyScore(), snapshot.data.name);
+                },
+                child: snapshot.hasData
+                    ? snapshot.data.hasAlreadyScore()
+                        ? Icon(Icons.edit)
+                        : Icon(Icons.save)
+                    : Container());
           },
-          child: Icon(Icons.save),
         ),
       ),
       body: renderBody(context),
@@ -144,6 +153,66 @@ class _SessionScoreViewState extends State<SessionScoreView> {
           },
         ),
       ),
+    );
+  }
+
+  _showAlertDialog(bool isEdit, String matchName) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(MarginsRaw.borderRadius),
+            ),
+          ),
+          // TODO: localize
+          title: Text(matchName),
+          content: Container(
+            height: 250,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: SvgPicture.asset(
+                    'assets/save-art.svg',
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: MarginsRaw.regular),
+                  child: Text(
+                    // TODO: localize
+                    isEdit
+                        ? "Do you want to update the scores of this match and go to the next one?"
+                        : "Do you want to save the scores of this match and go to the next one?",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                )
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              // TODO: localize
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              // TODO: localize
+              child: const Text('Ok'),
+              onPressed: () async {
+                await _tournamentBloc.endMatch();
+                Navigator.of(context).pop();
+                // TODO: add action
+              },
+            )
+          ],
+        );
+      },
     );
   }
 }

@@ -17,6 +17,7 @@
 /// Adapted from https://github.com/flutter/flutter/blob/master/examples/flutter_gallery/lib/demo/shrine/shopping_cart.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
@@ -38,92 +39,100 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(top: MarginsRaw.regular),
-                        child: SizedBox(
-                          width: _leftColumnWidth,
-                          child: IconButton(
-                            icon: const Icon(Icons.keyboard_arrow_down),
-                            onPressed: () => {
-                              // TODO: delete
-                            },
+      body: AnnotatedRegion(
+        value: SystemUiOverlayStyle(
+          statusBarColor: Colors.white,
+          statusBarIconBrightness: Brightness.dark,
+        ),
+        child: SafeArea(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(top: MarginsRaw.regular),
+                          child: SizedBox(
+                            width: _leftColumnWidth,
+                            child: IconButton(
+                              icon: const Icon(Icons.arrow_back_ios),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: MarginsRaw.regular),
-                        child: Text(
-                          'Leaderboard',
-                          style: TextStyle(fontSize: 36),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(top: MarginsRaw.regular),
+                          child: Text(
+                            'Leaderboard',
+                            style: TextStyle(fontSize: 36),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Expanded(
+                      flex: 4,
+                      child: Padding(
+                        padding: Margins.regular,
+                        child: SvgPicture.asset(
+                          'assets/podium-art.svg',
                         ),
                       ),
-                    ],
-                  ),
-                  Expanded(
-                    flex: 4,
-                    child: Padding(
-                      padding: Margins.regular,
-                      child: SvgPicture.asset(
-                        'assets/podium-art.svg',
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: MarginsRaw.regular,
+                        left: MarginsRaw.regular,
+                        bottom: MarginsRaw.regular,
+                      ),
+                      child: Container(
+                        alignment: Alignment.topLeft,
+                        decoration: BoxDecoration(
+                          color: AppColors.blue,
+                          borderRadius: BorderRadius.circular(
+                            MarginsRaw.borderRadius,
+                          ),
+                        ),
+                        height: 6,
+                        width: 60,
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: MarginsRaw.regular,
-                      left: MarginsRaw.regular,
-                      bottom: MarginsRaw.regular,
-                    ),
-                    child: Container(
-                      alignment: Alignment.topLeft,
-                      decoration: BoxDecoration(
-                        color: AppColors.blue,
-                        borderRadius: BorderRadius.circular(
-                          MarginsRaw.borderRadius,
+                    Expanded(
+                      flex: 6,
+                      child: Padding(
+                        padding: Margins.small,
+                        child: StreamBuilder<List<UIPlayer>>(
+                          initialData: [],
+                          stream: tournamentBloc.leaderboardPlayers,
+                          builder: (context, snapshot) {
+                            return snapshot.data.isNotEmpty
+                                ? ListView.builder(
+                                    itemCount: snapshot.data.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      UIPlayer uiPlayer = snapshot.data[index];
+                                      return LeaderboardItemTile(
+                                        uiPlayer: uiPlayer,
+                                        position: index + 1,
+                                      );
+                                    },
+                                  )
+                                : _renderEmptyLeaderboard();
+                          },
                         ),
                       ),
-                      height: 6,
-                      width: 60,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 6,
-                    child: Padding(
-                      padding: Margins.small,
-                      child: StreamBuilder<List<UIPlayer>>(
-                        initialData: [],
-                        stream: tournamentBloc.leaderboardPlayers,
-                        builder: (context, snapshot) {
-                          return snapshot.data.isNotEmpty
-                              ? ListView.builder(
-                                  itemCount: snapshot.data.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    UIPlayer uiPlayer = snapshot.data[index];
-                                    return LeaderboardItemTile(
-                                      uiPlayer: uiPlayer,
-                                      position: index + 1,
-                                    );
-                                  },
-                                )
-                              : _renderEmptyLeaderboard();
-                        },
-                      ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

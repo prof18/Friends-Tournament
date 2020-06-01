@@ -16,10 +16,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
 import 'package:friends_tournament/src/ui/custom_icons_icons.dart';
+import 'package:friends_tournament/src/ui/utils.dart';
+import 'package:friends_tournament/src/views/tournament/leaderboard_page.dart';
 import 'package:friends_tournament/style/app_style.dart';
 
 class Backdrop extends StatefulWidget {
@@ -82,10 +85,6 @@ class _BackdropState extends State<Backdrop>
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: AppColors.blue,
-    ));
-
     TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
 
     return Scaffold(
@@ -98,7 +97,12 @@ class _BackdropState extends State<Backdrop>
           child: StreamBuilder<UIMatch>(
             stream: tournamentBloc.currentMatch,
             builder: (context, snapshot) {
-              return snapshot.hasData ? Text(snapshot.data.name) : Text("");
+              return snapshot.hasData
+                  ? Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(snapshot.data.name),
+                    )
+                  : Container();
             },
           ),
         ),
@@ -117,7 +121,10 @@ class _BackdropState extends State<Backdrop>
             child: IconButton(
               icon: Icon(CustomIcons.podium),
               onPressed: () {
-                // TODO: go to leaderboard screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LeaderboardScreen()),
+                );
               },
               // TODO: localize me
               tooltip: "Show Leaderboard",

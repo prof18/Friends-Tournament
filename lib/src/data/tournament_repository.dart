@@ -153,8 +153,8 @@ class TournamentRepository {
     return;
   }
 
-  Future<List<UIScore>> getScore() async {
-    final List<Map> results = await localDataSource.getTournamentScore();
+  Future<List<UIScore>> getScore(Tournament tournament) async {
+    final List<Map> results = await localDataSource.getTournamentScore(tournament.id);
     final List<UIScore> finalScores = List<UIScore>();
     await Future.forEach(results, (row) async {
       final idPlayer = row['id_player'];
@@ -172,7 +172,7 @@ class TournamentRepository {
   }
 
   Future<List<UIScore>> finishTournament(Tournament tournament) async {
-    final List<Map> results = await localDataSource.getTournamentScore();
+    final List<Map> results = await localDataSource.getTournamentScore(tournament.id);
     final List<UIScore> finalScores = List<UIScore>();
     await Future.forEach(results, (row) async {
       final idPlayer = row['id_player'];

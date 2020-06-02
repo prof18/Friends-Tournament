@@ -24,6 +24,7 @@ class TournamentDao implements Dao<Tournament> {
   final columnAstPlayersNumber = "players_ast_number";
   final columnMatchesNumber = "matches_number";
   final columnActiveTournament = "is_active";
+  final columnDate = "date";
 
   @override
   String get tableName => "tournaments";
@@ -36,6 +37,7 @@ class TournamentDao implements Dao<Tournament> {
       "$columnAstPlayersNumber INTEGER, "
       "$columnMatchesNumber INTEGER, "
       "$columnActiveTournament INTEGER, "
+      "$columnDate INTEGER, "
       "PRIMARY KEY ($columnId)"
       ")";
 
@@ -54,10 +56,11 @@ class TournamentDao implements Dao<Tournament> {
     var tournamentName = query[columnName];
     var playersNumber = query[columnPlayersNumber];
     var playersAstNumber = query[columnAstPlayersNumber];
-    var macthesNumber = query[columnMatchesNumber];
+    var matchesNumber = query[columnMatchesNumber];
     var isActive = query[columnActiveTournament];
+    var date = query[columnDate];
     return Tournament(tournamentId, tournamentName, playersNumber,
-        playersAstNumber, macthesNumber, isActive);
+        playersAstNumber, matchesNumber, isActive, date);
   }
 
   @override
@@ -68,7 +71,8 @@ class TournamentDao implements Dao<Tournament> {
       columnPlayersNumber: object.playersNumber,
       columnAstPlayersNumber: object.playersAstNumber,
       columnMatchesNumber: object.matchesNumber,
-      columnActiveTournament: object.isActive
+      columnActiveTournament: object.isActive,
+      columnDate: object.date
     };
   }
 }

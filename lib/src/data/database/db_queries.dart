@@ -38,11 +38,11 @@ const getSessionPlayersQuery =
     "ORDER BY player_name;";
 
 const getTournamentScoreQuery =
-    "SELECT id_tournament, player_session.id_player, sum(score) as final_score, players.name "
-    "FROM tournaments "
-    "INNER JOIN tournament_player ON tournaments.id = tournament_player.id_tournament "
-    "INNER JOIN player_session ON tournament_player.id_player = player_session.id_player "
-    "INNER JOIN players ON player_session.id_player = players.id "
-    "WHERE tournaments.id = '<>' "
-    "GROUP BY player_session.id_player "
-    "ORDER BY final_score DESC";
+    "SELECT tournament_player.id_player as id_player, players.name as name, tournament_player.final_score as final_score "
+    "FROM tournament_player "
+    "INNER JOIN players ON tournament_player.id_player = players.id "
+    "WHERE tournament_player.id_tournament = <> "
+    "ORDER BY final_score DESC;";
+
+
+

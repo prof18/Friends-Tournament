@@ -59,7 +59,8 @@ class TournamentBloc {
 
   Stream<UIMatch> get currentMatch => _currentMatchController.stream;
 
-  Stream<List<UIPlayer>> get leaderboardPlayers => _leaderboardPlayersController.stream;
+  Stream<List<UIPlayer>> get leaderboardPlayers =>
+      _leaderboardPlayersController.stream;
 
   Stream<String> get currentMatchName => _currentMatchNameController.stream;
 
@@ -109,7 +110,6 @@ class TournamentBloc {
   /// Retrieve the current active active tournament. Then fetches all the data
   /// required to show it to the user
   _fetchInitialData() {
-
     // TODO: add a try/catch and report the result on a stream. Maybe show "something is wrong" and return to the setup process
 
     // Current tournament
@@ -124,25 +124,29 @@ class TournamentBloc {
 
   /// Retrieves the UI objects of the current tournament
   _fetchTournamentMatches(Tournament tournament) {
-
     // TODO: add a try/catch and report the result on a stream. Maybe show "something is wrong" and return to the setup process
 
+    // TODO: if there aren't any match, reset all
 
     repository.getTournamentMatches(tournament.id).then((matchesList) {
       _tournamentMatches = matchesList;
 
-      final currentMatch =
-          _tournamentMatches.firstWhere((match) => match.isActive == 1);
+      // If all the matches are not active, we set as first match the first one
+      final currentMatch = _tournamentMatches.firstWhere(
+          (match) => match.isActive == 1,
+          orElse: () => _tournamentMatches[0]);
+
       currentMatch.isSelected = true;
       _currentMatch = currentMatch;
 
-      _computeLeaderboard();
+      computeLeaderboard(_activeTournament);
 
       _activeTournamentController.add(_activeTournament);
       _tournamentMatchesController.add(_tournamentMatches);
       _currentMatchController.add(_currentMatch);
     }).catchError((error) {
       print(error);
+      // TODO: handle error?
     });
   }
 
@@ -168,29 +172,24 @@ class TournamentBloc {
   }
 
   Future<void> endMatch() async {
-
     // TODO: add a try/catch and report the result on a stream. Maybe show "something is wrong" and return to the setup process
 
-
     // TODO: pay attention if we are not saving the current match
-
 
     // save the current progress on the database
     _currentMatch.isActive = 0;
     _currentMatch.isSelected = false;
 
-    await repository.finishMatch(_currentMatch);
+    await repository.finishMatch(_currentMatch, _activeTournament);
 
-    _computeLeaderboard();
+    computeLeaderboard(_activeTournament);
 
     // the current match is no active. Select another as active
     int currentMatchIndex = _tournamentMatches.indexOf(_currentMatch);
     // it could be the last match
     int nextMatchIndex = currentMatchIndex + 1;
     if (nextMatchIndex > _tournamentMatches.length - 1) {
-      // we can finish the entire tournament
-      // TODO: don't do this!! Notify something to the UI and then take the decision!
-//      await endTournament();
+      // we can finish the entire tournament. So notify the fact to the UI.
       _tournamentFinishedController.add(null);
     } else {
       UIMatch nextMatch = _tournamentMatches[nextMatchIndex];
@@ -201,38 +200,27 @@ class TournamentBloc {
       _currentMatchController.add(_currentMatch);
       _tournamentMatchesController.add(_tournamentMatches);
       _currentMatchNameController.add(_currentMatch.name);
-
     }
   }
 
   Future<void> endTournament() async {
-
     // TODO: add a try/catch and report the result on a stream. Maybe show "something is wrong" and return to the setup process
 
-    final List<UIScore> finalScores =
-        await repository.finishTournament(_activeTournament);
-
-    // TODO: decide what to do!
-    print(finalScores);
-
-    List<UIPlayer> players =
-    finalScores.map((uiScore) => UIPlayer(id: uiScore.id, name: uiScore.name, score: uiScore.score)).toList();
-
-    _leaderboardPlayersController.add(players);
-
+    await repository.finishTournament(_activeTournament);
     return;
   }
 
-  void _computeLeaderboard() async {
+  void computeLeaderboard(Tournament tournament) async {
 
     // TODO: add a try/catch and report the result on a stream. Maybe show "something is wrong" and return to the setup process
 
-    final List<UIScore> scores = await repository.getScore(_activeTournament);
+    final List<UIScore> scores = await repository.getScore(tournament);
 
-    List<UIPlayer> players =
-        scores.map((uiScore) => UIPlayer(id: uiScore.id, name: uiScore.name, score: uiScore.score)).toList();
+    List<UIPlayer> players = scores
+        .map((uiScore) =>
+            UIPlayer(id: uiScore.id, name: uiScore.name, score: uiScore.score))
+        .toList();
 
     _leaderboardPlayersController.add(players);
-
   }
 }

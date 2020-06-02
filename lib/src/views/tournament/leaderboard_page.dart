@@ -22,10 +22,29 @@ import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
+import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_item_tile.dart';
 import 'package:friends_tournament/style/app_style.dart';
 
-class LeaderboardScreen extends StatelessWidget {
+class LeaderboardScreen extends StatefulWidget {
+  final Tournament tournament;
+
+  LeaderboardScreen(this.tournament);
+
+  @override
+  _LeaderboardScreenState createState() => _LeaderboardScreenState();
+}
+
+class _LeaderboardScreenState extends State<LeaderboardScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
+      tournamentBloc.computeLeaderboard(widget.tournament);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -140,4 +159,3 @@ class LeaderboardScreen extends StatelessWidget {
     );
   }
 }
-

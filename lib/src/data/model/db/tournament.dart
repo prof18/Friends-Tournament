@@ -29,14 +29,13 @@ class Tournament {
   int matchesNumber;
   // 0 inactive, 1 active
   int isActive;
+  int date;
 
   Tournament(this.id, this.name, this.playersNumber, this.playersAstNumber,
-      this.matchesNumber, this.isActive);
+      this.matchesNumber, this.isActive, this.date);
 
   @override
   String toString() {
-    return 'Tournament{id: $id, name: $name, playersNumber: $playersNumber,'
-        ' playersAstNumber: $playersAstNumber, matchesNumber: $matchesNumber, '
-        'isActive: $isActive}';
+    return 'Tournament{id: $id, name: $name, playersNumber: $playersNumber, playersAstNumber: $playersAstNumber, matchesNumber: $matchesNumber, isActive: $isActive, date: $date}';
   }
 }

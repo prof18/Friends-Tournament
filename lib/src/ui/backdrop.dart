@@ -73,12 +73,6 @@ class _BackdropState extends State<Backdrop>
     });
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
-  }
-
   bool get _isPanelVisible {
     var status = _controller.status;
     return status == AnimationStatus.completed ||
@@ -132,10 +126,11 @@ class _BackdropState extends State<Backdrop>
             visible: !_panelExpanded,
             child: IconButton(
               icon: Icon(CustomIcons.podium),
-              onPressed: () {
+              onPressed: () async {
+                final tournament = await tournamentBloc.activeTournament.first;
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LeaderboardScreen()),
+                  MaterialPageRoute(builder: (context) => LeaderboardScreen(tournament)),
                 );
               },
               // TODO: localize me
@@ -237,14 +232,12 @@ class _BackdropState extends State<Backdrop>
                     // TODO: localize
                     child: const Text('Ok'),
                     onPressed: () async {
-                      // TODO: uncomment
-//                    await tournamentBloc.endTournament();
-                      // TODO: navigate to new screen without backstack
-                      Navigator.of(context).pop();
+                      final tournament = await tournamentBloc.activeTournament.first;
+                      await tournamentBloc.endTournament();
                       Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
                             builder: (context) => TournamentBlocProvider(
-                              child: FinalScreen(),
+                              child: FinalScreen(tournament),
                             ),
                           ),
                           (Route<dynamic> route) => false);

@@ -22,7 +22,9 @@ import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.d
 import 'package:friends_tournament/src/data/database/database_provider.dart';
 import 'package:friends_tournament/src/data/database/database_provider_impl.dart';
 import 'package:friends_tournament/src/data/database/local_data_source.dart';
+import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/data/tournament_repository.dart';
+import 'package:friends_tournament/src/views/tournament/final_screen.dart';
 import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
 import 'package:friends_tournament/src/views/welcome_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -38,6 +40,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   var _isLoading = true;
   var _isActive = false;
+  Tournament _lastTournament;
 
   @override
   void initState() {
@@ -51,11 +54,14 @@ class _MyAppState extends State<MyApp> {
   _loadData() async {
     DatabaseProvider databaseProvider = DatabaseProviderImpl.get;
     LocalDataSource localDataSource = LocalDataSource(databaseProvider);
-    var repository = TournamentRepository(localDataSource);
+    final repository = TournamentRepository(localDataSource);
 
     var isActive = false;
     try {
       isActive = await repository.isTournamentActive();
+      if (!isActive) {
+        _lastTournament = await repository.getLastFinishedTournament();
+      }
     } on Exception catch (_) {
       // do nothing, we assume that the tournament is not active
     }
@@ -77,28 +83,23 @@ class _MyAppState extends State<MyApp> {
         null);
 
     await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoder, 'assets/podium-art.svg'),
+        ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/podium-art.svg'),
         null);
 
     await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoder, 'assets/error-art.svg'),
+        ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/error-art.svg'),
         null);
 
     await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoder, 'assets/finish-art.svg'),
+        ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/finish-art.svg'),
         null);
 
     await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoder, 'assets/save-art.svg'),
+        ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/save-art.svg'),
         null);
 
     await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoder, 'assets/winner-art.svg'),
+        ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/winner-art.svg'),
         null);
 
     setState(() {
@@ -113,18 +114,18 @@ class _MyAppState extends State<MyApp> {
     return SetupBlocProvider(
       child: TournamentBlocProvider(
         child: MaterialApp(
-            title: 'Flutter Demo',
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-              textTheme: GoogleFonts.montserratTextTheme(
-                Theme.of(context).textTheme,
-              ),
+          title: 'Flutter Demo',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            textTheme: GoogleFonts.montserratTextTheme(
+              Theme.of(context).textTheme,
             ),
-            home: _isLoading
-                ? buildLoader()
-            // TODO: if none tournament is active, but there are some in the memory, load the last one
-                : _isActive ? TournamentScreen() : Welcome()),
+          ),
+          home: _isLoading
+              ? buildLoader()
+              : _isActive ? _buildTournamentScreen() : _buildWelcomeScreen(),
+        ),
       ),
     );
   }
@@ -139,15 +140,11 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Widget buildWelcomeScreen() {
-    return SetupBlocProvider(
-      child: Welcome(),
-    );
+  Widget _buildWelcomeScreen() {
+    return _lastTournament != null ? FinalScreen(_lastTournament) : Welcome();
   }
 
-  Widget buildTournamentScreen() {
-    return TournamentBlocProvider(
-      child: TournamentScreen(),
-    );
+  Widget _buildTournamentScreen() {
+    return TournamentScreen();
   }
 }

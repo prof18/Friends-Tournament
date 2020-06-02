@@ -56,6 +56,10 @@ class TournamentRepository {
     return false;
   }
 
+  Future<Tournament> getLastFinishedTournament() async {
+    return localDataSource.getLastTournament();
+  }
+
   Future<Tournament> getCurrentActiveTournament() async {
     final dao = TournamentDao();
     final tournament = await localDataSource.getActiveTournament(dao);
@@ -133,9 +137,9 @@ class TournamentRepository {
   ///   - matches -> is_active
   ///   - player_session -> score
   ///   - tournament_player -> final_score
-  Future<void> finishMatch(UIMatch uiMatch) async {
+  Future<void> finishMatch(UIMatch uiMatch, Tournament tournament) async {
     // put inactive the current match
-    final tournament.Match match = uiMatch.getParent();
+    final match = uiMatch.getParent();
     await localDataSource.updateMatch(match);
 
     // update the scores of the player
@@ -147,11 +151,24 @@ class TournamentRepository {
         final PlayerSession playerSession =
             PlayerSession(player.id, session.id, player.score);
         await localDataSource.updatePlayerSession(playerSession);
+
+        final tournamentPlayer = await getTournamentPlayer(player.id, tournament.id);
+        if (tournamentPlayer != null) {
+          tournamentPlayer.finalScore += player.score;
+          await localDataSource.updateTournamentPlayer(tournamentPlayer);
+        }
       });
     });
 
     return;
   }
+
+
+  Future<TournamentPlayer> getTournamentPlayer(String playerId, String tournamentId) async{
+    final players = await localDataSource.getTournamentPlayers(tournamentId);
+    return players.firstWhere((element) => element.playerId == playerId, orElse: null);
+  }
+
 
   Future<List<UIScore>> getScore(Tournament tournament) async {
     final List<Map> results = await localDataSource.getTournamentScore(tournament.id);
@@ -171,30 +188,9 @@ class TournamentRepository {
     return finalScores;
   }
 
-  Future<List<UIScore>> finishTournament(Tournament tournament) async {
-    final List<Map> results = await localDataSource.getTournamentScore(tournament.id);
-    final List<UIScore> finalScores = List<UIScore>();
-    await Future.forEach(results, (row) async {
-      final idPlayer = row['id_player'];
-      final finalScore = row['final_score'];
-      final playerName = row['name'];
-      finalScores.add(
-        UIScore(
-          id: idPlayer,
-          name: playerName,
-          score: finalScore,
-        ),
-      );
-
-      final tournamentPlayer =
-          TournamentPlayer(idPlayer, tournament.id, finalScore);
-      await localDataSource.updateTournamentPlayer(tournamentPlayer);
-    });
-
+  Future<void> finishTournament(Tournament tournament) async {
     tournament.isActive = 0;
     await localDataSource.updateTournament(tournament);
-
-    return finalScores;
   }
 
   Future<void> updateMatch(UIMatch uiMatch) async {

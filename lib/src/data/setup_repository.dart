@@ -127,8 +127,14 @@ class SetupRepository {
     this._matchesNumber = matchesNumber;
     this._tournamentName = tournamentName;
 
-    this._tournament = Tournament(generateTournamentId(_tournamentName),
-        _tournamentName, _playersNumber, _playersAstNumber, _matchesNumber, 1);
+    this._tournament = Tournament(
+        generateTournamentId(_tournamentName),
+        _tournamentName,
+        _playersNumber,
+        _playersAstNumber,
+        _matchesNumber,
+        1,
+        DateTime.now().millisecondsSinceEpoch);
 
     _setupPlayers(playersName);
     _setupMatches(matchesName);

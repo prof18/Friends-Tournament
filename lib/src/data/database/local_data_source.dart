@@ -44,7 +44,6 @@ class LocalDataSource {
     return _singleton;
   }
 
-
   /// -------
 
   // TODO: close db connection
@@ -99,6 +98,20 @@ class LocalDataSource {
     return null;
   }
 
+  /// Return all the tournaments saved in the db
+  Future<Tournament> getLastTournament() async {
+    final db = await databaseProvider.db();
+    final dao = TournamentDao();
+    List<Map> maps = await db.query(dao.tableName, where: 'is_active = ?', whereArgs: [0], orderBy: "date DESC");
+    List<Tournament> tournaments = dao.fromList(maps);
+
+    if (tournaments.isNotEmpty) {
+      return tournaments.first;
+    }
+
+    return Future.value(null);
+  }
+
   /// Returns all the matches of the tournament provided as input
   Future<List<Map>> getTournamentMatches(String tournamentId) async {
     final db = await databaseProvider.db();
@@ -147,12 +160,6 @@ class LocalDataSource {
     return;
   }
 
-  Future<List<Map>> getTournamentScore(String tournamentId) async {
-    final db = await databaseProvider.db();
-    List<Map> results = await db.rawQuery(format(getTournamentScoreQuery, tournamentId));
-    return results;
-  }
-
   Future<void> updateTournamentPlayer(TournamentPlayer tournamentPlayer) async {
     final db = await databaseProvider.db();
     final TournamentPlayerDao dao = TournamentPlayerDao();
@@ -164,6 +171,15 @@ class LocalDataSource {
     );
   }
 
+  Future<List<TournamentPlayer>> getTournamentPlayers(
+      String tournamentId) async {
+    final db = await databaseProvider.db();
+    final TournamentPlayerDao dao = TournamentPlayerDao();
+    List<Map> results = await db.query(dao.tableName,
+        where: 'id_tournament = ?', whereArgs: [tournamentId]);
+    return dao.fromList(results);
+  }
+
   Future<void> updateTournament(Tournament tournament) async {
     final db = await databaseProvider.db();
     final TournamentDao dao = TournamentDao();
@@ -173,5 +189,11 @@ class LocalDataSource {
       where: dao.columnId + " = ?",
       whereArgs: [tournament.id],
     );
+  }
+
+  Future<List<Map>> getTournamentScore(String tournamentId) async {
+    final db = await databaseProvider.db();
+    List<Map> results = await db.rawQuery(format(getTournamentScoreQuery, tournamentId));
+    return results;
   }
 }

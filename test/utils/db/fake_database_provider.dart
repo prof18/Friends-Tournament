@@ -65,7 +65,7 @@ class FakeDatabaseProvider implements DatabaseProvider {
   }
 
   @override
-  Future<Database> closeDb() {
+  Future<void> closeDb() {
     if (_db != null) {
       _db.close();
     }

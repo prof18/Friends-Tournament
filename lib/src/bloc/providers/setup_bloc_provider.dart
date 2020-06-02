@@ -31,7 +31,5 @@ class SetupBlocProvider extends InheritedWidget {
   }
 
   static SetupBloc of(BuildContext context) =>
-      (context.inheritFromWidgetOfExactType(SetupBlocProvider)
-              as SetupBlocProvider)
-          .setupBloc;
+      context.dependOnInheritedWidgetOfExactType<SetupBlocProvider>().setupBloc;
 }

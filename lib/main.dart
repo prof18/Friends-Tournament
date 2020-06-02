@@ -109,12 +109,11 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
-  // TODO: change theme and name
   Widget build(BuildContext context) {
     return SetupBlocProvider(
       child: TournamentBlocProvider(
         child: MaterialApp(
-          title: 'Flutter Demo',
+          title: 'Friends Tournament',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primarySwatch: Colors.blue,

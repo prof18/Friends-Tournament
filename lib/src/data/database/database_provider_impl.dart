@@ -64,7 +64,7 @@ class DatabaseProviderImpl implements DatabaseProvider {
   }
 
   @override
-  Future<Database> closeDb() async {
+  Future<void> closeDb() async {
     if (_db != null) {
       _db.close();
     }

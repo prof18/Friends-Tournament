@@ -37,6 +37,7 @@ class SetupBloc {
   final _tournamentNameController = StreamController<String>();
   final _playersNameController = BehaviorSubject<Map<int, String>>();
   final _matchesNameController = BehaviorSubject<Map<int, String>>();
+  final _errorController = BehaviorSubject<void>();
 
   // Input
   Sink<int> get setPlayersNumber => _playersNumberController.sink;
@@ -62,6 +63,8 @@ class SetupBloc {
 
   Stream<Map<int, String>> get getMatchesName => _matchesNameController.stream;
 
+  Stream<void> get getErrorChecker => _errorController.stream;
+
   /* *************
   *
   * Constructor/Destructor
@@ -73,8 +76,8 @@ class SetupBloc {
 
     /// The min value for a meaningful match is two players
     _playersAstNumberController.value = 2;
-    /// The min value for a meaningful tournament is one
 
+    /// The min value for a meaningful tournament is one
     _matchesNumberController.value = 1;
 
     _playersNumberController.stream.listen(_setPlayersNumber);
@@ -92,6 +95,7 @@ class SetupBloc {
     _tournamentNameController.close();
     _playersNameController.close();
     _matchesNameController.close();
+    _errorController.close();
   }
 
   /* *************
@@ -145,12 +149,16 @@ class SetupBloc {
     LocalDataSource localDataSource = LocalDataSource(databaseProvider);
     SetupRepository repository = new SetupRepository(localDataSource);
 
-    // TODO: add a try/catch and report the error on a stream. In the UI, the setup process is restarted from scratch
-    //  - MatchesWithSameIdException
-    //  - TooMuchPlayersASTException -> do not start setup process from scratch
-    //  - AlreadyActiveTournamentException -> it should never happen! A setup process never starts if there is another ongoing tournament
+    try {
+      await repository.setupTournament(_playersNumber, _playersAstNumber,
+          _matchesNumber, _tournamentName, _playersName, _matchesName);
+    } on Exception catch (_) {
+      /// We know these exceptions:
+      ///  - MatchesWithSameIdException
+      ///  - TooMuchPlayersASTException -> do not start setup process from scratch
+      ///  - AlreadyActiveTournamentException -> it should never happen! A setup process never starts if there is another ongoing tournament
 
-    await repository.setupTournament(_playersNumber, _playersAstNumber,
-        _matchesNumber, _tournamentName, _playersName, _matchesName);
+      _errorController.add(null);
+    }
   }
 }

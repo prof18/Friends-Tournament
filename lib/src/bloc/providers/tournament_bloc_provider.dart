@@ -30,8 +30,7 @@ class TournamentBlocProvider extends InheritedWidget {
     return true;
   }
 
-  static TournamentBloc of(BuildContext context) =>
-      (context.inheritFromWidgetOfExactType(TournamentBlocProvider)
-              as TournamentBlocProvider)
-          .tournamentBloc;
+  static TournamentBloc of(BuildContext context) => context
+      .dependOnInheritedWidgetOfExactType<TournamentBlocProvider>()
+      .tournamentBloc;
 }

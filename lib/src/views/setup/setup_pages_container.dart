@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc.dart';
@@ -30,6 +31,7 @@ import 'package:friends_tournament/src/views/setup/5_players_name.dart';
 import 'package:friends_tournament/src/views/setup/6_matches_name.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
+import 'package:friends_tournament/src/views/welcome_screen.dart';
 import 'package:friends_tournament/style/app_style.dart';
 
 import '4_matches_number.dart';
@@ -68,6 +70,11 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _setupBloc = SetupBlocProvider.of(context);
+
+      _setupBloc.getErrorChecker.listen((event) {
+        _showErrorDialog();
+      });
+
       setState(() {
         _allPages = <SetupPage>[
           TournamentName(_setupBloc),
@@ -287,6 +294,63 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
                 ),
                 (Route<dynamic> route) => false);
           },
+        );
+      },
+    );
+  }
+
+  _showErrorDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(MarginsRaw.borderRadius),
+            ),
+          ),
+          // TODO: localize
+          title: Text("Ops 🙁"),
+          content: Container(
+            height: 250,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: SvgPicture.asset(
+                    'assets/error-art.svg',
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: MarginsRaw.regular),
+                  child: Text(
+                    // TODO: localize
+                    "Something is not working! Please apologize me 🙏🏻",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                )
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              // TODO: localize
+              child: const Text('Restart from scratch'),
+              onPressed: () async {
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (context) => SetupBlocProvider(
+                        child: TournamentBlocProvider(
+                          child: Welcome(),
+                        ),
+                      ),
+                    ),
+                    (Route<dynamic> route) => false);
+              },
+            )
+          ],
         );
       },
     );

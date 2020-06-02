@@ -130,7 +130,8 @@ class _BackdropState extends State<Backdrop>
                 final tournament = await tournamentBloc.activeTournament.first;
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LeaderboardScreen(tournament)),
+                  MaterialPageRoute(
+                      builder: (context) => LeaderboardScreen(tournament)),
                 );
               },
               // TODO: localize me
@@ -188,64 +189,65 @@ class _BackdropState extends State<Backdrop>
       barrierDismissible: false, // user must tap button for close dialog!
       builder: (BuildContext context) {
         return StreamBuilder<Tournament>(
-            stream: tournamentBloc.activeTournament,
-            builder: (context, snapshot) {
-              return AlertDialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(MarginsRaw.borderRadius),
-                  ),
+          stream: tournamentBloc.activeTournament,
+          builder: (context, snapshot) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(MarginsRaw.borderRadius),
                 ),
-                // TODO: localize
-                title:
-                    snapshot.hasData ? Text(snapshot.data.name) : Container(),
-                content: Container(
-                  height: 250,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: SvgPicture.asset(
-                          'assets/finish-art.svg',
-                        ),
+              ),
+              // TODO: localize
+              title: snapshot.hasData ? Text(snapshot.data.name) : Container(),
+              content: Container(
+                height: 250,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: SvgPicture.asset(
+                        'assets/finish-art.svg',
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: MarginsRaw.regular),
-                        child: Text(
-                          message,
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      )
-                    ],
-                  ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: MarginsRaw.regular),
+                      child: Text(
+                        message,
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    )
+                  ],
                 ),
-                actions: <Widget>[
-                  FlatButton(
-                    // TODO: localize
-                    child: const Text('Cancel'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  FlatButton(
-                    // TODO: localize
-                    child: const Text('Ok'),
-                    onPressed: () async {
-                      final tournament = await tournamentBloc.activeTournament.first;
-                      await tournamentBloc.endTournament();
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                            builder: (context) => TournamentBlocProvider(
-                              child: FinalScreen(tournament),
-                            ),
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  // TODO: localize
+                  child: const Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                FlatButton(
+                  // TODO: localize
+                  child: const Text('Ok'),
+                  onPressed: () async {
+                    final tournament =
+                        await tournamentBloc.activeTournament.first;
+                    await tournamentBloc.endTournament();
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (context) => TournamentBlocProvider(
+                            child: FinalScreen(tournament),
                           ),
-                          (Route<dynamic> route) => false);
-                    },
-                  )
-                ],
-              );
-            });
+                        ),
+                        (Route<dynamic> route) => false);
+                  },
+                )
+              ],
+            );
+          },
+        );
       },
     );
   }

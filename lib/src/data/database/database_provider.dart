@@ -18,5 +18,5 @@ import 'package:sqflite/sqflite.dart';
 
 abstract class DatabaseProvider {
   Future<Database> db();
-  Future<Database> closeDb();
+  Future<void> closeDb();
 }

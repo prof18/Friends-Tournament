@@ -117,10 +117,9 @@ class SetupRepository {
       Map<int, String> playersName,
       Map<int, String> matchesName) {
     if (playersAstNumber > playersNumber) {
+      // should never happen!
       throw TooMuchPlayersASTException();
     }
-
-    // TODO: check players AST number not equal to zero. Maybe do this check on the UI.
 
     this._playersNumber = playersNumber;
     this._playersAstNumber = playersAstNumber;

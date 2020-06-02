@@ -96,6 +96,11 @@ class _MyAppState extends State<MyApp> {
             SvgPicture.svgStringDecoder, 'assets/save-art.svg'),
         null);
 
+    await precachePicture(
+        ExactAssetPicture(
+            SvgPicture.svgStringDecoder, 'assets/winner-art.svg'),
+        null);
+
     setState(() {
       _isActive = isActive;
       _isLoading = false;
@@ -118,6 +123,7 @@ class _MyAppState extends State<MyApp> {
             ),
             home: _isLoading
                 ? buildLoader()
+            // TODO: if none tournament is active, but there are some in the memory, load the last one
                 : _isActive ? TournamentScreen() : Welcome()),
       ),
     );

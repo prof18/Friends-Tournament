@@ -25,14 +25,8 @@ import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_item_tile.dart';
 import 'package:friends_tournament/style/app_style.dart';
 
-const double _leftColumnWidth = 60.0;
+class LeaderboardScreen extends StatelessWidget {
 
-class LeaderboardScreen extends StatefulWidget {
-  @override
-  _LeaderboardScreenState createState() => _LeaderboardScreenState();
-}
-
-class _LeaderboardScreenState extends State<LeaderboardScreen> {
   @override
   Widget build(BuildContext context) {
     TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
@@ -57,7 +51,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                           padding:
                               const EdgeInsets.only(top: MarginsRaw.regular),
                           child: SizedBox(
-                            width: _leftColumnWidth,
+                            width: 60,
                             child: IconButton(
                               icon: const Icon(Icons.arrow_back_ios),
                               onPressed: () {
@@ -71,7 +65,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                               const EdgeInsets.only(top: MarginsRaw.regular),
                           child: Text(
                             'Leaderboard',
-                            style: TextStyle(fontSize: 36),
+                            style: TextStyle(fontSize: 28),
                           ),
                         ),
                       ],
@@ -147,8 +141,3 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   }
 }
 
-/*
-
-
-
- */

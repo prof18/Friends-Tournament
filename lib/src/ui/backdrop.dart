@@ -17,11 +17,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
+import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/ui/custom_icons_icons.dart';
 import 'package:friends_tournament/src/ui/utils.dart';
+import 'package:friends_tournament/src/views/tournament/final_screen.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_page.dart';
 import 'package:friends_tournament/style/app_style.dart';
 
@@ -58,6 +61,15 @@ class _BackdropState extends State<Backdrop>
           _panelExpanded = false;
         });
       }
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
+
+      tournamentBloc.tournamentIsOver.listen((event) {
+        _showEndTournamentDialog(
+            "All the matches are finished! Do you want to finish the tournament and discover the winner?");
+      });
     });
   }
 
@@ -135,7 +147,9 @@ class _BackdropState extends State<Backdrop>
             child: IconButton(
               icon: Icon(CustomIcons.flag_checkered),
               onPressed: () {
-                // TODO: show a popup and finish the tournament
+                // TODO: localize me
+                _showEndTournamentDialog(
+                    "Do you want to finish the tournament and discover the winners?");
               },
               // TODO: localize me
               tooltip: "Finish the tournament",
@@ -168,6 +182,78 @@ class _BackdropState extends State<Backdrop>
           )
         ],
       ),
+    );
+  }
+
+  _showEndTournamentDialog(String message) {
+    TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
+
+    showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return StreamBuilder<Tournament>(
+            stream: tournamentBloc.activeTournament,
+            builder: (context, snapshot) {
+              return AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(MarginsRaw.borderRadius),
+                  ),
+                ),
+                // TODO: localize
+                title:
+                    snapshot.hasData ? Text(snapshot.data.name) : Container(),
+                content: Container(
+                  height: 250,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: SvgPicture.asset(
+                          'assets/finish-art.svg',
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: MarginsRaw.regular),
+                        child: Text(
+                          message,
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    // TODO: localize
+                    child: const Text('Cancel'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  FlatButton(
+                    // TODO: localize
+                    child: const Text('Ok'),
+                    onPressed: () async {
+                      // TODO: uncomment
+//                    await tournamentBloc.endTournament();
+                      // TODO: navigate to new screen without backstack
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                            builder: (context) => TournamentBlocProvider(
+                              child: FinalScreen(),
+                            ),
+                          ),
+                          (Route<dynamic> route) => false);
+                    },
+                  )
+                ],
+              );
+            });
+      },
     );
   }
 }

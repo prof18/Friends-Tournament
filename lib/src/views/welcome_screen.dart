@@ -22,15 +22,12 @@ import 'package:friends_tournament/src/views/setup/setup_pages_container.dart';
 import 'package:friends_tournament/style/app_style.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Welcome extends StatefulWidget {
-  @override
-  _WelcomeState createState() => _WelcomeState();
-}
+class Welcome extends StatelessWidget {
 
-// TODO: extract all design stuff into something
-class _WelcomeState extends State<Welcome> {
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       body: AnnotatedRegion(
         value: SystemUiOverlayStyle(

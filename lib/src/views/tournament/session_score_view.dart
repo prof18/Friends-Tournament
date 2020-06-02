@@ -107,11 +107,11 @@ class _SessionScoreViewState extends State<SessionScoreView> {
             return FloatingActionButton(
                 backgroundColor: AppColors.blue,
                 onPressed: () {
-                  _showAlertDialog(
-                      snapshot.data.hasAlreadyScore(), snapshot.data.name);
+                  _showSaveDialog(
+                      snapshot.data.isActive == 0, snapshot.data.name);
                 },
                 child: snapshot.hasData
-                    ? snapshot.data.hasAlreadyScore()
+                    ? snapshot.data.isActive == 0
                         ? Icon(Icons.edit)
                         : Icon(Icons.save)
                     : Container());
@@ -156,7 +156,7 @@ class _SessionScoreViewState extends State<SessionScoreView> {
     );
   }
 
-  _showAlertDialog(bool isEdit, String matchName) {
+  _showSaveDialog(bool isEdit, String matchName) {
     showDialog(
       context: context,
       barrierDismissible: false, // user must tap button for close dialog!
@@ -207,7 +207,6 @@ class _SessionScoreViewState extends State<SessionScoreView> {
               onPressed: () async {
                 await _tournamentBloc.endMatch();
                 Navigator.of(context).pop();
-                // TODO: add action
               },
             )
           ],

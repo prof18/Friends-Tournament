@@ -44,6 +44,7 @@ class TournamentBloc {
   final _updatePlayerScoreController = StreamController<PlayerSession>();
   final _leaderboardPlayersController = BehaviorSubject<List<UIPlayer>>();
   final _currentMatchNameController = BehaviorSubject<String>();
+  final _tournamentFinishedController = StreamController<void>();
 
   // Input
   Sink<UIMatch> get setCurrentMatch => _updateCurrentMatchController.sink;
@@ -61,6 +62,8 @@ class TournamentBloc {
   Stream<List<UIPlayer>> get leaderboardPlayers => _leaderboardPlayersController.stream;
 
   Stream<String> get currentMatchName => _currentMatchNameController.stream;
+
+  Stream<void> get tournamentIsOver => _tournamentFinishedController.stream;
 
   /* *************
   *
@@ -81,6 +84,7 @@ class TournamentBloc {
     _updatePlayerScoreController.close();
     _leaderboardPlayersController.close();
     _currentMatchNameController.close();
+    _tournamentFinishedController.close();
   }
 
   /* *************
@@ -186,7 +190,8 @@ class TournamentBloc {
     if (nextMatchIndex > _tournamentMatches.length - 1) {
       // we can finish the entire tournament
       // TODO: don't do this!! Notify something to the UI and then take the decision!
-      await endTournament();
+//      await endTournament();
+      _tournamentFinishedController.add(null);
     } else {
       UIMatch nextMatch = _tournamentMatches[nextMatchIndex];
       nextMatch.isActive = 1;
@@ -209,6 +214,11 @@ class TournamentBloc {
 
     // TODO: decide what to do!
     print(finalScores);
+
+    List<UIPlayer> players =
+    finalScores.map((uiScore) => UIPlayer(id: uiScore.id, name: uiScore.name, score: uiScore.score)).toList();
+
+    _leaderboardPlayersController.add(players);
 
     return;
   }

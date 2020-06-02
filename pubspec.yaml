@@ -64,6 +64,7 @@ flutter:
     - save-art.svg
     - finish-art.svg
     - error-art.svg
+    - winner-art.svg
 
   fonts:
    - family:  CustomIcons

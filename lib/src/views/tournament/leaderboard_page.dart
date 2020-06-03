@@ -23,6 +23,7 @@ import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.d
 import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
+import 'package:friends_tournament/src/ui/error_dialog.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_item_tile.dart';
 import 'package:friends_tournament/style/app_style.dart';
 
@@ -43,6 +44,10 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
       tournamentBloc.computeLeaderboard(widget.tournament);
+
+      tournamentBloc.getErrorChecker.listen((event) {
+        showErrorDialog(context);
+      });
     });
   }
 

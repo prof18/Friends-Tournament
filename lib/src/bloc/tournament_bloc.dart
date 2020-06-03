@@ -45,6 +45,7 @@ class TournamentBloc {
   final _leaderboardPlayersController = BehaviorSubject<List<UIPlayer>>();
   final _currentMatchNameController = BehaviorSubject<String>();
   final _tournamentFinishedController = StreamController<void>();
+  final _errorController = BehaviorSubject<void>();
 
   // Input
   Sink<UIMatch> get setCurrentMatch => _updateCurrentMatchController.sink;
@@ -66,6 +67,8 @@ class TournamentBloc {
 
   Stream<void> get tournamentIsOver => _tournamentFinishedController.stream;
 
+  Stream<void> get getErrorChecker => _errorController.stream;
+
   /* *************
   *
   * Constructor/Destructor
@@ -86,6 +89,7 @@ class TournamentBloc {
     _leaderboardPlayersController.close();
     _currentMatchNameController.close();
     _tournamentFinishedController.close();
+    _errorController.close();
   }
 
   /* *************
@@ -109,26 +113,27 @@ class TournamentBloc {
 
   /// Retrieve the current active active tournament. Then fetches all the data
   /// required to show it to the user
-  _fetchInitialData() {
-    // TODO: add a try/catch and report the result on a stream. Maybe show "something is wrong" and return to the setup process
-
-    // Current tournament
-    repository.getCurrentActiveTournament().then((tournament) {
+  _fetchInitialData() async {
+    try {
+      final tournament = await repository.getCurrentActiveTournament();
       _activeTournament = tournament;
       _fetchTournamentMatches(tournament);
-    }).catchError((error) {
+    } on Exception catch (exception) {
+      print(exception);
+      // TODO: notify to Sentry
+      _errorController.add(null);
+    } catch (error) {
       print(error);
-      // TODO: handle error?
-    });
+      // TODO: notify to Sentry
+      _errorController.add(null);
+    }
   }
 
   /// Retrieves the UI objects of the current tournament
-  _fetchTournamentMatches(Tournament tournament) {
-    // TODO: add a try/catch and report the result on a stream. Maybe show "something is wrong" and return to the setup process
-
-    // TODO: if there aren't any match, reset all
-
-    repository.getTournamentMatches(tournament.id).then((matchesList) {
+  _fetchTournamentMatches(Tournament tournament) async {
+    try {
+      List<UIMatch> matchesList =
+          await repository.getTournamentMatches(tournament.id);
       _tournamentMatches = matchesList;
 
       // If all the matches are not active, we set as first match the first one
@@ -144,10 +149,15 @@ class TournamentBloc {
       _activeTournamentController.add(_activeTournament);
       _tournamentMatchesController.add(_tournamentMatches);
       _currentMatchController.add(_currentMatch);
-    }).catchError((error) {
+    } on Exception catch (exception) {
+      print(exception);
+      // TODO: notify to Sentry
+      _errorController.add(null);
+    } catch (error) {
       print(error);
-      // TODO: handle error?
-    });
+      // TODO: notify to Sentry
+      _errorController.add(null);
+    }
   }
 
   _setCurrentMatch(UIMatch match) {
@@ -172,55 +182,76 @@ class TournamentBloc {
   }
 
   Future<void> endMatch() async {
-    // TODO: add a try/catch and report the result on a stream. Maybe show "something is wrong" and return to the setup process
+    try {
+      // save the current progress on the database
+      _currentMatch.isActive = 0;
+      _currentMatch.isSelected = false;
 
-    // TODO: pay attention if we are not saving the current match
+      await repository.finishMatch(_currentMatch, _activeTournament);
 
-    // save the current progress on the database
-    _currentMatch.isActive = 0;
-    _currentMatch.isSelected = false;
+      computeLeaderboard(_activeTournament);
 
-    await repository.finishMatch(_currentMatch, _activeTournament);
-
-    computeLeaderboard(_activeTournament);
-
-    // the current match is no active. Select another as active
-    int currentMatchIndex = _tournamentMatches.indexOf(_currentMatch);
-    // it could be the last match
-    int nextMatchIndex = currentMatchIndex + 1;
-    if (nextMatchIndex > _tournamentMatches.length - 1) {
-      // we can finish the entire tournament. So notify the fact to the UI.
-      _tournamentFinishedController.add(null);
-    } else {
-      UIMatch nextMatch = _tournamentMatches[nextMatchIndex];
-      nextMatch.isActive = 1;
-      nextMatch.isSelected = true;
-      await repository.updateMatch(nextMatch);
-      _currentMatch = nextMatch;
-      _currentMatchController.add(_currentMatch);
-      _tournamentMatchesController.add(_tournamentMatches);
-      _currentMatchNameController.add(_currentMatch.name);
+      // the current match is no active. Select another as active
+      int currentMatchIndex = _tournamentMatches.indexOf(_currentMatch);
+      // it could be the last match
+      int nextMatchIndex = currentMatchIndex + 1;
+      if (nextMatchIndex > _tournamentMatches.length - 1) {
+        // we can finish the entire tournament. So notify the fact to the UI.
+        _tournamentFinishedController.add(null);
+      } else {
+        UIMatch nextMatch = _tournamentMatches[nextMatchIndex];
+        nextMatch.isActive = 1;
+        nextMatch.isSelected = true;
+        await repository.updateMatch(nextMatch);
+        _currentMatch = nextMatch;
+        _currentMatchController.add(_currentMatch);
+        _tournamentMatchesController.add(_tournamentMatches);
+        _currentMatchNameController.add(_currentMatch.name);
+      }
+    } on Exception catch (exception) {
+      print(exception);
+      // TODO: notify to Sentry
+      _errorController.add(null);
+    } catch (error) {
+      print(error);
+      // TODO: notify to Sentry
+      _errorController.add(null);
     }
   }
 
   Future<void> endTournament() async {
-    // TODO: add a try/catch and report the result on a stream. Maybe show "something is wrong" and return to the setup process
-
-    await repository.finishTournament(_activeTournament);
-    return;
+    try {
+      await repository.finishTournament(_activeTournament);
+      return;
+    } on Exception catch (exception) {
+      print(exception);
+      // TODO: notify to Sentry
+      _errorController.add(null);
+    } catch (error) {
+      print(error);
+      // TODO: notify to Sentry
+      _errorController.add(null);
+    }
   }
 
   void computeLeaderboard(Tournament tournament) async {
+    try {
+      final List<UIScore> scores = await repository.getScore(tournament);
 
-    // TODO: add a try/catch and report the result on a stream. Maybe show "something is wrong" and return to the setup process
+      List<UIPlayer> players = scores
+          .map((uiScore) => UIPlayer(
+              id: uiScore.id, name: uiScore.name, score: uiScore.score))
+          .toList();
 
-    final List<UIScore> scores = await repository.getScore(tournament);
-
-    List<UIPlayer> players = scores
-        .map((uiScore) =>
-            UIPlayer(id: uiScore.id, name: uiScore.name, score: uiScore.score))
-        .toList();
-
-    _leaderboardPlayersController.add(players);
+      _leaderboardPlayersController.add(players);
+    } on Exception catch (exception) {
+      print(exception);
+      // TODO: notify to Sentry
+      _errorController.add(null);
+    } catch (error) {
+      print(error);
+      // TODO: notify to Sentry
+      _errorController.add(null);
+    }
   }
 }

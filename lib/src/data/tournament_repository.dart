@@ -15,7 +15,6 @@
  */
 
 import 'package:friends_tournament/src/data/database/dao/tournament_dao.dart';
-import 'package:friends_tournament/src/data/database/dao/tournament_player_dao.dart';
 import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/model/app/ui_final_score.dart';
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
@@ -25,9 +24,6 @@ import 'package:friends_tournament/src/data/model/db/match.dart' as tournament;
 import 'package:friends_tournament/src/data/model/db/player_session.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/data/model/db/tournament_player.dart';
-
-import 'database/database_provider.dart';
-import 'database/database_provider_impl.dart';
 
 class TournamentRepository {
   // Implement singleton
@@ -198,5 +194,14 @@ class TournamentRepository {
     final tournament.Match match = uiMatch.getParent();
     await localDataSource.updateMatch(match);
     return;
+  }
+
+  /// Used to fix eventual errors
+  Future<void> finishAllTournament() async {
+    List<Tournament> allTournaments = await localDataSource.getAllTournaments();
+    Future.forEach(allTournaments, (tournament) async {
+      tournament.isActive = 0;
+      await localDataSource.updateTournament(tournament);
+    });
   }
 }

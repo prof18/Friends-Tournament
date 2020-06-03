@@ -21,6 +21,7 @@ import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
 import 'package:friends_tournament/src/ui/backdrop.dart';
 import 'package:friends_tournament/src/ui/center_loader.dart';
+import 'package:friends_tournament/src/ui/error_dialog.dart';
 import 'package:friends_tournament/src/views/tournament/match_selection_tile.dart';
 import 'package:friends_tournament/src/views/tournament/session_score_view.dart';
 import 'package:friends_tournament/style/app_style.dart';
@@ -56,13 +57,16 @@ class _TournamentScreenState extends State<TournamentScreen>
           content: Text("Match \"$matchName\" selected."),
         ));
       });
+
+      tournamentBloc.getErrorChecker.listen((event) {
+        showErrorDialog(context);
+      });
     });
   }
 
   @override
   void dispose() {
     super.dispose();
-    // TODO: this is disposed too much times
     _controller.dispose();
     _tournamentBloc.dispose();
   }

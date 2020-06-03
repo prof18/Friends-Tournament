@@ -20,23 +20,27 @@ import 'package:friends_tournament/style/app_style.dart';
 InputDecoration getTextFieldDecoration(String hintText) {
   return InputDecoration(
       enabledBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(MarginsRaw.borderRadius),
-          ),
-          borderSide: BorderSide(color: Colors.transparent)),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(MarginsRaw.borderRadius),
+        ),
+        borderSide: BorderSide(color: Colors.transparent),
+      ),
       border: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(MarginsRaw.borderRadius),
-          ),
-          borderSide: BorderSide(color: Colors.transparent)),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(MarginsRaw.borderRadius),
+        ),
+        borderSide: BorderSide(color: Colors.transparent),
+      ),
       focusedBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(MarginsRaw.borderRadius),
-          ),
-          borderSide: BorderSide(color: Colors.transparent)),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(MarginsRaw.borderRadius),
+        ),
+        borderSide: BorderSide(color: Colors.transparent),
+      ),
       filled: true,
-      hintStyle: TextStyle(color: Colors.grey[800]),
-      // TODO: localize
+      hintStyle: TextStyle(
+        color: Colors.grey[800],
+      ),
       hintText: hintText,
       fillColor: Colors.white70);
 }

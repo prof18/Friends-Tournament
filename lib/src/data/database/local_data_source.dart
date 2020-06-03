@@ -98,11 +98,23 @@ class LocalDataSource {
     return null;
   }
 
+  /// Used to fix eventual errors. Get all the tournaments
+  Future<List<Tournament>> getAllTournaments() async {
+    TournamentDao dao = TournamentDao();
+    final db = await databaseProvider.db();
+    List<Map> maps = await db.query(dao.tableName);
+    if (maps.length > 0) {
+      return dao.fromList(maps);
+    }
+    return [];
+  }
+
   /// Return all the tournaments saved in the db
   Future<Tournament> getLastTournament() async {
     final db = await databaseProvider.db();
     final dao = TournamentDao();
-    List<Map> maps = await db.query(dao.tableName, where: 'is_active = ?', whereArgs: [0], orderBy: "date DESC");
+    List<Map> maps = await db.query(dao.tableName,
+        where: 'is_active = ?', whereArgs: [0], orderBy: "date DESC");
     List<Tournament> tournaments = dao.fromList(maps);
 
     if (tournaments.isNotEmpty) {
@@ -193,7 +205,8 @@ class LocalDataSource {
 
   Future<List<Map>> getTournamentScore(String tournamentId) async {
     final db = await databaseProvider.db();
-    List<Map> results = await db.rawQuery(format(getTournamentScoreQuery, tournamentId));
+    List<Map> results =
+        await db.rawQuery(format(getTournamentScoreQuery, tournamentId));
     return results;
   }
 }

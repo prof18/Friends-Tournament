@@ -22,6 +22,7 @@ import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.d
 import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
+import 'package:friends_tournament/src/ui/error_dialog.dart';
 import 'package:friends_tournament/src/views/setup/setup_pages_container.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_page.dart';
 import 'package:friends_tournament/style/app_style.dart';
@@ -43,15 +44,16 @@ class _FinalScreenState extends State<FinalScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
       tournamentBloc.computeLeaderboard(widget.tournament);
+
+      tournamentBloc.getErrorChecker.listen((event) {
+        showErrorDialog(context);
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
     TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
-
-    // TODO: maybe make a screen with only the winner, on the bottom some
-    //    buttons to go to the full leaderboard or the create another tournament
 
     return Scaffold(
       backgroundColor: Colors.white,

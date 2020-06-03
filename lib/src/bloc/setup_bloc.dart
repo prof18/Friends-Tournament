@@ -152,12 +152,17 @@ class SetupBloc {
     try {
       await repository.setupTournament(_playersNumber, _playersAstNumber,
           _matchesNumber, _tournamentName, _playersName, _matchesName);
-    } on Exception catch (_) {
+    } on Exception catch (exception) {
       /// We know these exceptions:
       ///  - MatchesWithSameIdException
       ///  - TooMuchPlayersASTException -> do not start setup process from scratch
       ///  - AlreadyActiveTournamentException -> it should never happen! A setup process never starts if there is another ongoing tournament
-
+      print(exception);
+      // TODO: notify to Sentry
+      _errorController.add(null);
+    } catch (error) {
+      print(error);
+      // TODO: notify to Sentry
       _errorController.add(null);
     }
   }

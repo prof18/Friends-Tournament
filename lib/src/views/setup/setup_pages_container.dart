@@ -23,6 +23,7 @@ import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/ui/dialog_loader.dart';
+import 'package:friends_tournament/src/ui/error_dialog.dart';
 import 'package:friends_tournament/src/ui/slide_dots.dart';
 import 'package:friends_tournament/src/views/setup/1_tournament_name.dart';
 import 'package:friends_tournament/src/views/setup/2_player_number.dart';
@@ -72,7 +73,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
       _setupBloc = SetupBlocProvider.of(context);
 
       _setupBloc.getErrorChecker.listen((event) {
-        _showErrorDialog();
+        showErrorDialog(context);
       });
 
       setState(() {
@@ -294,63 +295,6 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
                 ),
                 (Route<dynamic> route) => false);
           },
-        );
-      },
-    );
-  }
-
-  _showErrorDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false, // user must tap button for close dialog!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(MarginsRaw.borderRadius),
-            ),
-          ),
-          // TODO: localize
-          title: Text("Ops 🙁"),
-          content: Container(
-            height: 250,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: SvgPicture.asset(
-                    'assets/error-art.svg',
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: MarginsRaw.regular),
-                  child: Text(
-                    // TODO: localize
-                    "Something is not working! Please apologize me 🙏🏻",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                )
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              // TODO: localize
-              child: const Text('Restart from scratch'),
-              onPressed: () async {
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (context) => SetupBlocProvider(
-                        child: TournamentBlocProvider(
-                          child: Welcome(),
-                        ),
-                      ),
-                    ),
-                    (Route<dynamic> route) => false);
-              },
-            )
-          ],
         );
       },
     );

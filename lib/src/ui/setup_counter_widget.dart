@@ -16,7 +16,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:friends_tournament/style/app_style.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
 
 class SetupCounterWidget extends StatelessWidget {
   final Sink<int> inputStream;

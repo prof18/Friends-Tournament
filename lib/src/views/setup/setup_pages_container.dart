@@ -33,7 +33,7 @@ import 'package:friends_tournament/src/views/setup/6_matches_name.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
 import 'package:friends_tournament/src/views/welcome_screen.dart';
-import 'package:friends_tournament/style/app_style.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
 
 import '4_matches_number.dart';
 

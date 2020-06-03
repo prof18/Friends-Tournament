@@ -19,7 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:friends_tournament/src/views/setup/setup_pages_container.dart';
-import 'package:friends_tournament/style/app_style.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Welcome extends StatelessWidget {

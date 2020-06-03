@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Marco Gomiero
+ * Copyright 2020 Marco Gomiero
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
@@ -24,12 +26,27 @@ import 'package:friends_tournament/src/data/database/database_provider_impl.dart
 import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/data/tournament_repository.dart';
+import 'package:friends_tournament/src/utils/error_reporting.dart';
 import 'package:friends_tournament/src/views/tournament/final_screen.dart';
 import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
 import 'package:friends_tournament/src/views/welcome_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  // Run the whole app in a zone to capture all uncaught errors.
+  runZoned(
+    () => runApp(MyApp()),
+    onError: (Object error, StackTrace stackTrace) {
+      try {
+        reportError(error, stackTrace);
+        print('Error sent to sentry.io: $error');
+      } catch (e) {
+        print('Sending report to sentry.io failed: $e');
+        print('Original error: $error');
+      }
+    },
+  );
+}
 
 class MyApp extends StatefulWidget {
   // This widget is the root of your application.

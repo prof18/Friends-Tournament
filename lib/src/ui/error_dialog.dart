@@ -24,7 +24,7 @@ import 'package:friends_tournament/src/data/database/database_provider_impl.dart
 import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/tournament_repository.dart';
 import 'package:friends_tournament/src/views/welcome_screen.dart';
-import 'package:friends_tournament/style/app_style.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
 
 showErrorDialog(BuildContext context) {
 

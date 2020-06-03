@@ -20,7 +20,7 @@ import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.d
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/app/ui_session.dart';
 import 'package:friends_tournament/src/data/model/db/player_session.dart';
-import 'package:friends_tournament/style/app_style.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
 
 class SessionPlayerTile extends StatefulWidget {
   final UIPlayer player;

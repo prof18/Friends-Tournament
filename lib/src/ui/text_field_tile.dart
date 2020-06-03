@@ -17,7 +17,7 @@
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
 import 'package:friends_tournament/src/ui/text_field_decoration.dart';
-import 'package:friends_tournament/style/app_style.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
 
 class TextFieldTile extends StatefulWidget {
   final TextFieldWrapper textFieldWrapper;

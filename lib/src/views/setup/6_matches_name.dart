@@ -22,7 +22,7 @@ import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
-import 'package:friends_tournament/style/app_style.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
 
 class MatchesName extends StatelessWidget implements SetupPage {
   final List<TextFieldWrapper> _textFieldsList = new List<TextFieldWrapper>();

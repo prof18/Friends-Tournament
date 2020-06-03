@@ -26,6 +26,7 @@ import 'package:friends_tournament/src/data/model/app/ui_session.dart';
 import 'package:friends_tournament/src/data/model/db/player_session.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/data/tournament_repository.dart';
+import 'package:friends_tournament/src/utils/error_reporting.dart';
 import 'package:rxdart/rxdart.dart';
 
 class TournamentBloc {
@@ -118,13 +119,8 @@ class TournamentBloc {
       final tournament = await repository.getCurrentActiveTournament();
       _activeTournament = tournament;
       _fetchTournamentMatches(tournament);
-    } on Exception catch (exception) {
-      print(exception);
-      // TODO: notify to Sentry
-      _errorController.add(null);
-    } catch (error) {
-      print(error);
-      // TODO: notify to Sentry
+    } catch (error, stackTrace) {
+      await reportError(error, stackTrace);
       _errorController.add(null);
     }
   }
@@ -149,13 +145,8 @@ class TournamentBloc {
       _activeTournamentController.add(_activeTournament);
       _tournamentMatchesController.add(_tournamentMatches);
       _currentMatchController.add(_currentMatch);
-    } on Exception catch (exception) {
-      print(exception);
-      // TODO: notify to Sentry
-      _errorController.add(null);
-    } catch (error) {
-      print(error);
-      // TODO: notify to Sentry
+    } catch (error, stackTrace) {
+      await reportError(error, stackTrace);
       _errorController.add(null);
     }
   }
@@ -208,13 +199,8 @@ class TournamentBloc {
         _tournamentMatchesController.add(_tournamentMatches);
         _currentMatchNameController.add(_currentMatch.name);
       }
-    } on Exception catch (exception) {
-      print(exception);
-      // TODO: notify to Sentry
-      _errorController.add(null);
-    } catch (error) {
-      print(error);
-      // TODO: notify to Sentry
+    } catch (error, stackTrace) {
+      await reportError(error, stackTrace);
       _errorController.add(null);
     }
   }
@@ -223,13 +209,8 @@ class TournamentBloc {
     try {
       await repository.finishTournament(_activeTournament);
       return;
-    } on Exception catch (exception) {
-      print(exception);
-      // TODO: notify to Sentry
-      _errorController.add(null);
-    } catch (error) {
-      print(error);
-      // TODO: notify to Sentry
+    } catch (error, stackTrace) {
+      await reportError(error, stackTrace);
       _errorController.add(null);
     }
   }
@@ -244,13 +225,8 @@ class TournamentBloc {
           .toList();
 
       _leaderboardPlayersController.add(players);
-    } on Exception catch (exception) {
-      print(exception);
-      // TODO: notify to Sentry
-      _errorController.add(null);
-    } catch (error) {
-      print(error);
-      // TODO: notify to Sentry
+    } catch (error, stackTrace) {
+      await reportError(error, stackTrace);
       _errorController.add(null);
     }
   }

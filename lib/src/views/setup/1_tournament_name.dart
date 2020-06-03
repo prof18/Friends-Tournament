@@ -20,7 +20,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/ui/text_field_decoration.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
-import 'package:friends_tournament/style/app_style.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
 
 class TournamentName extends StatelessWidget implements SetupPage {
   final _scaffoldKey = GlobalKey<ScaffoldState>();

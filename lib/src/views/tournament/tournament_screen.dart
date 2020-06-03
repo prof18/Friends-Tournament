@@ -24,7 +24,7 @@ import 'package:friends_tournament/src/ui/center_loader.dart';
 import 'package:friends_tournament/src/ui/error_dialog.dart';
 import 'package:friends_tournament/src/views/tournament/match_selection_tile.dart';
 import 'package:friends_tournament/src/views/tournament/session_score_view.dart';
-import 'package:friends_tournament/style/app_style.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
 
 class TournamentScreen extends StatefulWidget {
   TournamentScreen();

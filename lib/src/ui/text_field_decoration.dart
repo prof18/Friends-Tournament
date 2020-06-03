@@ -15,7 +15,7 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:friends_tournament/style/app_style.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
 
 InputDecoration getTextFieldDecoration(String hintText) {
   return InputDecoration(

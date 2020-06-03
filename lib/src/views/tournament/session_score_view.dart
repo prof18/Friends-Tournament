@@ -25,7 +25,7 @@ import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/app/ui_session.dart';
 import 'package:friends_tournament/src/ui/utils.dart';
 import 'package:friends_tournament/src/views/tournament/session_item_widget.dart';
-import 'package:friends_tournament/style/app_style.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
 
 class SessionScoreView extends StatefulWidget {
   final List<UISession> sessions;

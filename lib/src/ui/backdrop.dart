@@ -15,18 +15,16 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
+import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/custom_icons_icons.dart';
-import 'package:friends_tournament/src/ui/utils.dart';
 import 'package:friends_tournament/src/views/tournament/final_screen.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_page.dart';
-import 'package:friends_tournament/style/app_style.dart';
 
 class Backdrop extends StatefulWidget {
   final Widget dropdownWidget;

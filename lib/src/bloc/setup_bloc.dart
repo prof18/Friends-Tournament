@@ -20,6 +20,7 @@ import 'package:friends_tournament/src/data/database/database_provider.dart';
 import 'package:friends_tournament/src/data/database/database_provider_impl.dart';
 import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/setup_repository.dart';
+import 'package:friends_tournament/src/utils/error_reporting.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SetupBloc {
@@ -152,17 +153,12 @@ class SetupBloc {
     try {
       await repository.setupTournament(_playersNumber, _playersAstNumber,
           _matchesNumber, _tournamentName, _playersName, _matchesName);
-    } on Exception catch (exception) {
+    } catch (error, stackTrace) {
       /// We know these exceptions:
       ///  - MatchesWithSameIdException
       ///  - TooMuchPlayersASTException -> do not start setup process from scratch
       ///  - AlreadyActiveTournamentException -> it should never happen! A setup process never starts if there is another ongoing tournament
-      print(exception);
-      // TODO: notify to Sentry
-      _errorController.add(null);
-    } catch (error) {
-      print(error);
-      // TODO: notify to Sentry
+      await reportError(error, stackTrace);
       _errorController.add(null);
     }
   }

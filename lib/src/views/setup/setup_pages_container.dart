@@ -18,13 +18,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/dialog_loader.dart';
 import 'package:friends_tournament/src/ui/error_dialog.dart';
 import 'package:friends_tournament/src/ui/slide_dots.dart';
+import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/views/setup/1_tournament_name.dart';
 import 'package:friends_tournament/src/views/setup/2_player_number.dart';
 import 'package:friends_tournament/src/views/setup/3_player_ast_number.dart';
@@ -32,8 +33,6 @@ import 'package:friends_tournament/src/views/setup/5_players_name.dart';
 import 'package:friends_tournament/src/views/setup/6_matches_name.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
-import 'package:friends_tournament/src/views/welcome_screen.dart';
-import 'package:friends_tournament/src/style/app_style.dart';
 
 import '4_matches_number.dart';
 
@@ -42,8 +41,6 @@ class SetupPagesContainer extends StatefulWidget {
   @override
   _SetupPagesContainerState createState() => _SetupPagesContainerState();
 }
-
-// TODO: remember to dispose the bloc when exit
 
 // TODO: make lighter the hint message
 
@@ -92,6 +89,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
   @override
   void dispose() {
     super.dispose();
+    _setupBloc.dispose();
     _pageController.dispose();
     _controller.dispose();
   }
@@ -151,8 +149,8 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
                                 padding:
                                     EdgeInsets.only(left: 15.0, bottom: 15.0),
                                 child: Text(
-                                  // TODO: localize
-                                  "Back",
+                                  AppLocalizations.of(context)
+                                      .translate('generic_back'),
                                   style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14.0,
@@ -167,7 +165,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
                           child: GestureDetector(
                             onTap: () {
                               final page = _allPages[_currentPageIndex];
-                              final canGoForward = page.onNextPressed();
+                              final canGoForward = page.onNextPressed(context);
                               if (canGoForward) {
                                 if (_currentPageIndex != _allPages.length - 1) {
                                   FocusScope.of(context).unfocus();
@@ -176,7 +174,6 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
                                       duration: Duration(milliseconds: 250),
                                       curve: Curves.ease);
                                 } else {
-                                  // TODO: end the setup process
                                   _showAlertDialog();
                                 }
                               }
@@ -185,10 +182,10 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
                               padding:
                                   EdgeInsets.only(right: 15.0, bottom: 15.0),
                               child: Text(
-                                // TODO: localize
-                                _currentPageIndex == _allPages.length - 1
-                                    ? "Done"
-                                    : "Next",
+                                AppLocalizations.of(context).translate(
+                                    _currentPageIndex == _allPages.length - 1
+                                        ? "generic_done"
+                                        : "generic_next"),
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14.0,
@@ -241,23 +238,26 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
               Radius.circular(MarginsRaw.borderRadius),
             ),
           ),
-          // TODO: localize
-          title: Text('Tournament building'),
-          content: const Text(
-              "This will start the generation of the tournament. "
-              "Please be sure that all the data are correct since you can't "
-              "modify it later"),
+          title: Text(
+            AppLocalizations.of(context).translate('tournament_building_title'),
+          ),
+          content: Text(
+            AppLocalizations.of(context)
+                .translate('tournament_building_message'),
+          ),
           actions: <Widget>[
             FlatButton(
-              // TODO: localize
-              child: const Text('Cancel'),
+              child: Text(
+                  AppLocalizations.of(context).translate('generic_cancel')),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
-              // TODO: localize
-              child: const Text('Proceed'),
+              child: Text(
+                AppLocalizations.of(context)
+                    .translate('tournament_building_go_button'),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
                 _showLoaderAndStartProcess();
@@ -275,14 +275,13 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
       barrierDismissible: false,
       builder: (_) => DialogLoader(
         controller: _controller,
-        // TODO: localize
-        text: "Generating the tournament",
+        text: AppLocalizations.of(context)
+            .translate('generating_tournament_message'),
       ),
     );
 
     _setupBloc.setupTournament().then(
       (_) {
-        print("I'm over on saving data on the db");
         _controller.reverse().then(
           (_) {
             _setupBloc.dispose();

@@ -17,6 +17,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
@@ -26,6 +27,7 @@ import 'package:friends_tournament/src/data/database/database_provider_impl.dart
 import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/data/tournament_repository.dart';
+import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/utils/error_reporting.dart';
 import 'package:friends_tournament/src/views/tournament/final_screen.dart';
 import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
@@ -138,6 +140,33 @@ class _MyAppState extends State<MyApp> {
               Theme.of(context).textTheme,
             ),
           ),
+
+          supportedLocales: [
+            Locale('en', 'US'),
+            Locale('it', 'IT'),
+          ],
+          // These delegates make sure that the localization data for the proper language is loaded
+          localizationsDelegates: [
+            // A class which loads the translations from JSON files
+            AppLocalizations.delegate,
+            // Built-in localization of basic text for Material widgets
+            GlobalMaterialLocalizations.delegate,
+            // Built-in localization for text direction LTR/RTL
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          // Returns a locale which will be used by the app
+          localeResolutionCallback: (locale, supportedLocales) {
+            // Check if the current device locale is supported
+            for (var supportedLocale in supportedLocales) {
+              if (supportedLocale.languageCode == locale.languageCode &&
+                  supportedLocale.countryCode == locale.countryCode) {
+                return supportedLocale;
+              }
+            }
+            // If the locale of the device is not supported, use the first one
+            // from the list (English, in this case).
+            return supportedLocales.first;
+          },
           home: _isLoading
               ? buildLoader()
               : _isActive ? _buildTournamentScreen() : _buildWelcomeScreen(),

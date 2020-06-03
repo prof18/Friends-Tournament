@@ -21,6 +21,7 @@ import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/app/ui_session.dart';
 import 'package:friends_tournament/src/data/model/db/player_session.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
+import 'package:friends_tournament/src/utils/app_localizations.dart';
 
 class SessionPlayerTile extends StatefulWidget {
   final UIPlayer player;
@@ -73,8 +74,7 @@ class _SessionPlayerTileState extends State<SessionPlayerTile> {
                           style: TextStyle(fontSize: 32),
                         ),
                         Text(
-                          // TODO: localize
-                          "score",
+                          AppLocalizations.of(context).translate('score'),
                           style: TextStyle(fontSize: 12),
                         )
                       ],
@@ -139,52 +139,3 @@ class _SessionPlayerTileState extends State<SessionPlayerTile> {
     }
   }
 }
-
-/*
-Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              widget.player.name,
-              style: TextStyle(fontSize: 22),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                GestureDetector(
-                  onTap: _decrementScore,
-                  child: Icon(
-                    Icons.remove,
-                    size: 36,
-                    color: Colors.black38,
-                  ),
-                ),
-                Text(
-                  widget.player.score.toString(),
-                  style: TextStyle(fontSize: 28),
-                ),
-//              SizedBox(
-//                width: widget.buttonSize,
-//                height: widget.buttonSize,
-//                child: FloatingActionButton(
-//                  onPressed: _incrementScore,
-//                  elevation: 2,
-//                  child: Icon(
-//                    Icons.add,
-//                    size: widget.iconSize,
-//                  ),
-//                ),
-//              ),
-                GestureDetector(
-                  onTap: _incrementScore,
-                  child: Icon(
-                    Icons.add,
-                    size: 36,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            )
-          ],
-        )
- */

@@ -24,6 +24,7 @@ import 'package:friends_tournament/src/data/model/app/ui_match.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/app/ui_session.dart';
 import 'package:friends_tournament/src/ui/utils.dart';
+import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/views/tournament/session_item_widget.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 
@@ -65,21 +66,16 @@ class _SessionScoreViewState extends State<SessionScoreView> {
 
     _scrollController.addListener(() {
       switch (_scrollController.position.userScrollDirection) {
-        // Scrolling up - forward the animation (value goes to 1)
         case ScrollDirection.forward:
-//          _hideFabAnimController.forward();
           setState(() {
             hideFab = false;
           });
           break;
-        // Scrolling down - reverse the animation (value goes to 0)
         case ScrollDirection.reverse:
-//          _hideFabAnimController.reverse();
           setState(() {
             hideFab = true;
           });
           break;
-        // Idle - keep FAB visibility unchanged
         case ScrollDirection.idle:
           break;
       }
@@ -167,7 +163,6 @@ class _SessionScoreViewState extends State<SessionScoreView> {
               Radius.circular(MarginsRaw.borderRadius),
             ),
           ),
-          // TODO: localize
           title: Text(matchName),
           content: Container(
             height: 250,
@@ -183,10 +178,9 @@ class _SessionScoreViewState extends State<SessionScoreView> {
                 Padding(
                   padding: const EdgeInsets.only(top: MarginsRaw.regular),
                   child: Text(
-                    // TODO: localize
-                    isEdit
-                        ? "Do you want to update the scores of this match and go to the next one?"
-                        : "Do you want to save the scores of this match and go to the next one?",
+                    AppLocalizations.of(context).translate(isEdit
+                        ? "match_score_update_message"
+                        : "match_score_save_message"),
                     style: TextStyle(fontSize: 18),
                   ),
                 )
@@ -195,15 +189,14 @@ class _SessionScoreViewState extends State<SessionScoreView> {
           ),
           actions: <Widget>[
             FlatButton(
-              // TODO: localize
-              child: const Text('Cancel'),
+              child: Text(
+                  AppLocalizations.of(context).translate('generic_cancel')),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
-              // TODO: localize
-              child: const Text('Ok'),
+              child: Text(AppLocalizations.of(context).translate('generic_ok')),
               onPressed: () async {
                 await _tournamentBloc.endMatch();
                 Navigator.of(context).pop();

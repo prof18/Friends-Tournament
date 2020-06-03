@@ -204,8 +204,7 @@ class SetupRepository {
       int sessionsNumber = (_playersNumber / _playersAstNumber).ceil();
       var currentSessionPlayers = List<String>();
       for (int i = 0; i < sessionsNumber; i++) {
-        // TODO: localize
-        var sessionName = "Session ${i + 1}";
+        var sessionName = "Round ${i + 1}";
         var sessionId = generateSessionId(match.id, sessionName);
         var session = Session(sessionId, sessionName, i);
         sessions.add(session);

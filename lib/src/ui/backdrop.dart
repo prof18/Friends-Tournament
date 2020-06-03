@@ -23,6 +23,7 @@ import 'package:friends_tournament/src/data/model/app/ui_match.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/custom_icons_icons.dart';
+import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/views/tournament/final_screen.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_page.dart';
 
@@ -66,7 +67,7 @@ class _BackdropState extends State<Backdrop>
 
       tournamentBloc.tournamentIsOver.listen((event) {
         _showEndTournamentDialog(
-            "All the matches are finished! Do you want to finish the tournament and discover the winner?");
+            AppLocalizations.of(context).translate('match_finished_message'));
       });
     });
   }
@@ -132,8 +133,8 @@ class _BackdropState extends State<Backdrop>
                       builder: (context) => LeaderboardScreen(tournament)),
                 );
               },
-              // TODO: localize me
-              tooltip: "Show Leaderboard",
+              tooltip: AppLocalizations.of(context)
+                  .translate('show_leaderboard_tooltip'),
             ),
           ),
           Visibility(
@@ -141,12 +142,11 @@ class _BackdropState extends State<Backdrop>
             child: IconButton(
               icon: Icon(CustomIcons.flag_checkered),
               onPressed: () {
-                // TODO: localize me
-                _showEndTournamentDialog(
-                    "Do you want to finish the tournament and discover the winners?");
+                _showEndTournamentDialog(AppLocalizations.of(context)
+                    .translate('finish_tournament_message'));
               },
-              // TODO: localize me
-              tooltip: "Finish the tournament",
+              tooltip: AppLocalizations.of(context)
+                  .translate('finish_tournament_tooltip'),
             ),
           ),
         ],
@@ -195,7 +195,6 @@ class _BackdropState extends State<Backdrop>
                   Radius.circular(MarginsRaw.borderRadius),
                 ),
               ),
-              // TODO: localize
               title: snapshot.hasData ? Text(snapshot.data.name) : Container(),
               content: Container(
                 height: 250,
@@ -220,15 +219,15 @@ class _BackdropState extends State<Backdrop>
               ),
               actions: <Widget>[
                 FlatButton(
-                  // TODO: localize
-                  child: const Text('Cancel'),
+                  child: Text(
+                      AppLocalizations.of(context).translate('generic_cancel')),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
                 FlatButton(
-                  // TODO: localize
-                  child: const Text('Ok'),
+                  child: Text(
+                      AppLocalizations.of(context).translate('generic_ok')),
                   onPressed: () async {
                     final tournament =
                         await tournamentBloc.activeTournament.first;

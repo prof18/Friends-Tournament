@@ -23,11 +23,11 @@ import 'package:friends_tournament/src/data/database/database_provider.dart';
 import 'package:friends_tournament/src/data/database/database_provider_impl.dart';
 import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/tournament_repository.dart';
+import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/views/welcome_screen.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 
 showErrorDialog(BuildContext context) {
-
   final DatabaseProvider databaseProvider = DatabaseProviderImpl.get;
   final LocalDataSource localDataSource = LocalDataSource(databaseProvider);
   final repository = TournamentRepository(localDataSource);
@@ -42,8 +42,8 @@ showErrorDialog(BuildContext context) {
             Radius.circular(MarginsRaw.borderRadius),
           ),
         ),
-        // TODO: localize
-        title: Text("Ops 🙁"),
+        title: Text(AppLocalizations.of(context)
+            .translate('something_not_working_title')),
         content: Container(
           height: 250,
           child: Column(
@@ -58,8 +58,8 @@ showErrorDialog(BuildContext context) {
               Padding(
                 padding: const EdgeInsets.only(top: MarginsRaw.regular),
                 child: Text(
-                  // TODO: localize
-                  "Something is not working! Please apologize me 🙏🏻",
+                  AppLocalizations.of(context)
+                      .translate('something_not_working_message'),
                   style: TextStyle(fontSize: 18),
                 ),
               )
@@ -68,8 +68,8 @@ showErrorDialog(BuildContext context) {
         ),
         actions: <Widget>[
           FlatButton(
-            // TODO: localize
-            child: const Text('Restart from scratch'),
+            child: Text(
+                AppLocalizations.of(context).translate('restart_from_scratch')),
             onPressed: () async {
               await repository.finishAllTournament();
               Navigator.of(context).pushAndRemoveUntil(
@@ -80,7 +80,7 @@ showErrorDialog(BuildContext context) {
                       ),
                     ),
                   ),
-                      (Route<dynamic> route) => false);
+                  (Route<dynamic> route) => false);
             },
           )
         ],

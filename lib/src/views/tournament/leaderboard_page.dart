@@ -24,6 +24,7 @@ import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/ui/error_dialog.dart';
+import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_item_tile.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 
@@ -88,7 +89,8 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                           padding:
                               const EdgeInsets.only(top: MarginsRaw.regular),
                           child: Text(
-                            'Leaderboard',
+                            AppLocalizations.of(context)
+                                .translate('leaderboard'),
                             style: TextStyle(fontSize: 28),
                           ),
                         ),
@@ -158,9 +160,8 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
 
   Widget _renderEmptyLeaderboard() {
     return Center(
-      child: Text(
-          // TODO: localize
-          "Not matches started yet! 🤷‍♂️‍"),
+      child: Text(AppLocalizations.of(context)
+          .translate('no_matches_started_yet_label')),
     );
   }
 }

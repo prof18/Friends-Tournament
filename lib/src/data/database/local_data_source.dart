@@ -46,8 +46,6 @@ class LocalDataSource {
 
   /// -------
 
-  // TODO: close db connection
-
   Batch _batch;
 
   Future insert(dynamic object, Dao dao) async {

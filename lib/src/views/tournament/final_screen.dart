@@ -23,6 +23,7 @@ import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/ui/error_dialog.dart';
+import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/views/setup/setup_pages_container.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_page.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
@@ -116,14 +117,14 @@ class _FinalScreenState extends State<FinalScreen> {
                             right: MarginsRaw.regular,
                             bottom: MarginsRaw.regular),
                         child: Text(
-                          "The winner is.. ",
+                          AppLocalizations.of(context)
+                              .translate('winner_title'),
                           style: TextStyle(fontSize: 28),
                         ),
                       ),
                     ),
                     Expanded(
                       flex: 3,
-                      // TODO: change stream!!! With a new one
                       child: StreamBuilder<List<UIPlayer>>(
                           stream: tournamentBloc.leaderboardPlayers,
                           builder: (context, snapshot) {
@@ -134,7 +135,8 @@ class _FinalScreenState extends State<FinalScreen> {
                                 child: Text(
                                   snapshot.hasData
                                       ? "${snapshot.data.first.name} 🎉"
-                                      : "Nobody 😧",
+                                      : AppLocalizations.of(context)
+                                          .translate('winner_error_message'),
                                   style: TextStyle(
                                       fontSize: 36,
                                       fontWeight: FontWeight.bold),
@@ -174,7 +176,8 @@ class _FinalScreenState extends State<FinalScreen> {
                                   textColor: Colors.white,
                                   padding: Margins.regular,
                                   child: Text(
-                                    "Leaderboard",
+                                    AppLocalizations.of(context)
+                                        .translate('leaderboard'),
                                     style: TextStyle(fontSize: 16),
                                   ),
                                 ),
@@ -200,7 +203,8 @@ class _FinalScreenState extends State<FinalScreen> {
                                 textColor: Colors.white,
                                 padding: Margins.regular,
                                 child: Text(
-                                  "New tournament",
+                                  AppLocalizations.of(context)
+                                      .translate('new_tournament_button'),
                                   style: TextStyle(fontSize: 16),
                                 ),
                               ),
@@ -221,9 +225,8 @@ class _FinalScreenState extends State<FinalScreen> {
 
   Widget _renderEmptyLeaderboard() {
     return Center(
-      child: Text(
-          // TODO: localize
-          "Ops, somethings goes wrong! 🤷‍♂️‍"),
+      child: Text(AppLocalizations.of(context)
+          .translate('something_goes_wrong_message')),
     );
   }
 }

@@ -23,21 +23,20 @@ import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
+import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 
 class PlayersName extends StatelessWidget implements SetupPage {
   final List<TextFieldWrapper> _textFieldsList = new List<TextFieldWrapper>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  SetupBloc _setupBloc;
+  final SetupBloc _setupBloc;
   final Map<int, String> _savedValues = new HashMap();
 
   PlayersName(this._setupBloc);
 
   @override
   Widget build(BuildContext context) {
-    _setupBloc = SetupBlocProvider.of(context);
-
     return StreamBuilder(
       initialData: 0,
       builder: (context, snapshot) {
@@ -59,7 +58,8 @@ class PlayersName extends StatelessWidget implements SetupPage {
                   initialData: Map<int, String>(),
                   stream: _setupBloc.getPlayersName,
                   builder: (context, snapshot) {
-                    return renderTextFields(playersNumber, snapshot.data);
+                    return renderTextFields(
+                        playersNumber, snapshot.data, context);
                   },
                 ),
               ),
@@ -70,12 +70,14 @@ class PlayersName extends StatelessWidget implements SetupPage {
     );
   }
 
-  Widget renderTextFields(int playersNumber, Map<int, String> playersName) {
+  Widget renderTextFields(
+      int playersNumber, Map<int, String> playersName, BuildContext context) {
     if (_textFieldsList.length != playersNumber) {
       _textFieldsList.clear();
       for (int i = 0; i < playersNumber; i++) {
-        TextFieldWrapper textFieldWrapper =
-            new TextFieldWrapper(TextEditingController(), "Player ${i + 1}");
+        TextFieldWrapper textFieldWrapper = new TextFieldWrapper(
+            TextEditingController(),
+            "${AppLocalizations.of(context).translate('player_label')} ${i + 1}");
         if (playersName.containsKey(i)) {
           textFieldWrapper.value = playersName[i];
           textFieldWrapper.textEditingController.text = playersName[i];
@@ -103,8 +105,7 @@ class PlayersName extends StatelessWidget implements SetupPage {
               bottom: MarginsRaw.small,
             ),
             child: Text(
-              // TODO: localize
-              "Players Name",
+              AppLocalizations.of(context).translate('players_name_title'),
               style: TextStyle(
                 fontSize: 36,
                 fontWeight: FontWeight.bold,
@@ -159,10 +160,6 @@ class PlayersName extends StatelessWidget implements SetupPage {
     _setupBloc.setPlayersName.add(_savedValues);
   }
 
-  void goToNextPage() {
-//    Navigator.push(context, SlideLeftRoute(page: MatchesName()));
-  }
-
   @override
   bool onBackPressed() {
     saveValues();
@@ -170,14 +167,15 @@ class PlayersName extends StatelessWidget implements SetupPage {
   }
 
   @override
-  bool onNextPressed() {
-    // TODO: implement onNextPressed
+  bool onNextPressed(BuildContext context) {
     saveValues();
     if (_savedValues.length != _textFieldsList.length) {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
-          // TODO: localize
-          content: Text("Please, don't leave the player anonymous 🙏🏻"),
+          content: Text(
+            AppLocalizations.of(context)
+                .translate('player_name_empty_fields_message'),
+          ),
         ),
       );
       return false;

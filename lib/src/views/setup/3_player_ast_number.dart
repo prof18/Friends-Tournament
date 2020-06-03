@@ -19,6 +19,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/ui/setup_counter_widget.dart';
+import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 
@@ -27,8 +28,6 @@ class PlayersAST extends StatelessWidget implements SetupPage {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   PlayersAST(this._setupBloc);
-
-  // TODO: add some check. For example If there is 5 player and 2 ast player, its not possible
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +58,8 @@ class PlayersAST extends StatelessWidget implements SetupPage {
                       bottom: MarginsRaw.small,
                     ),
                     child: Text(
-                      // TODO: localize
-                      "Number of players at the same time",
+                      AppLocalizations.of(context)
+                          .translate('number_of_players_ast_title'),
                       style: TextStyle(
                         fontSize: 36,
                         fontWeight: FontWeight.bold,
@@ -109,7 +108,7 @@ class PlayersAST extends StatelessWidget implements SetupPage {
   }
 
   @override
-  bool onNextPressed() {
+  bool onNextPressed(BuildContext context) {
     return true;
   }
 }

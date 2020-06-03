@@ -19,6 +19,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/ui/text_field_decoration.dart';
+import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 
@@ -59,8 +60,8 @@ class TournamentName extends StatelessWidget implements SetupPage {
                       bottom: MarginsRaw.small,
                     ),
                     child: Text(
-                      // TODO: localize
-                      "Tournament Name",
+                      AppLocalizations.of(context)
+                          .translate('tournament_name_title'),
                       style: TextStyle(
                         fontSize: 36,
                         fontWeight: FontWeight.bold,
@@ -93,8 +94,10 @@ class TournamentName extends StatelessWidget implements SetupPage {
                       controller: _tournamentController,
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.next,
-                      // TODO: localize
-                      decoration: getTextFieldDecoration('Tournament Name'),
+                      decoration: getTextFieldDecoration(
+                        AppLocalizations.of(context)
+                            .translate('tournament_name_title'),
+                      ),
                     ),
                   ),
                   Expanded(
@@ -117,11 +120,13 @@ class TournamentName extends StatelessWidget implements SetupPage {
   }
 
   @override
-  bool onNextPressed() {
+  bool onNextPressed(BuildContext context) {
     if (_tournamentController.text.isEmpty) {
-      // TODO: localize
-      _scaffoldKey.currentState
-          .showSnackBar(SnackBar(content: Text('Complete all the fields')));
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text(
+        AppLocalizations.of(context)
+            .translate('tournament_name_empty_fields_message'),
+      )));
       return false;
     }
 

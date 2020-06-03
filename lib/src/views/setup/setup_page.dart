@@ -19,6 +19,6 @@ import 'package:flutter/widgets.dart';
 abstract class SetupPage implements StatelessWidget {
 
   bool onBackPressed();
-  bool onNextPressed();
+  bool onNextPressed(BuildContext context);
 
 }

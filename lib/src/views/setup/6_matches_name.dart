@@ -21,6 +21,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
+import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 
@@ -55,7 +56,8 @@ class MatchesName extends StatelessWidget implements SetupPage {
                   initialData: new Map<int, String>(),
                   stream: _setupBloc.getMatchesName,
                   builder: (context, snapshot) {
-                    return renderTextFields(matchesNumber, snapshot.data);
+                    return renderTextFields(
+                        matchesNumber, snapshot.data, context);
                   },
                 ),
               ),
@@ -66,11 +68,13 @@ class MatchesName extends StatelessWidget implements SetupPage {
     );
   }
 
-  Widget renderTextFields(int matchesNumber, Map<int, String> matchesName) {
+  Widget renderTextFields(
+      int matchesNumber, Map<int, String> matchesName, BuildContext context) {
     if (_textFieldsList.length != matchesNumber) {
       for (int i = 0; i < matchesNumber; i++) {
-        TextFieldWrapper textFieldWrapper =
-            TextFieldWrapper(TextEditingController(), "Match ${i + 1}");
+        TextFieldWrapper textFieldWrapper = TextFieldWrapper(
+            TextEditingController(),
+            "${AppLocalizations.of(context).translate('match_label')} ${i + 1}");
         if (matchesName.containsKey(i)) {
           textFieldWrapper.value = matchesName[i];
           textFieldWrapper.textEditingController.text = matchesName[i];
@@ -98,8 +102,7 @@ class MatchesName extends StatelessWidget implements SetupPage {
               bottom: MarginsRaw.small,
             ),
             child: Text(
-              // TODO: localize
-              "Matches Name",
+              AppLocalizations.of(context).translate('matches_name_title'),
               style: TextStyle(
                 fontSize: 36,
                 fontWeight: FontWeight.bold,
@@ -162,13 +165,14 @@ class MatchesName extends StatelessWidget implements SetupPage {
   }
 
   @override
-  bool onNextPressed() {
+  bool onNextPressed(BuildContext context) {
     saveValues();
     if (_savedValues.length != _textFieldsList.length) {
-      _scaffoldKey.currentState
-          // TODO: localize
-          .showSnackBar(SnackBar(
-              content: Text("Please, don't leave the matches anonymous 🙏🏻")));
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text(
+        AppLocalizations.of(context)
+            .translate('matches_name_empty_fields_message'),
+      )));
       return false;
     }
     return true;

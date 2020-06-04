@@ -86,6 +86,7 @@ class PlayersNumber extends StatelessWidget implements SetupPage {
                     SetupCounterWidget(
                       inputStream: _setupBloc.setPlayersNumber,
                       outputStream: _setupBloc.getPlayersNumber,
+                      minValue: 2,
                     ),
                     Expanded(
                       flex: 4,

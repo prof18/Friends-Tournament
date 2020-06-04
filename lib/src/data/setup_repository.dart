@@ -93,6 +93,13 @@ class SetupRepository {
     createTournament(playersNumber, playersAstNumber, matchesNumber,
         tournamentName, playersName, matchesName);
     await save();
+    players = [];
+    sessions = [];
+    matches = [];
+    playerSessionList = [];
+    matchSessionList = [];
+    _tournamentMatchList = [];
+    _tournamentPlayerList = [];
   }
 
   ///
@@ -167,7 +174,7 @@ class SetupRepository {
   ///
   void _setupMatches(Map<int, String> matchesName) {
     matchesName.forEach((index, matchName) {
-      var matchId = generateMatchId(_tournamentName, matchName);
+      var matchId = generateMatchId(_tournament.id, matchName);
       var isActiveMatch = 0;
       if (index == 0) {
         isActiveMatch = 1;

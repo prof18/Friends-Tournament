@@ -85,7 +85,6 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
   @override
   void dispose() {
     super.dispose();
-    _setupBloc.dispose();
     _pageController.dispose();
     _controller.dispose();
   }
@@ -265,7 +264,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
     );
   }
 
-  _showLoaderAndStartProcess() {
+  _showLoaderAndStartProcess() async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -276,22 +275,21 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
       ),
     );
 
-    _setupBloc.setupTournament().then(
-      (_) {
-        _controller.reverse().then(
-          (_) {
-            _setupBloc.dispose();
-            Navigator.pop(context);
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                  builder: (context) => TournamentBlocProvider(
-                    child: TournamentScreen(),
-                  ),
+    final result = await _setupBloc.setupTournament();
+
+    if (result) {
+      _controller.reverse().then(
+        (_) {
+          Navigator.pop(context);
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => TournamentBlocProvider(
+                  child: TournamentScreen(),
                 ),
-                (Route<dynamic> route) => false);
-          },
-        );
-      },
-    );
+              ),
+              (Route<dynamic> route) => false);
+        },
+      );
+    }
   }
 }

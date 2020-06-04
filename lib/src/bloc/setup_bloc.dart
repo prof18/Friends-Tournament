@@ -75,6 +75,9 @@ class SetupBloc {
   SetupBloc() {
     // Default values
 
+    /// The min value for a meaningful tournament is two players
+    _playersNumberController.value = 2;
+
     /// The min value for a meaningful match is two players
     _playersAstNumberController.value = 2;
 
@@ -145,7 +148,7 @@ class SetupBloc {
   int getCurrentPlayersAstNumber() =>
       _playersAstNumber != null ? _playersAstNumber : 2;
 
-  Future<void> setupTournament() async {
+  Future<bool> setupTournament() async {
     DatabaseProvider databaseProvider = DatabaseProviderImpl.get;
     LocalDataSource localDataSource = LocalDataSource(databaseProvider);
     SetupRepository repository = new SetupRepository(localDataSource);
@@ -153,6 +156,7 @@ class SetupBloc {
     try {
       await repository.setupTournament(_playersNumber, _playersAstNumber,
           _matchesNumber, _tournamentName, _playersName, _matchesName);
+      return true;
     } catch (error, stackTrace) {
       /// We know these exceptions:
       ///  - MatchesWithSameIdException
@@ -160,6 +164,25 @@ class SetupBloc {
       ///  - AlreadyActiveTournamentException -> it should never happen! A setup process never starts if there is another ongoing tournament
       await reportError(error, stackTrace);
       _errorController.add(null);
+      return false;
     }
+  }
+
+  void clearAll() {
+    _playersNumber = null;
+    _playersAstNumber = null;
+    _matchesNumber = null;
+    _tournamentName = null;
+    _playersName = null;
+    _matchesName = null;
+
+    /// The min value for a meaningful tournament is two players
+    _playersNumberController.value = 2;
+
+    /// The min value for a meaningful match is two players
+    _playersAstNumberController.value = 2;
+
+    /// The min value for a meaningful tournament is one
+    _matchesNumberController.value = 1;
   }
 }

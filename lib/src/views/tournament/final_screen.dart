@@ -18,7 +18,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
+import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
@@ -55,6 +57,7 @@ class _FinalScreenState extends State<FinalScreen> {
   @override
   Widget build(BuildContext context) {
     TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
+    SetupBloc setupBloc = SetupBlocProvider.of(context);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -186,11 +189,13 @@ class _FinalScreenState extends State<FinalScreen> {
                             Expanded(
                               child: RaisedButton(
                                 onPressed: () {
+                                  setupBloc.clearAll();
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          SetupPagesContainer(),
+                                      builder: (context) => SetupBlocProvider(
+                                        child: SetupPagesContainer(),
+                                      ),
                                     ),
                                   );
                                 },

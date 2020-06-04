@@ -149,7 +149,5 @@ void main() {
         expect(matchPlayers.length, TestTournament.playersNumber);
       });
     });
-
-    // TODO: add test to end the match and the tournament
   });
 }

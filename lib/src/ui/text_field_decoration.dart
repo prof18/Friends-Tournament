@@ -39,7 +39,7 @@ InputDecoration getTextFieldDecoration(String hintText) {
       ),
       filled: true,
       hintStyle: TextStyle(
-        color: Colors.grey[800],
+        color: Colors.grey[500],
       ),
       hintText: hintText,
       fillColor: Colors.white70);

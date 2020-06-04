@@ -118,7 +118,9 @@ class TournamentBloc {
     try {
       final tournament = await repository.getCurrentActiveTournament();
       _activeTournament = tournament;
-      _fetchTournamentMatches(tournament);
+      if (tournament != null) {
+        _fetchTournamentMatches(tournament);
+      }
     } catch (error, stackTrace) {
       await reportError(error, stackTrace);
       _errorController.add(null);

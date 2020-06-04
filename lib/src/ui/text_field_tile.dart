@@ -38,10 +38,7 @@ class _TextFieldTileState extends State<TextFieldTile> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-        top: MarginsRaw.small,
-        bottom: MarginsRaw.small,
-      ),
+      padding: Margins.small,
       child: Container(
         child: Material(
           elevation: MarginsRaw.elevation,

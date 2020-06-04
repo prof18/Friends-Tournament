@@ -82,64 +82,67 @@ class MatchesName extends StatelessWidget implements SetupPage {
         _textFieldsList.add(textFieldWrapper);
       }
     }
-    return Padding(
-      padding: Margins.regular,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-            flex: 3,
-            child: Padding(
-              padding: const EdgeInsets.only(top: MarginsRaw.regular),
-              child: SvgPicture.asset(
-                'assets/matches-art.svg',
-              ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Expanded(
+          flex: 3,
+          child: Padding(
+            padding: Margins.regular,
+            child: SvgPicture.asset(
+              'assets/matches-art.svg',
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
               top: MarginsRaw.regular,
               bottom: MarginsRaw.small,
-            ),
-            child: Text(
-              AppLocalizations.of(context).translate('matches_name_title'),
-              style: TextStyle(
-                fontSize: 36,
-                fontWeight: FontWeight.bold,
-              ),
+              left: MarginsRaw.regular,
+              right: MarginsRaw.regular),
+          child: Text(
+            AppLocalizations.of(context).translate('matches_name_title'),
+            style: TextStyle(
+              fontSize: 36,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          Padding(
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+              top: MarginsRaw.regular,
+              left: MarginsRaw.regular,
+              right: MarginsRaw.regular),
+          child: Container(
+            alignment: Alignment.topLeft,
+            decoration: BoxDecoration(
+              color: AppColors.blue,
+              borderRadius: BorderRadius.circular(
+                MarginsRaw.borderRadius,
+              ),
+            ),
+            height: 6,
+            width: 60,
+          ),
+        ),
+        Expanded(
+          flex: 7,
+          child: Padding(
             padding: const EdgeInsets.only(
               top: MarginsRaw.regular,
+              bottom: MarginsRaw.regular,
+              left: MarginsRaw.small,
+              right: MarginsRaw.small,
             ),
-            child: Container(
-              alignment: Alignment.topLeft,
-              decoration: BoxDecoration(
-                color: AppColors.blue,
-                borderRadius: BorderRadius.circular(
-                  MarginsRaw.borderRadius,
-                ),
-              ),
-              height: 6,
-              width: 60,
+            child: ListView.builder(
+              itemBuilder: (BuildContext context, int index) {
+                return TextFieldTile(textFieldWrapper: _textFieldsList[index]);
+              },
+              itemCount: _textFieldsList.length,
             ),
           ),
-          Expanded(
-            flex: 7,
-            child: Padding(
-              padding: const EdgeInsets.only(top: MarginsRaw.regular),
-              child: ListView.builder(
-                itemBuilder: (BuildContext context, int index) {
-                  return TextFieldTile(
-                      textFieldWrapper: _textFieldsList[index]);
-                },
-                itemCount: _textFieldsList.length,
-              ),
-            ),
-          )
-        ],
-      ),
+        )
+      ],
     );
   }
 

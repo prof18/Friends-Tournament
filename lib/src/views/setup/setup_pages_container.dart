@@ -42,10 +42,6 @@ class SetupPagesContainer extends StatefulWidget {
   _SetupPagesContainerState createState() => _SetupPagesContainerState();
 }
 
-// TODO: make lighter the hint message
-
-// TODO: fix padding on text fields
-
 class _SetupPagesContainerState extends State<SetupPagesContainer>
     with SingleTickerProviderStateMixin {
   int _currentPageIndex = 0;

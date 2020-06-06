@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -106,7 +107,8 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    _openURL("https://github.com/prof18/Friends-Tournament/blob/master/privacy_policy.md");
+                    _openURL(
+                        "https://github.com/prof18/Friends-Tournament/blob/master/privacy_policy.md");
                   },
                   child: SettingsTile(
                     AppLocalizations.of(context).translate('privacy_policy'),
@@ -114,6 +116,12 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
+                    LicenseRegistry.addLicense(() async* {
+                      yield LicenseEntryWithLineBreaks(
+                          <String>['freepik'], '''
+                            <a href="https://it.freepik.com/foto-vettori-gratuito/design">Vectors and illustrations from freepik - freepik.com</a>''');
+                    });
+
                     Navigator.of(context).push(MaterialPageRoute<void>(
                       builder: (context) => Theme(
                         data: Theme.of(context).copyWith(

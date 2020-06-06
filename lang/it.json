@@ -35,5 +35,14 @@
   "tournament_building_go_button": "Procedi",
   "generic_back": "Indietro",
   "generic_next": "Avanti",
-  "generic_done": "Fatto"
+  "generic_done": "Fatto",
+  "start_tournament_btn": "Comincia torneo",
+  "friends_tournament_intro_message": "Comincia un nuovo torneo con gli amici",
+  "friends_tournament_claim": "Gestisci ed organizza tornei con i tuoi amici",
+  "show_github": "Mostra su Github",
+  "privacy_policy": "Privacy Policy",
+  "open_source_license": "Licenze Open Source",
+  "app_version": "Versione app: ",
+  "developed_by": "Sviluppata con ❤️ da "
+
 }

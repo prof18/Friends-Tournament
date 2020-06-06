@@ -77,12 +77,12 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                               const EdgeInsets.only(top: MarginsRaw.regular),
                           child: SizedBox(
                             width: 60,
-                            child: IconButton(
-                              icon: const Icon(Icons.arrow_back_ios),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
+                              child: IconButton(
+                                icon: const Icon(Icons.arrow_back_ios),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
                           ),
                         ),
                         Padding(

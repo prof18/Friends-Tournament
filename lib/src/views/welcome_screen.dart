@@ -18,6 +18,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:friends_tournament/src/ui/utils.dart';
+import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/views/settings/settings_screen.dart';
 import 'package:friends_tournament/src/views/setup/setup_pages_container.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,6 +31,19 @@ class Welcome extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Scaffold(
+//      appBar: AppBar(
+//        elevation: 0,
+//        backgroundColor: Colors.transparent,
+//        actions: [
+//          Padding(
+//            padding: Margins.medium,
+//            child: Icon(
+//              Icons.settings,
+//              color: Colors.black,
+//            ),
+//          )
+//        ],
+//      ),
       body: AnnotatedRegion(
         value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -42,10 +58,30 @@ class Welcome extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Expanded(
-                  flex: 4,
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only( top: MarginsRaw.medium),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SettingsScreen()),
+                          );
+                        },
+                        child: Icon(
+                          Icons.settings,
+                          color: Colors.black38,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 3,
                   child: Container(
                     padding: const EdgeInsets.only(
-                      top: MarginsRaw.medium,
                       left: MarginsRaw.medium,
                       right: MarginsRaw.medium,
                     ),
@@ -109,7 +145,8 @@ class Welcome extends StatelessWidget {
                             top: MarginsRaw.regular,
                           ),
                           child: Text(
-                            "Start a new tournament with your friends",
+                              AppLocalizations.of(context)
+                                  .translate('friends_tournament_intro_message'),
                             style: GoogleFonts.nunito(
                               textStyle: TextStyle(fontSize: 24),
                             ),
@@ -133,7 +170,8 @@ class Welcome extends StatelessWidget {
                               );
                             },
                             child: Text(
-                              'Start Tournament',
+                                AppLocalizations.of(context)
+                                    .translate('start_tournament_btn'),
                               style: TextStyle(fontSize: 20),
                             ),
                           ),

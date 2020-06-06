@@ -76,10 +76,24 @@ class _FinalScreenState extends State<FinalScreen> {
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(
-                          top: 36, left: MarginsRaw.regular),
-                      child: Text(
-                        widget.tournament.name,
-                        style: TextStyle(fontSize: 28),
+                          top: 36, left: MarginsRaw.regular, right: MarginsRaw.regular),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: MarginsRaw.small),
+                              child: Text(
+                            widget.tournament.name,
+                                style: TextStyle(fontSize: 28),
+                              ),
+                            ),
+                          ),
+                          Icon(
+                            Icons.settings,
+                            color: Colors.black38,
+                          )
+                        ],
                       ),
                     ),
                     Expanded(

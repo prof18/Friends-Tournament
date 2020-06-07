@@ -36,7 +36,6 @@
   "generic_back": "Back",
   "generic_next": "Next",
   "generic_done": "Done",
-
   "start_tournament_btn": "Start Tournament",
   "friends_tournament_intro_message": "Start a new tournament with your friends",
   "friends_tournament_claim": "Manage and organize tournaments with your friends",
@@ -45,5 +44,4 @@
   "open_source_license": "Open Source Licenses",
   "app_version": "App version: ",
   "developed_by": "Developed with ❤️ by "
-
 }

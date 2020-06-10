@@ -26,6 +26,7 @@ import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/ui/error_dialog.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/views/settings/settings_screen.dart';
 import 'package:friends_tournament/src/views/setup/setup_pages_container.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_page.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
@@ -89,9 +90,18 @@ class _FinalScreenState extends State<FinalScreen> {
                               ),
                             ),
                           ),
-                          Icon(
-                            Icons.settings,
-                            color: Colors.black38,
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SettingsScreen()),
+                              );
+                            },
+                            child: Icon(
+                              Icons.settings,
+                              color: Colors.black38,
+                            ),
                           )
                         ],
                       ),

@@ -45,5 +45,6 @@
   "app_version": "App version: ",
   "developed_by": "Developed with ❤️ by ",
   "player_name_duplicated": "Please, don't use the same name for different players 🙏🏻",
-  "match_name_duplicated": "Please, don't use the same name for different matches 🙏🏻"
+  "match_name_duplicated": "Please, don't use the same name for different matches 🙏🏻",
+  "match_with_one_player": "With the current choice there will be a match with one player 😱"
 }

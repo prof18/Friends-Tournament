@@ -133,6 +133,14 @@ class SetupRepository {
     this._matchesNumber = matchesNumber;
     this._tournamentName = tournamentName;
 
+    debugPrint("*** Starting Tournament Generation");
+    debugPrint("Players number -> $playersNumber");
+    debugPrint("Players ast number -> $playersAstNumber");
+    debugPrint("Matches number -> $matchesNumber");
+    debugPrint("Tournament Name -> $tournamentName");
+    debugPrint("players Name -> $playersName");
+    debugPrint("matches name -> $matchesName");
+
     this._tournament = Tournament(
         generateTournamentId(_tournamentName),
         _tournamentName,

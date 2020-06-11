@@ -23,6 +23,7 @@ import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
+import 'package:friends_tournament/src/ui/utils.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
@@ -172,10 +173,46 @@ class PlayersName extends StatelessWidget implements SetupPage {
     return true;
   }
 
+  /// Return true if the list is valid, i.e. every player has a name
+  bool isPlayerNamesValid() {
+    for (int i = 0; i < _textFieldsList.length; i++) {
+      TextFieldWrapper textField = _textFieldsList[i];
+      if (textField.textEditingController.text.trim().isEmpty) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /// Return true if there are some duplicates
+  bool areNamesDuplicate() {
+    List<String> finalNameList = [];
+    _textFieldsList.forEach((textFieldWrapper) {
+      finalNameList.add(textFieldWrapper.textEditingController.text.trim());
+    });
+
+    var distinctNames = finalNameList.toSet().toList();
+    return distinctNames.length != finalNameList.length;
+  }
+
   @override
   bool onNextPressed(BuildContext context) {
+    if (areNamesDuplicate()) {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context).translate('player_name_duplicated'),
+          ),
+        ),
+      );
+      return false;
+    }
+
     saveValues();
-    if (_savedValues.length != _textFieldsList.length) {
+
+    if (_savedValues.length == _textFieldsList.length && isPlayerNamesValid()) {
+      return true;
+    } else {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
           content: Text(
@@ -186,6 +223,5 @@ class PlayersName extends StatelessWidget implements SetupPage {
       );
       return false;
     }
-    return true;
   }
 }

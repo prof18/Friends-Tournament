@@ -133,6 +133,14 @@ class SetupRepository {
     this._matchesNumber = matchesNumber;
     this._tournamentName = tournamentName;
 
+    debugPrint("*** Starting Tournament Generation");
+    debugPrint("Players number -> $playersNumber");
+    debugPrint("Players ast number -> $playersAstNumber");
+    debugPrint("Matches number -> $matchesNumber");
+    debugPrint("Tournament Name -> $tournamentName");
+    debugPrint("players Name -> $playersName");
+    debugPrint("matches name -> $matchesName");
+
     this._tournament = Tournament(
         generateTournamentId(_tournamentName),
         _tournamentName,
@@ -219,6 +227,7 @@ class SetupRepository {
         matchSessionList.add(matchSession);
         for (int j = 0; j < _playersAstNumber; j++) {
           while (true) {
+            print("Inside while");
             int playerIndex = _random.nextInt(_playersNumber);
             final playerCandidate = players[playerIndex];
             if (currentSessionPlayers.contains(playerCandidate.id)) {

@@ -83,9 +83,7 @@ class _TournamentScreenState extends State<TournamentScreen>
           statusBarIconBrightness: Brightness.light,
         ),
         child: Material(
-          child: SafeArea(
-            child: buildBody(),
-          ),
+          child: buildBody(),
         ),
       ),
     );

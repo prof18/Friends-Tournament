@@ -105,47 +105,92 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
               statusBarIconBrightness: Brightness.dark,
             ),
             child: Scaffold(
-              body: Container(
-                child: Stack(
-                  alignment: AlignmentDirectional.bottomCenter,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 42.0),
-                      child: PageView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        controller: _pageController,
-                        onPageChanged: _onPageChanged,
-                        itemCount: _allPages.length,
-                        itemBuilder: (ctx, i) => _allPages[i],
+              body: SafeArea(
+                child: Container(
+                  child: Stack(
+                    alignment: AlignmentDirectional.bottomCenter,
+                    children: <Widget>[
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(bottom: MarginsRaw.xlarge),
+                        child: PageView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          controller: _pageController,
+                          onPageChanged: _onPageChanged,
+                          itemCount: _allPages.length,
+                          itemBuilder: (ctx, i) => _allPages[i],
+                        ),
                       ),
-                    ),
-                    Stack(
-                      alignment: AlignmentDirectional.topStart,
-                      children: <Widget>[
-                        Visibility(
-                          visible: _currentPageIndex != 0,
-                          child: GestureDetector(
-                            onTap: () {
-                              final page = _allPages[_currentPageIndex];
-                              final canGoBack = page.onBackPressed();
-                              if (canGoBack) {
-                                if (_currentPageIndex != _allPages.length - 1) {
-                                  FocusScope.of(context).unfocus();
-                                  _pageController.animateToPage(
-                                      _currentPageIndex -= 1,
-                                      duration: Duration(milliseconds: 250),
-                                      curve: Curves.ease);
-                                }
-                              }
-                            },
+                      Stack(
+                        alignment: AlignmentDirectional.topStart,
+                        children: <Widget>[
+                          Visibility(
+                            visible: _currentPageIndex != 0,
                             child: Align(
                               alignment: Alignment.bottomLeft,
+                              child: InkWell(
+                                customBorder: CircleBorder(),
+                                onTap: () {
+                                  final page = _allPages[_currentPageIndex];
+                                  final canGoBack = page.onBackPressed();
+                                  if (canGoBack) {
+                                    FocusScope.of(context).unfocus();
+                                    _pageController.animateToPage(
+                                        _currentPageIndex -= 1,
+                                        duration: Duration(milliseconds: 250),
+                                        curve: Curves.ease);
+                                  }
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                      left: MarginsRaw.regular,
+                                      bottom: MarginsRaw.medium,
+                                      top: MarginsRaw.medium,
+                                      right: MarginsRaw.medium),
+                                  child: Text(
+                                    AppLocalizations.of(context)
+                                        .translate('generic_back'),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14.0,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: InkWell(
+                              customBorder: CircleBorder(),
+                              onTap: () {
+                                final page = _allPages[_currentPageIndex];
+                                final canGoForward =
+                                    page.onNextPressed(context);
+                                if (canGoForward) {
+                                  if (_currentPageIndex !=
+                                      _allPages.length - 1) {
+                                    FocusScope.of(context).unfocus();
+                                    _pageController.animateToPage(
+                                        _currentPageIndex += 1,
+                                        duration: Duration(milliseconds: 250),
+                                        curve: Curves.ease);
+                                  } else {
+                                    _showAlertDialog();
+                                  }
+                                }
+                              },
                               child: Padding(
-                                padding:
-                                    EdgeInsets.only(left: 15.0, bottom: 15.0),
+                                padding: EdgeInsets.only(
+                                    right: MarginsRaw.regular,
+                                    bottom: MarginsRaw.medium,
+                                    top: MarginsRaw.medium,
+                                    left: MarginsRaw.medium),
                                 child: Text(
-                                  AppLocalizations.of(context)
-                                      .translate('generic_back'),
+                                  AppLocalizations.of(context).translate(
+                                      _currentPageIndex == _allPages.length - 1
+                                          ? "generic_done"
+                                          : "generic_next"),
                                   style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14.0,
@@ -154,58 +199,24 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
                               ),
                             ),
                           ),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: GestureDetector(
-                            onTap: () {
-                              final page = _allPages[_currentPageIndex];
-                              final canGoForward = page.onNextPressed(context);
-                              if (canGoForward) {
-                                if (_currentPageIndex != _allPages.length - 1) {
-                                  FocusScope.of(context).unfocus();
-                                  _pageController.animateToPage(
-                                      _currentPageIndex += 1,
-                                      duration: Duration(milliseconds: 250),
-                                      curve: Curves.ease);
-                                } else {
-                                  _showAlertDialog();
-                                }
-                              }
-                            },
-                            child: Padding(
-                              padding:
-                                  EdgeInsets.only(right: 15.0, bottom: 15.0),
-                              child: Text(
-                                AppLocalizations.of(context).translate(
-                                    _currentPageIndex == _allPages.length - 1
-                                        ? "generic_done"
-                                        : "generic_next"),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14.0,
-                                ),
-                              ),
+                          Container(
+                            alignment: AlignmentDirectional.bottomCenter,
+                            margin: EdgeInsets.only(bottom: MarginsRaw.medium),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                for (int i = 0; i < _allPages.length; i++)
+                                  if (i == _currentPageIndex)
+                                    SlideDots(true)
+                                  else
+                                    SlideDots(false)
+                              ],
                             ),
                           ),
-                        ),
-                        Container(
-                          alignment: AlignmentDirectional.bottomCenter,
-                          margin: EdgeInsets.only(bottom: 20.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              for (int i = 0; i < _allPages.length; i++)
-                                if (i == _currentPageIndex)
-                                  SlideDots(true)
-                                else
-                                  SlideDots(false)
-                            ],
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

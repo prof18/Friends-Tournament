@@ -109,6 +109,19 @@ class PlayersAST extends StatelessWidget implements SetupPage {
 
   @override
   bool onNextPressed(BuildContext context) {
+    if (_setupBloc.getCurrentPlayersNumber() -
+            _setupBloc.getCurrentPlayersAstNumber() ==
+        1) {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context).translate('match_with_one_player'),
+          ),
+        ),
+      );
+      return false;
+    }
+
     return true;
   }
 }

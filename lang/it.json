@@ -43,5 +43,9 @@
   "privacy_policy": "Privacy Policy",
   "open_source_license": "Licenze Open Source",
   "app_version": "Versione app: ",
-  "developed_by": "Sviluppata con ❤️ da "
+  "developed_by": "Sviluppata con ❤️ da ",
+  "player_name_duplicated": "Per favore, non usare lo stesso nome per giocatori diversi 🙏🏻",
+  "match_name_duplicated": "Per favore, non usare lo stesso nome per match diversi 🙏🏻",
+  "match_with_one_player": "Con questa scelta ci sarebbe un match con un solo giocatore 😱"
+
 }

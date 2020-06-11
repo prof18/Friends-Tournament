@@ -71,6 +71,7 @@ class MatchesName extends StatelessWidget implements SetupPage {
   Widget renderTextFields(
       int matchesNumber, Map<int, String> matchesName, BuildContext context) {
     if (_textFieldsList.length != matchesNumber) {
+      _textFieldsList.clear();
       for (int i = 0; i < matchesNumber; i++) {
         TextFieldWrapper textFieldWrapper = TextFieldWrapper(
             TextEditingController(),
@@ -146,6 +147,17 @@ class MatchesName extends StatelessWidget implements SetupPage {
     );
   }
 
+  /// Return true if the list is valid, i.e. every match has a name
+  bool isMatchNamesValid() {
+    for (int i = 0; i < _textFieldsList.length; i++) {
+      TextFieldWrapper textField = _textFieldsList[i];
+      if (textField.textEditingController.text.trim().isEmpty) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   void saveValues() {
     for (int i = 0; i < _textFieldsList.length; i++) {
       TextFieldWrapper textField = _textFieldsList[i];
@@ -161,6 +173,17 @@ class MatchesName extends StatelessWidget implements SetupPage {
     _setupBloc.setMatchesName.add(_savedValues);
   }
 
+  /// Return true if there are some duplicates
+  bool areNamesDuplicate() {
+    List<String> finalNameList = [];
+    _textFieldsList.forEach((textFieldWrapper) {
+      finalNameList.add(textFieldWrapper.textEditingController.text.trim());
+    });
+
+    var distinctNames = finalNameList.toSet().toList();
+    return distinctNames.length != finalNameList.length;
+  }
+
   @override
   bool onBackPressed() {
     saveValues();
@@ -169,15 +192,31 @@ class MatchesName extends StatelessWidget implements SetupPage {
 
   @override
   bool onNextPressed(BuildContext context) {
-    saveValues();
-    if (_savedValues.length != _textFieldsList.length) {
-      _scaffoldKey.currentState.showSnackBar(SnackBar(
+    if (areNamesDuplicate()) {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
           content: Text(
-        AppLocalizations.of(context)
-            .translate('matches_name_empty_fields_message'),
-      )));
+            AppLocalizations.of(context).translate('match_name_duplicated'),
+          ),
+        ),
+      );
       return false;
     }
-    return true;
+
+    saveValues();
+
+    if (_savedValues.length == _textFieldsList.length && isMatchNamesValid()) {
+      return true;
+    } else {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context)
+                .translate('matches_name_empty_fields_message'),
+          ),
+        ),
+      );
+      return false;
+    }
   }
 }

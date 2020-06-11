@@ -121,7 +121,7 @@ class TournamentName extends StatelessWidget implements SetupPage {
 
   @override
   bool onNextPressed(BuildContext context) {
-    if (_tournamentController.text.isEmpty) {
+    if (_tournamentController.text.trim().isEmpty) {
       _scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text(
         AppLocalizations.of(context)

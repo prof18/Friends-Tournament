@@ -82,10 +82,8 @@ class _TournamentScreenState extends State<TournamentScreen>
           statusBarColor: AppColors.blue,
           statusBarIconBrightness: Brightness.light,
         ),
-        child: SafeArea(
-          child: Material(
-            child: buildBody(),
-          ),
+        child: Material(
+          child: buildBody(),
         ),
       ),
     );

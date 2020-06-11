@@ -172,20 +172,31 @@ class PlayersName extends StatelessWidget implements SetupPage {
     return true;
   }
 
+  /// Return true if the list is valid, i.e. every player has a name
+  bool isPlayerNamesValid() {
+    for (int i = 0; i < _textFieldsList.length; i++) {
+      TextFieldWrapper textField = _textFieldsList[i];
+      if (textField.textEditingController.text.trim().isEmpty) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   @override
   bool onNextPressed(BuildContext context) {
     saveValues();
-    if (_savedValues.length != _textFieldsList.length) {
-      _scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text(
-            AppLocalizations.of(context)
-                .translate('player_name_empty_fields_message'),
-          ),
-        ),
-      );
-      return false;
+    if (_savedValues.length == _textFieldsList.length && isPlayerNamesValid()) {
+      return true;
     }
-    return true;
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: Text(
+          AppLocalizations.of(context)
+              .translate('player_name_empty_fields_message'),
+        ),
+      ),
+    );
+    return false;
   }
 }

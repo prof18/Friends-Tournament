@@ -219,6 +219,7 @@ class SetupRepository {
         matchSessionList.add(matchSession);
         for (int j = 0; j < _playersAstNumber; j++) {
           while (true) {
+            print("Inside while");
             int playerIndex = _random.nextInt(_playersNumber);
             final playerCandidate = players[playerIndex];
             if (currentSessionPlayers.contains(playerCandidate.id)) {

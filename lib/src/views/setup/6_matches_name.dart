@@ -146,6 +146,17 @@ class MatchesName extends StatelessWidget implements SetupPage {
     );
   }
 
+  /// Return true if the list is valid, i.e. every match has a name
+  bool isMatchNamesValid() {
+    for (int i = 0; i < _textFieldsList.length; i++) {
+      TextFieldWrapper textField = _textFieldsList[i];
+      if (textField.textEditingController.text.trim().isEmpty) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   void saveValues() {
     for (int i = 0; i < _textFieldsList.length; i++) {
       TextFieldWrapper textField = _textFieldsList[i];
@@ -170,14 +181,18 @@ class MatchesName extends StatelessWidget implements SetupPage {
   @override
   bool onNextPressed(BuildContext context) {
     saveValues();
-    if (_savedValues.length != _textFieldsList.length) {
-      _scaffoldKey.currentState.showSnackBar(SnackBar(
+    if (_savedValues.length == _textFieldsList.length && isMatchNamesValid()) {
+      return true;
+    } else {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
           content: Text(
-        AppLocalizations.of(context)
-            .translate('matches_name_empty_fields_message'),
-      )));
+            AppLocalizations.of(context)
+                .translate('matches_name_empty_fields_message'),
+          ),
+        ),
+      );
       return false;
     }
-    return true;
   }
 }

@@ -71,6 +71,7 @@ class MatchesName extends StatelessWidget implements SetupPage {
   Widget renderTextFields(
       int matchesNumber, Map<int, String> matchesName, BuildContext context) {
     if (_textFieldsList.length != matchesNumber) {
+      _textFieldsList.clear();
       for (int i = 0; i < matchesNumber; i++) {
         TextFieldWrapper textFieldWrapper = TextFieldWrapper(
             TextEditingController(),

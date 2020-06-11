@@ -129,13 +129,11 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
                               final page = _allPages[_currentPageIndex];
                               final canGoBack = page.onBackPressed();
                               if (canGoBack) {
-                                if (_currentPageIndex != _allPages.length - 1) {
-                                  FocusScope.of(context).unfocus();
-                                  _pageController.animateToPage(
-                                      _currentPageIndex -= 1,
-                                      duration: Duration(milliseconds: 250),
-                                      curve: Curves.ease);
-                                }
+                                FocusScope.of(context).unfocus();
+                                _pageController.animateToPage(
+                                    _currentPageIndex -= 1,
+                                    duration: Duration(milliseconds: 250),
+                                    curve: Curves.ease);
                               }
                             },
                             child: Align(

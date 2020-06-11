@@ -18,7 +18,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:friends_tournament/src/ui/utils.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/views/settings/settings_screen.dart';
 import 'package:friends_tournament/src/views/setup/setup_pages_container.dart';
@@ -31,19 +30,6 @@ class Welcome extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Scaffold(
-//      appBar: AppBar(
-//        elevation: 0,
-//        backgroundColor: Colors.transparent,
-//        actions: [
-//          Padding(
-//            padding: Margins.medium,
-//            child: Icon(
-//              Icons.settings,
-//              color: Colors.black,
-//            ),
-//          )
-//        ],
-//      ),
       body: AnnotatedRegion(
         value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,

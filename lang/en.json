@@ -43,5 +43,7 @@
   "privacy_policy": "Privacy Policy",
   "open_source_license": "Open Source Licenses",
   "app_version": "App version: ",
-  "developed_by": "Developed with ❤️ by "
+  "developed_by": "Developed with ❤️ by ",
+  "player_name_duplicated": "Please, don't use the same name for different players 🙏🏻",
+  "match_name_duplicated": "Please, don't use the same name for different matches 🙏🏻"
 }

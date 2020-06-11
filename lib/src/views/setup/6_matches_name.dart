@@ -172,6 +172,17 @@ class MatchesName extends StatelessWidget implements SetupPage {
     _setupBloc.setMatchesName.add(_savedValues);
   }
 
+  /// Return true if there are some duplicates
+  bool areNamesDuplicate() {
+    List<String> finalNameList = [];
+    _textFieldsList.forEach((textFieldWrapper) {
+      finalNameList.add(textFieldWrapper.textEditingController.text.trim());
+    });
+
+    var distinctNames = finalNameList.toSet().toList();
+    return distinctNames.length != finalNameList.length;
+  }
+
   @override
   bool onBackPressed() {
     saveValues();
@@ -180,7 +191,19 @@ class MatchesName extends StatelessWidget implements SetupPage {
 
   @override
   bool onNextPressed(BuildContext context) {
+    if (areNamesDuplicate()) {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context).translate('match_name_duplicated'),
+          ),
+        ),
+      );
+      return false;
+    }
+
     saveValues();
+
     if (_savedValues.length == _textFieldsList.length && isMatchNamesValid()) {
       return true;
     } else {

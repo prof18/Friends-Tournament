@@ -183,20 +183,44 @@ class PlayersName extends StatelessWidget implements SetupPage {
     return true;
   }
 
+  /// Return true if there are some duplicates
+  bool areNamesDuplicate() {
+    List<String> finalNameList = [];
+    _textFieldsList.forEach((textFieldWrapper) {
+      finalNameList.add(textFieldWrapper.textEditingController.text.trim());
+    });
+
+    var distinctNames = finalNameList.toSet().toList();
+    return distinctNames.length != finalNameList.length;
+  }
+
   @override
   bool onNextPressed(BuildContext context) {
+    if (areNamesDuplicate()) {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context).translate('player_name_duplicated'),
+          ),
+        ),
+      );
+      return false;
+    }
+
     saveValues();
+
     if (_savedValues.length == _textFieldsList.length && isPlayerNamesValid()) {
       return true;
-    }
-    _scaffoldKey.currentState.showSnackBar(
-      SnackBar(
-        content: Text(
-          AppLocalizations.of(context)
-              .translate('player_name_empty_fields_message'),
+    } else {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context)
+                .translate('player_name_empty_fields_message'),
+          ),
         ),
-      ),
-    );
-    return false;
+      );
+      return false;
+    }
   }
 }

@@ -68,7 +68,6 @@ class _TournamentScreenState extends State<TournamentScreen>
   void dispose() {
     super.dispose();
     _controller.dispose();
-    _tournamentBloc.dispose();
   }
 
   @override

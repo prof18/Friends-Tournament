@@ -25,80 +25,73 @@ import 'package:friends_tournament/src/style/app_style.dart';
 
 class PlayersNumber extends StatelessWidget implements SetupPage {
   final SetupBloc _setupBloc;
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   PlayersNumber(this._setupBloc);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: Colors.white12,
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: Padding(
-                padding: Margins.regular,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(
-                      flex: 6,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: MarginsRaw.regular),
-                        child: SvgPicture.asset(
-                          'assets/players_art.svg',
-                        ),
-                      ),
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: Padding(
+            padding: Margins.regular,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  flex: 6,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: MarginsRaw.regular),
+                    child: SvgPicture.asset(
+                      'assets/players_art.svg',
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: MarginsRaw.regular,
-                        bottom: MarginsRaw.small,
-                      ),
-                      child: Text(
-                        AppLocalizations.of(context)
-                            .translate('number_of_players_title'),
-                        style: TextStyle(
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: MarginsRaw.medium,
-                        bottom: MarginsRaw.medium,
-                      ),
-                      child: Container(
-                        alignment: Alignment.topLeft,
-                        decoration: BoxDecoration(
-                          color: AppColors.blue,
-                          borderRadius: BorderRadius.circular(
-                            MarginsRaw.borderRadius,
-                          ),
-                        ),
-                        height: 6,
-                        width: 60,
-                      ),
-                    ),
-                    SetupCounterWidget(
-                      inputStream: _setupBloc.setPlayersNumber,
-                      outputStream: _setupBloc.getPlayersNumber,
-                      minValue: 2,
-                    ),
-                    Expanded(
-                      flex: 4,
-                      child: Container(),
-                    )
-                  ],
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: MarginsRaw.regular,
+                    bottom: MarginsRaw.small,
+                  ),
+                  child: Text(
+                    AppLocalizations.of(context)
+                        .translate('number_of_players_title'),
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: MarginsRaw.medium,
+                    bottom: MarginsRaw.medium,
+                  ),
+                  child: Container(
+                    alignment: Alignment.topLeft,
+                    decoration: BoxDecoration(
+                      color: AppColors.blue,
+                      borderRadius: BorderRadius.circular(
+                        MarginsRaw.borderRadius,
+                      ),
+                    ),
+                    height: 6,
+                    width: 60,
+                  ),
+                ),
+                SetupCounterWidget(
+                  inputStream: _setupBloc.setPlayersNumber,
+                  outputStream: _setupBloc.getPlayersNumber,
+                  minValue: 2,
+                ),
+                Expanded(
+                  flex: 4,
+                  child: Container(),
+                )
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -112,10 +105,13 @@ class PlayersNumber extends StatelessWidget implements SetupPage {
     if (_setupBloc.getCurrentPlayersNumber() != 0) {
       return true;
     } else {
-      _scaffoldKey.currentState.showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
           content: Text(
-        AppLocalizations.of(context).translate('player_name_empty_fields'),
-      )));
+            AppLocalizations.of(context).translate('player_name_empty_fields'),
+          ),
+        ),
+      );
       return false;
     }
   }

@@ -25,7 +25,7 @@ Friends Tournament works both on Android and iOs but for the time being is only 
 
 ## Translating 🌍
 
-Friends Tournament currently supports Italian and English. 
+Friends Tournament currently supports Italian, English, Spanish, French and Portuguese. 
 If you want to help Friends Tournament becoming international, I will more than happy.
 
 To add a new translation just add a pull request with a new `json` file in the `lang` folder and a new store description in the `store_assets` folder.

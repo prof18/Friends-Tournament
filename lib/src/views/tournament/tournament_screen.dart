@@ -38,8 +38,6 @@ class _TournamentScreenState extends State<TournamentScreen>
   AnimationController _controller;
   TournamentBloc _tournamentBloc;
 
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-
   @override
   void initState() {
     super.initState();
@@ -53,9 +51,11 @@ class _TournamentScreenState extends State<TournamentScreen>
       TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
 
       tournamentBloc.currentMatchName.listen((matchName) {
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text("Match \"$matchName\" selected."),
-        ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Match \"$matchName\" selected."),
+          ),
+        );
       });
 
       tournamentBloc.getErrorChecker.listen((event) {
@@ -75,7 +75,6 @@ class _TournamentScreenState extends State<TournamentScreen>
     _tournamentBloc = TournamentBlocProvider.of(context);
 
     return Scaffold(
-      key: _scaffoldKey,
       body: AnnotatedRegion(
         value: SystemUiOverlayStyle(
           statusBarColor: AppColors.blue,

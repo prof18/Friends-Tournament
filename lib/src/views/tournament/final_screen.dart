@@ -190,7 +190,8 @@ class _FinalScreenState extends State<FinalScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => LeaderboardScreen(
-                                            widget.tournament),
+                                            tournament: widget.tournament,
+                                            isFromFinalScreen: true),
                                       ),
                                     );
                                   },

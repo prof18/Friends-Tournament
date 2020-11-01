@@ -30,14 +30,18 @@ import 'package:friends_tournament/src/style/app_style.dart';
 
 class LeaderboardScreen extends StatefulWidget {
   final Tournament tournament;
+  final bool isFromFinalScreen;
 
-  LeaderboardScreen(this.tournament);
+  LeaderboardScreen({this.tournament, this.isFromFinalScreen});
 
   @override
   _LeaderboardScreenState createState() => _LeaderboardScreenState();
 }
 
 class _LeaderboardScreenState extends State<LeaderboardScreen> {
+  var statusBarColor = Colors.white;
+  var statusBarBrightness = Brightness.dark;
+
   @override
   void initState() {
     super.initState();
@@ -56,102 +60,120 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   Widget build(BuildContext context) {
     TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: AnnotatedRegion(
-        value: SystemUiOverlayStyle(
-          statusBarColor: Colors.white,
-          statusBarIconBrightness: Brightness.dark,
-        ),
-        child: SafeArea(
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(top: MarginsRaw.regular),
-                          child: SizedBox(
-                            width: 60,
+    return WillPopScope(
+      onWillPop: () {
+        if (!widget.isFromFinalScreen) {
+          setState(() {
+            statusBarColor = AppColors.blue;
+            statusBarBrightness = Brightness.light;
+          });
+        }
+        return Future.value(true);
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: AnnotatedRegion(
+          value: SystemUiOverlayStyle(
+            statusBarColor: statusBarColor,
+            statusBarIconBrightness: statusBarBrightness,
+          ),
+          child: SafeArea(
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: MarginsRaw.regular),
+                            child: SizedBox(
+                              width: 60,
                               child: IconButton(
                                 icon: const Icon(Icons.arrow_back_ios),
                                 onPressed: () {
+                                  if (!widget.isFromFinalScreen) {
+                                    setState(() {
+                                      statusBarColor = AppColors.blue;
+                                      statusBarBrightness = Brightness.light;
+                                    });
+                                  }
                                   Navigator.pop(context);
                                 },
                               ),
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: MarginsRaw.regular),
+                            child: Text(
+                              AppLocalizations.of(context)
+                                  .translate('leaderboard'),
+                              style: TextStyle(fontSize: 28),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Expanded(
+                        flex: 4,
+                        child: Padding(
+                          padding: Margins.regular,
+                          child: SvgPicture.asset(
+                            'assets/podium-art.svg',
                           ),
                         ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(top: MarginsRaw.regular),
-                          child: Text(
-                            AppLocalizations.of(context)
-                                .translate('leaderboard'),
-                            style: TextStyle(fontSize: 28),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: MarginsRaw.regular,
+                          left: MarginsRaw.regular,
+                          bottom: MarginsRaw.regular,
+                        ),
+                        child: Container(
+                          alignment: Alignment.topLeft,
+                          decoration: BoxDecoration(
+                            color: AppColors.blue,
+                            borderRadius: BorderRadius.circular(
+                              MarginsRaw.borderRadius,
+                            ),
+                          ),
+                          height: 6,
+                          width: 60,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 6,
+                        child: Padding(
+                          padding: Margins.small,
+                          child: StreamBuilder<List<UIPlayer>>(
+                            initialData: [],
+                            stream: tournamentBloc.leaderboardPlayers,
+                            builder: (context, snapshot) {
+                              return snapshot.data.isNotEmpty
+                                  ? ListView.builder(
+                                      itemCount: snapshot.data.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        UIPlayer uiPlayer =
+                                            snapshot.data[index];
+                                        return LeaderboardItemTile(
+                                          uiPlayer: uiPlayer,
+                                          position: index + 1,
+                                        );
+                                      },
+                                    )
+                                  : _renderEmptyLeaderboard();
+                            },
                           ),
                         ),
-                      ],
-                    ),
-                    Expanded(
-                      flex: 4,
-                      child: Padding(
-                        padding: Margins.regular,
-                        child: SvgPicture.asset(
-                          'assets/podium-art.svg',
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: MarginsRaw.regular,
-                        left: MarginsRaw.regular,
-                        bottom: MarginsRaw.regular,
-                      ),
-                      child: Container(
-                        alignment: Alignment.topLeft,
-                        decoration: BoxDecoration(
-                          color: AppColors.blue,
-                          borderRadius: BorderRadius.circular(
-                            MarginsRaw.borderRadius,
-                          ),
-                        ),
-                        height: 6,
-                        width: 60,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 6,
-                      child: Padding(
-                        padding: Margins.small,
-                        child: StreamBuilder<List<UIPlayer>>(
-                          initialData: [],
-                          stream: tournamentBloc.leaderboardPlayers,
-                          builder: (context, snapshot) {
-                            return snapshot.data.isNotEmpty
-                                ? ListView.builder(
-                                    itemCount: snapshot.data.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      UIPlayer uiPlayer = snapshot.data[index];
-                                      return LeaderboardItemTile(
-                                        uiPlayer: uiPlayer,
-                                        position: index + 1,
-                                      );
-                                    },
-                                  )
-                                : _renderEmptyLeaderboard();
-                          },
-                        ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

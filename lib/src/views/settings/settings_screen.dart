@@ -123,7 +123,7 @@ class SettingsScreen extends StatelessWidget {
                               <a href="https://it.freepik.com/foto-vettori-gratuito/design">Vectors and illustrations from freepik - freepik.com</a>''');
                       });
 
-                      Navigator.of(context).push(MaterialPageRoute<void>(
+                      Navigator.of(context)?.push(MaterialPageRoute<void>(
                         builder: (context) => Theme(
                           data: Theme.of(context).copyWith(
                               textTheme: Typography.material2018(

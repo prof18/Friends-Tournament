@@ -22,6 +22,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
+import 'package:friends_tournament/src/bloc/setup_bloc.dart';
+import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
 import 'package:friends_tournament/src/data/database/database_provider_impl.dart';
 import 'package:friends_tournament/src/data/database/local_data_source.dart';
@@ -68,6 +70,18 @@ class _MyAppState extends State<MyApp> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadData();
     });
+  }
+
+
+  @override
+  void dispose() {
+    TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
+    SetupBloc setupBloc = SetupBlocProvider.of(context);
+
+    tournamentBloc.dispose();
+    setupBloc.dispose();
+
+    super.dispose();
   }
 
   _loadData() async {

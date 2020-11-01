@@ -130,7 +130,9 @@ class _BackdropState extends State<Backdrop>
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => LeaderboardScreen(tournament)),
+                    builder: (context) => LeaderboardScreen(
+                        tournament: tournament, isFromFinalScreen: false),
+                  ),
                 );
               },
               tooltip: AppLocalizations.of(context)

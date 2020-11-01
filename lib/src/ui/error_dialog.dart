@@ -72,7 +72,7 @@ showErrorDialog(BuildContext context) {
                 AppLocalizations.of(context).translate('restart_from_scratch')),
             onPressed: () async {
               await repository.finishAllTournament();
-              Navigator.of(context).pushAndRemoveUntil(
+              Navigator.of(context)?.pushAndRemoveUntil(
                   MaterialPageRoute(
                     builder: (context) => SetupBlocProvider(
                       child: TournamentBlocProvider(

@@ -159,7 +159,6 @@ class _BackdropState extends State<Backdrop>
 
   Widget _buildStack(BuildContext context, BoxConstraints constraints) {
     final animation = _getPanelAnimation(constraints);
-    final theme = Theme.of(context);
     return Container(
       color: AppColors.blue,
       child: Stack(
@@ -222,7 +221,7 @@ class _BackdropState extends State<Backdrop>
                   child: Text(
                       AppLocalizations.of(context).translate('generic_cancel')),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.of(context)?.pop();
                   },
                 ),
                 FlatButton(
@@ -232,7 +231,7 @@ class _BackdropState extends State<Backdrop>
                     final tournament =
                         await tournamentBloc.activeTournament.first;
                     await tournamentBloc.endTournament();
-                    Navigator.of(context).pushAndRemoveUntil(
+                    Navigator.of(context)?.pushAndRemoveUntil(
                         MaterialPageRoute(
                           builder: (context) => TournamentBlocProvider(
                             child: FinalScreen(tournament),

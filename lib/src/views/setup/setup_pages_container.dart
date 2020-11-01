@@ -256,7 +256,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
               child: Text(
                   AppLocalizations.of(context).translate('generic_cancel')),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context)?.pop();
               },
             ),
             FlatButton(
@@ -265,7 +265,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
                     .translate('tournament_building_go_button'),
               ),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context)?.pop();
                 _showLoaderAndStartProcess();
               },
             )
@@ -292,7 +292,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
       _controller.reverse().then(
         (_) {
           Navigator.pop(context);
-          Navigator.of(context).pushAndRemoveUntil(
+          Navigator.of(context)?.pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) => TournamentBlocProvider(
                   child: TournamentScreen(),

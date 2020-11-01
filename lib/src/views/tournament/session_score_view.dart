@@ -187,14 +187,14 @@ class _SessionScoreViewState extends State<SessionScoreView> {
               child: Text(
                   AppLocalizations.of(context).translate('generic_cancel')),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context)?.pop();
               },
             ),
             FlatButton(
               child: Text(AppLocalizations.of(context).translate('generic_ok')),
               onPressed: () async {
                 await _tournamentBloc.endMatch();
-                Navigator.of(context).pop();
+                Navigator.of(context)?.pop();
               },
             )
           ],

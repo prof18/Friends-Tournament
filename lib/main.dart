@@ -133,7 +133,6 @@ class _MyAppState extends State<MyApp> {
       child: TournamentBlocProvider(
         child: MaterialApp(
           title: 'Friends Tournament',
-          debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primarySwatch: Colors.blue,
             textTheme: GoogleFonts.montserratTextTheme(

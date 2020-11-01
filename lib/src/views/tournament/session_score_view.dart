@@ -16,17 +16,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
+import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
-import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/app/ui_session.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/utils.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/views/tournament/session_item_widget.dart';
-import 'package:friends_tournament/src/style/app_style.dart';
 
 class SessionScoreView extends StatefulWidget {
   final List<UISession> sessions;
@@ -45,8 +43,6 @@ class _SessionScoreViewState extends State<SessionScoreView> {
   TournamentBloc _tournamentBloc;
 
   ScrollController _scrollController;
-
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -93,7 +89,6 @@ class _SessionScoreViewState extends State<SessionScoreView> {
     _tournamentBloc = TournamentBlocProvider.of(context);
 
     return Scaffold(
-      key: _scaffoldKey,
       floatingActionButton: AnimatedOpacity(
         opacity: _panelExpanded || hideFab ? 0.0 : 1.0,
         duration: Duration(milliseconds: 100),

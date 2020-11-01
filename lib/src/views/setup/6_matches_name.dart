@@ -27,7 +27,6 @@ import 'package:friends_tournament/src/style/app_style.dart';
 
 class MatchesName extends StatelessWidget implements SetupPage {
   final List<TextFieldWrapper> _textFieldsList = new List<TextFieldWrapper>();
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
   final Map<int, String> _savedValues = new HashMap();
   final SetupBloc _setupBloc;
 
@@ -45,26 +44,20 @@ class MatchesName extends StatelessWidget implements SetupPage {
   }
 
   Widget createBody(int matchesNumber) {
-    return Scaffold(
-      key: _scaffoldKey,
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: Container(
-                child: StreamBuilder(
-                  initialData: new Map<int, String>(),
-                  stream: _setupBloc.getMatchesName,
-                  builder: (context, snapshot) {
-                    return renderTextFields(
-                        matchesNumber, snapshot.data, context);
-                  },
-                ),
-              ),
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: Container(
+            child: StreamBuilder(
+              initialData: new Map<int, String>(),
+              stream: _setupBloc.getMatchesName,
+              builder: (context, snapshot) {
+                return renderTextFields(matchesNumber, snapshot.data, context);
+              },
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -193,7 +186,7 @@ class MatchesName extends StatelessWidget implements SetupPage {
   @override
   bool onNextPressed(BuildContext context) {
     if (areNamesDuplicate()) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
             AppLocalizations.of(context).translate('match_name_duplicated'),
@@ -208,7 +201,7 @@ class MatchesName extends StatelessWidget implements SetupPage {
     if (_savedValues.length == _textFieldsList.length && isMatchNamesValid()) {
       return true;
     } else {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
             AppLocalizations.of(context)

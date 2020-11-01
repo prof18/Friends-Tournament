@@ -30,72 +30,68 @@ class MatchesNumber extends StatelessWidget implements SetupPage {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white12,
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-                child: Padding(
-              padding: Margins.regular,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(
-                    flex: 6,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: MarginsRaw.regular),
-                      child: SvgPicture.asset(
-                        'assets/matches-art.svg',
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: Padding(
+            padding: Margins.regular,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  flex: 6,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: MarginsRaw.regular),
+                    child: SvgPicture.asset(
+                      'assets/matches-art.svg',
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: MarginsRaw.regular,
+                    bottom: MarginsRaw.small,
+                  ),
+                  child: Text(
+                    AppLocalizations.of(context)
+                        .translate('number_of_matches_title'),
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: MarginsRaw.medium,
+                    bottom: MarginsRaw.medium,
+                  ),
+                  child: Container(
+                    alignment: Alignment.topLeft,
+                    decoration: BoxDecoration(
+                      color: AppColors.blue,
+                      borderRadius: BorderRadius.circular(
+                        MarginsRaw.borderRadius,
                       ),
                     ),
+                    height: 6,
+                    width: 60,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: MarginsRaw.regular,
-                      bottom: MarginsRaw.small,
-                    ),
-                    child: Text(
-                      AppLocalizations.of(context)
-                          .translate('number_of_matches_title'),
-                      style: TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: MarginsRaw.medium,
-                      bottom: MarginsRaw.medium,
-                    ),
-                    child: Container(
-                      alignment: Alignment.topLeft,
-                      decoration: BoxDecoration(
-                        color: AppColors.blue,
-                        borderRadius: BorderRadius.circular(
-                          MarginsRaw.borderRadius,
-                        ),
-                      ),
-                      height: 6,
-                      width: 60,
-                    ),
-                  ),
-                  SetupCounterWidget(
-                    inputStream: _setupBloc.setMatchesNumber,
-                    outputStream: _setupBloc.getMatchesNumber,
-                    minValue: 1,
-                  ),
-                  Expanded(
-                    flex: 4,
-                    child: Container(),
-                  )
-                ],
-              ),
-            )),
-          ],
+                ),
+                SetupCounterWidget(
+                  inputStream: _setupBloc.setMatchesNumber,
+                  outputStream: _setupBloc.getMatchesNumber,
+                  minValue: 1,
+                ),
+                Expanded(
+                  flex: 4,
+                  child: Container(),
+                )
+              ],
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 

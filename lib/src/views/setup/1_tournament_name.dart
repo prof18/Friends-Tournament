@@ -24,7 +24,6 @@ import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 
 class TournamentName extends StatelessWidget implements SetupPage {
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController _tournamentController =
       new TextEditingController();
   final SetupBloc setupBloc;
@@ -33,83 +32,78 @@ class TournamentName extends StatelessWidget implements SetupPage {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: Colors.white12,
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-                child: Padding(
-              padding: Margins.regular,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(
-                    flex: 6,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: MarginsRaw.regular),
-                      child: SvgPicture.asset(
-                        'assets/intro-art.svg',
-                      ),
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: Padding(
+            padding: Margins.regular,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  flex: 6,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: MarginsRaw.regular),
+                    child: SvgPicture.asset(
+                      'assets/intro-art.svg',
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: MarginsRaw.regular,
-                      bottom: MarginsRaw.small,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: MarginsRaw.regular,
+                    bottom: MarginsRaw.small,
+                  ),
+                  child: Text(
+                    AppLocalizations.of(context)
+                        .translate('tournament_name_title'),
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
                     ),
-                    child: Text(
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: MarginsRaw.medium,
+                    bottom: MarginsRaw.medium,
+                  ),
+                  child: Container(
+                    alignment: Alignment.topLeft,
+                    decoration: BoxDecoration(
+                      color: AppColors.blue,
+                      borderRadius: BorderRadius.circular(
+                        MarginsRaw.borderRadius,
+                      ),
+                    ),
+                    height: 6,
+                    width: 60,
+                  ),
+                ),
+                Material(
+                  elevation: MarginsRaw.elevation,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(MarginsRaw.borderRadius),
+                  ),
+                  child: TextField(
+                    controller: _tournamentController,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    decoration: getTextFieldDecoration(
                       AppLocalizations.of(context)
                           .translate('tournament_name_title'),
-                      style: TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                      ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: MarginsRaw.medium,
-                      bottom: MarginsRaw.medium,
-                    ),
-                    child: Container(
-                      alignment: Alignment.topLeft,
-                      decoration: BoxDecoration(
-                        color: AppColors.blue,
-                        borderRadius: BorderRadius.circular(
-                          MarginsRaw.borderRadius,
-                        ),
-                      ),
-                      height: 6,
-                      width: 60,
-                    ),
-                  ),
-                  Material(
-                    elevation: MarginsRaw.elevation,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(MarginsRaw.borderRadius),
-                    ),
-                    child: TextField(
-                      controller: _tournamentController,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                      decoration: getTextFieldDecoration(
-                        AppLocalizations.of(context)
-                            .translate('tournament_name_title'),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 4,
-                    child: Container(),
-                  )
-                ],
-              ),
-            )),
-          ],
+                ),
+                Expanded(
+                  flex: 4,
+                  child: Container(),
+                )
+              ],
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -122,11 +116,14 @@ class TournamentName extends StatelessWidget implements SetupPage {
   @override
   bool onNextPressed(BuildContext context) {
     if (_tournamentController.text.trim().isEmpty) {
-      _scaffoldKey.currentState.showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
           content: Text(
-        AppLocalizations.of(context)
-            .translate('tournament_name_empty_fields_message'),
-      )));
+            AppLocalizations.of(context)
+                .translate('tournament_name_empty_fields_message'),
+          ),
+        ),
+      );
       return false;
     }
 

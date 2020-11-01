@@ -19,18 +19,15 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
-import 'package:friends_tournament/src/ui/utils.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
-import 'package:friends_tournament/src/style/app_style.dart';
 
 class PlayersName extends StatelessWidget implements SetupPage {
   final List<TextFieldWrapper> _textFieldsList = new List<TextFieldWrapper>();
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
   final SetupBloc _setupBloc;
   final Map<int, String> _savedValues = new HashMap();
 
@@ -48,26 +45,20 @@ class PlayersName extends StatelessWidget implements SetupPage {
   }
 
   Widget createBody(int playersNumber) {
-    return Scaffold(
-      key: _scaffoldKey,
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: Container(
-                child: StreamBuilder(
-                  initialData: Map<int, String>(),
-                  stream: _setupBloc.getPlayersName,
-                  builder: (context, snapshot) {
-                    return renderTextFields(
-                        playersNumber, snapshot.data, context);
-                  },
-                ),
-              ),
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: Container(
+            child: StreamBuilder(
+              initialData: Map<int, String>(),
+              stream: _setupBloc.getPlayersName,
+              builder: (context, snapshot) {
+                return renderTextFields(playersNumber, snapshot.data, context);
+              },
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -198,7 +189,7 @@ class PlayersName extends StatelessWidget implements SetupPage {
   @override
   bool onNextPressed(BuildContext context) {
     if (areNamesDuplicate()) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
             AppLocalizations.of(context).translate('player_name_duplicated'),
@@ -213,7 +204,7 @@ class PlayersName extends StatelessWidget implements SetupPage {
     if (_savedValues.length == _textFieldsList.length && isPlayerNamesValid()) {
       return true;
     } else {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
             AppLocalizations.of(context)

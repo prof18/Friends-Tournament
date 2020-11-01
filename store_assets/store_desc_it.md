@@ -1,5 +1,3 @@
-TODO
-
 # Title
 Friends Tournament - Gestione Tornei
 

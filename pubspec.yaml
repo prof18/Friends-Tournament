@@ -57,6 +57,9 @@ flutter:
     - winner-art.svg
     - lang/en.json
     - lang/it.json
+    - lang/pt.json
+    - lang/es.json
+    - lang/fr.json
     - app-icon.png
 
   fonts:

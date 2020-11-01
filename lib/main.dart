@@ -155,8 +155,11 @@ class _MyAppState extends State<MyApp> {
           ),
 
           supportedLocales: [
-            Locale('en', 'US'),
-            Locale('it', 'IT'),
+            Locale('en', ''),
+            Locale('it', ''),
+            Locale('pt', ''),
+            Locale('es', ''),
+            Locale('fr', ''),
           ],
           // These delegates make sure that the localization data for the proper language is loaded
           localizationsDelegates: [
@@ -171,8 +174,7 @@ class _MyAppState extends State<MyApp> {
           localeResolutionCallback: (locale, supportedLocales) {
             // Check if the current device locale is supported
             for (var supportedLocale in supportedLocales) {
-              if (supportedLocale.languageCode == locale.languageCode &&
-                  supportedLocale.countryCode == locale.countryCode) {
+              if (supportedLocale.languageCode == locale.languageCode) {
                 return supportedLocale;
               }
             }

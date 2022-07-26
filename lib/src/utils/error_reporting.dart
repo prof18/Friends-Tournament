@@ -16,22 +16,22 @@
 
 import 'package:sentry/sentry.dart';
 
-import '../dsn.dart';
 
 Future<void> reportError(dynamic error, dynamic stackTrace) async {
-  var sentry = SentryClient(dsn: dsn);
-  // Print the exception to the console.
-  print('Caught error: $error');
-  if (isInDebugMode) {
-    // Print the full stacktrace in debug mode.
-    print(stackTrace);
-  } else {
-    // Send the Exception and Stacktrace to Sentry in Production mode.
-    sentry.captureException(
-      exception: error,
-      stackTrace: stackTrace,
-    );
-  }
+  // TODO: migrate to crashlytics
+  // var sentry = SentryClient(dsn: dsn);
+  // // Print the exception to the console.
+  // print('Caught error: $error');
+  // if (isInDebugMode) {
+  //   // Print the full stacktrace in debug mode.
+  //   print(stackTrace);
+  // } else {
+  //   // Send the Exception and Stacktrace to Sentry in Production mode.
+  //   sentry.captureException(
+  //     exception: error,
+  //     stackTrace: stackTrace,
+  //   );
+  // }
 }
 
 bool get isInDebugMode {

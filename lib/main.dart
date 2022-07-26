@@ -100,39 +100,39 @@ class _MyAppState extends State<MyApp> {
     }
 
     await precachePicture(
-        ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/intro-art.svg'),
+        ExactAssetPicture(SvgPicture.svgStringDecoderBuilder, 'assets/intro-art.svg'),
         null);
     await precachePicture(
         ExactAssetPicture(
-            SvgPicture.svgStringDecoder, 'assets/players_art.svg'),
+            SvgPicture.svgStringDecoderBuilder, 'assets/players_art.svg'),
         null);
     await precachePicture(
         ExactAssetPicture(
-            SvgPicture.svgStringDecoder, 'assets/player-ast-art.svg'),
+            SvgPicture.svgStringDecoderBuilder, 'assets/player-ast-art.svg'),
         null);
     await precachePicture(
         ExactAssetPicture(
-            SvgPicture.svgStringDecoder, 'assets/matches-art.svg'),
+            SvgPicture.svgStringDecoderBuilder, 'assets/matches-art.svg'),
         null);
 
     await precachePicture(
-        ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/podium-art.svg'),
+        ExactAssetPicture(SvgPicture.svgStringDecoderBuilder, 'assets/podium-art.svg'),
         null);
 
     await precachePicture(
-        ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/error-art.svg'),
+        ExactAssetPicture(SvgPicture.svgStringDecoderBuilder, 'assets/error-art.svg'),
         null);
 
     await precachePicture(
-        ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/finish-art.svg'),
+        ExactAssetPicture(SvgPicture.svgStringDecoderBuilder, 'assets/finish-art.svg'),
         null);
 
     await precachePicture(
-        ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/save-art.svg'),
+        ExactAssetPicture(SvgPicture.svgStringDecoderBuilder, 'assets/save-art.svg'),
         null);
 
     await precachePicture(
-        ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/winner-art.svg'),
+        ExactAssetPicture(SvgPicture.svgStringDecoderBuilder, 'assets/winner-art.svg'),
         null);
 
     setState(() {

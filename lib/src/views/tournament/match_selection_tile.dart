@@ -24,7 +24,8 @@ class MatchSelectionTile extends StatefulWidget {
   final UIMatch match;
   final AnimationController controller;
 
-  MatchSelectionTile({this.match, this.controller});
+  MatchSelectionTile({Key key, @required this.match, @required this.controller})
+      : super(key: key);
 
   @override
   _MatchSelectionTileState createState() => _MatchSelectionTileState();

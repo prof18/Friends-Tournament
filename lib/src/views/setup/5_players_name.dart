@@ -24,6 +24,7 @@ import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 
 class PlayersName extends StatelessWidget implements SetupPage {
@@ -134,6 +135,7 @@ class PlayersName extends StatelessWidget implements SetupPage {
             child: ListView.builder(
                 itemBuilder: (BuildContext context, int index) {
                   return TextFieldTile(
+                      key: getKeyForPlayerNameTextField(index),
                       textFieldWrapper: _textFieldsList[index]);
                 },
                 itemCount: _textFieldsList.length),

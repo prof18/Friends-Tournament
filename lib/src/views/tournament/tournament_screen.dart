@@ -22,6 +22,7 @@ import 'package:friends_tournament/src/data/model/app/ui_match.dart';
 import 'package:friends_tournament/src/ui/backdrop.dart';
 import 'package:friends_tournament/src/ui/center_loader.dart';
 import 'package:friends_tournament/src/ui/error_dialog.dart';
+import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/tournament/match_selection_tile.dart';
 import 'package:friends_tournament/src/views/tournament/session_score_view.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
@@ -103,6 +104,7 @@ class _TournamentScreenState extends State<TournamentScreen>
             ? ListView.builder(
                 itemBuilder: (BuildContext context, int index) {
                   return MatchSelectionTile(
+                    key: getKeyForMatchSelector(index),
                     match: snapshot.data[index],
                     controller: _controller,
                   );

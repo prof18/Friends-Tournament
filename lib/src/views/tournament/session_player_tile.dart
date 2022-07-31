@@ -31,7 +31,12 @@ class SessionPlayerTile extends StatefulWidget {
   final double buttonSize = 20;
   final double iconSize = 16;
 
-  SessionPlayerTile({this.player, this.session, this.step = 1});
+  SessionPlayerTile({
+    key: Key,
+    @required this.player,
+    @required this.session,
+    this.step = 1,
+  }): super(key: key);
 
   @override
   _SessionPlayerTileState createState() => _SessionPlayerTileState();

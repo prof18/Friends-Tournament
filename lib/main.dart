@@ -75,11 +75,12 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
-    SetupBloc setupBloc = SetupBlocProvider.of(context);
-
-    tournamentBloc.dispose();
-    setupBloc.dispose();
+    // TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
+    // SetupBloc setupBloc = SetupBlocProvider.of(context);
+    //
+    // tournamentBloc.dispose();
+    // setupBloc.dispose();
+// TODO: is crashing on UI tests
 
     super.dispose();
   }

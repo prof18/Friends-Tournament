@@ -17,6 +17,7 @@
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/app/ui_session.dart';
+import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/tournament/session_player_tile.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 
@@ -54,6 +55,7 @@ class SessionItemWidget extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 UIPlayer player = session.sessionPlayers[index];
                 return SessionPlayerTile(
+                  key: getKeyForScore(index, session.name),
                   player: player,
                   session: session,
                 );

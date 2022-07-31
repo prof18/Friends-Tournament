@@ -24,6 +24,7 @@ import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/custom_icons_icons.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/tournament/final_screen.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_page.dart';
 
@@ -112,6 +113,7 @@ class _BackdropState extends State<Backdrop>
           ),
         ),
         leading: IconButton(
+          key: matchViewButtonKey,
           onPressed: () {
             _controller.fling(velocity: _isPanelVisible ? -1.0 : 1.0);
           },

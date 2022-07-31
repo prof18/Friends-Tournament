@@ -26,6 +26,7 @@ import 'package:friends_tournament/src/ui/dialog_loader.dart';
 import 'package:friends_tournament/src/ui/error_dialog.dart';
 import 'package:friends_tournament/src/ui/slide_dots.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/setup/1_tournament_name.dart';
 import 'package:friends_tournament/src/views/setup/2_player_number.dart';
 import 'package:friends_tournament/src/views/setup/3_player_ast_number.dart';
@@ -129,6 +130,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
                             child: Align(
                               alignment: Alignment.bottomLeft,
                               child: InkWell(
+                                key: setupBackButtonKey,
                                 customBorder: CircleBorder(),
                                 onTap: () {
                                   final page = _allPages[_currentPageIndex];
@@ -162,6 +164,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
                           Align(
                             alignment: Alignment.bottomRight,
                             child: InkWell(
+                              key: setupNextButtonKey,
                               customBorder: CircleBorder(),
                               onTap: () {
                                 final page = _allPages[_currentPageIndex];
@@ -260,6 +263,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
               },
             ),
             FlatButton(
+              key: finishSetupProceedButtonKey,
               child: Text(
                 AppLocalizations.of(context)
                     .translate('tournament_building_go_button'),

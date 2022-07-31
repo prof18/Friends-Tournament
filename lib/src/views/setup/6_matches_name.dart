@@ -22,6 +22,7 @@ import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 
@@ -130,7 +131,9 @@ class MatchesName extends StatelessWidget implements SetupPage {
             ),
             child: ListView.builder(
               itemBuilder: (BuildContext context, int index) {
-                return TextFieldTile(textFieldWrapper: _textFieldsList[index]);
+                return TextFieldTile(
+                    key: getKeyForMatchNameTextField(index),
+                    textFieldWrapper: _textFieldsList[index]);
               },
               itemCount: _textFieldsList.length,
             ),

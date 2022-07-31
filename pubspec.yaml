@@ -37,8 +37,13 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  integration_test:
+    sdk: flutter
+
   flutter_driver:
     sdk: flutter
+
   sqflite_common_ffi: 1.1.1
   synchronized: '>=2.0.2 <4.0.0'
 

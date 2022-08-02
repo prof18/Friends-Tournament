@@ -29,6 +29,7 @@ import 'package:friends_tournament/src/data/model/db/tournament_player.dart';
 import 'package:friends_tournament/src/utils/utils.dart';
 import 'package:sqflite/sqflite.dart';
 
+// TODO: does it make sense to have it as a singleton?
 class LocalDataSource {
   // Implement singleton
   // To get back it, simple call: MyClass myObj = new MyClass();

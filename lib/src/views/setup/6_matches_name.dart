@@ -18,43 +18,45 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
+import 'package:friends_tournament/src/provider/setup_provider.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
+import 'package:provider/provider.dart';
 
 class MatchesName extends StatelessWidget implements SetupPage {
   final List<TextFieldWrapper> _textFieldsList = new List<TextFieldWrapper>();
   final Map<int, String> _savedValues = new HashMap();
-  final SetupBloc _setupBloc;
-
-  MatchesName(this._setupBloc);
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      initialData: 0,
-      stream: _setupBloc.getMatchesNumber,
-      builder: (context, snapshot) {
-        return createBody(snapshot.data);
+    return Consumer<SetupProvider>(
+      builder: (context, provider, child) {
+        return createBody(
+          provider.matchesNumber,
+          provider.matchesName,
+          context,
+        );
       },
     );
   }
 
-  Widget createBody(int matchesNumber) {
+  Widget createBody(
+    int matchesNumber,
+    UnmodifiableMapView<int, String> matches,
+    BuildContext context,
+  ) {
     return Column(
       children: <Widget>[
         Expanded(
           child: Container(
-            child: StreamBuilder(
-              initialData: new Map<int, String>(),
-              stream: _setupBloc.getMatchesName,
-              builder: (context, snapshot) {
-                return renderTextFields(matchesNumber, snapshot.data, context);
-              },
+            child: renderTextFields(
+              matchesNumber,
+              matches,
+              context,
             ),
           ),
         ),
@@ -63,7 +65,10 @@ class MatchesName extends StatelessWidget implements SetupPage {
   }
 
   Widget renderTextFields(
-      int matchesNumber, Map<int, String> matchesName, BuildContext context) {
+    int matchesNumber,
+    Map<int, String> matchesName,
+    BuildContext context,
+  ) {
     if (_textFieldsList.length != matchesNumber) {
       _textFieldsList.clear();
       for (int i = 0; i < matchesNumber; i++) {
@@ -154,7 +159,7 @@ class MatchesName extends StatelessWidget implements SetupPage {
     return true;
   }
 
-  void saveValues() {
+  void saveValues(BuildContext context) {
     for (int i = 0; i < _textFieldsList.length; i++) {
       TextFieldWrapper textField = _textFieldsList[i];
       if (textField.textEditingController.text.isNotEmpty) {
@@ -166,7 +171,7 @@ class MatchesName extends StatelessWidget implements SetupPage {
         }
       }
     }
-    _setupBloc.setMatchesName.add(_savedValues);
+    Provider.of<SetupProvider>(context, listen: false).setMatchesName(_savedValues);
   }
 
   /// Return true if there are some duplicates
@@ -181,8 +186,8 @@ class MatchesName extends StatelessWidget implements SetupPage {
   }
 
   @override
-  bool onBackPressed() {
-    saveValues();
+  bool onBackPressed(BuildContext context) {
+    saveValues(context);
     return true;
   }
 
@@ -199,7 +204,7 @@ class MatchesName extends StatelessWidget implements SetupPage {
       return false;
     }
 
-    saveValues();
+    saveValues(context);
 
     if (_savedValues.length == _textFieldsList.length && isMatchNamesValid()) {
       return true;

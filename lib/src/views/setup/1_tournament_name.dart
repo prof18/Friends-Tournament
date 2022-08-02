@@ -15,20 +15,17 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:friends_tournament/src/bloc/setup_bloc.dart';
+import 'package:friends_tournament/src/provider/setup_provider.dart';
 import 'package:friends_tournament/src/ui/text_field_decoration.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
+import 'package:provider/provider.dart';
 
 class TournamentName extends StatelessWidget implements SetupPage {
   final TextEditingController _tournamentController =
       new TextEditingController();
-  final SetupBloc setupBloc;
-
-  TournamentName(this.setupBloc);
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +105,7 @@ class TournamentName extends StatelessWidget implements SetupPage {
   }
 
   @override
-  bool onBackPressed() {
+  bool onBackPressed(BuildContext context) {
     // Nothing to do here!
     return true;
   }
@@ -126,8 +123,9 @@ class TournamentName extends StatelessWidget implements SetupPage {
       );
       return false;
     }
+    Provider.of<SetupProvider>(context, listen: false)
+        .setTournamentName(_tournamentController.text);
 
-    setupBloc.setTournamentName.add(_tournamentController.text);
     return true;
   }
 }

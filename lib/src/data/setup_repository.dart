@@ -39,6 +39,7 @@ import 'package:friends_tournament/src/utils/id_generator.dart';
 
 import 'errors.dart';
 
+// TODO: does it make sense to have it as a singleton?
 class SetupRepository {
   // Implement singleton
   // To get back it, simple call: MyClass myObj = new MyClass();

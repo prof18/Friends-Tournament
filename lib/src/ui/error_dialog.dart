@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
 import 'package:friends_tournament/src/data/database/database_provider_impl.dart';
@@ -74,10 +72,8 @@ showErrorDialog(BuildContext context) {
               await repository.finishAllTournament();
               Navigator.of(context)?.pushAndRemoveUntil(
                   MaterialPageRoute(
-                    builder: (context) => SetupBlocProvider(
-                      child: TournamentBlocProvider(
-                        child: Welcome(),
-                      ),
+                    builder: (context) => TournamentBlocProvider(
+                      child: Welcome(),
                     ),
                   ),
                   (Route<dynamic> route) => false);

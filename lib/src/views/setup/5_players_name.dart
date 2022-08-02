@@ -17,45 +17,46 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
+import 'package:friends_tournament/src/provider/setup_provider.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
+import 'package:provider/provider.dart';
 
 class PlayersName extends StatelessWidget implements SetupPage {
   final List<TextFieldWrapper> _textFieldsList = new List<TextFieldWrapper>();
-  final SetupBloc _setupBloc;
   final Map<int, String> _savedValues = new HashMap();
-
-  PlayersName(this._setupBloc);
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      initialData: 0,
-      builder: (context, snapshot) {
-        return createBody(snapshot.data);
+    return Consumer<SetupProvider>(
+      builder: (context, provider, child) {
+        return createBody(
+          provider.playersNumber,
+          provider.playersName,
+          context,
+        );
       },
-      stream: _setupBloc.getPlayersNumber,
     );
   }
 
-  Widget createBody(int playersNumber) {
+  Widget createBody(
+    int playersNumber,
+    UnmodifiableMapView<int, String> players,
+    BuildContext context,
+  ) {
     return Column(
       children: <Widget>[
         Expanded(
           child: Container(
-            child: StreamBuilder(
-              initialData: Map<int, String>(),
-              stream: _setupBloc.getPlayersName,
-              builder: (context, snapshot) {
-                return renderTextFields(playersNumber, snapshot.data, context);
-              },
+            child: renderTextFields(
+              playersNumber,
+              players,
+              context,
             ),
           ),
         ),
@@ -64,7 +65,10 @@ class PlayersName extends StatelessWidget implements SetupPage {
   }
 
   Widget renderTextFields(
-      int playersNumber, Map<int, String> playersName, BuildContext context) {
+    int playersNumber,
+    Map<int, String> playersName,
+    BuildContext context,
+  ) {
     if (_textFieldsList.length != playersNumber) {
       _textFieldsList.clear();
       for (int i = 0; i < playersNumber; i++) {
@@ -145,7 +149,7 @@ class PlayersName extends StatelessWidget implements SetupPage {
     );
   }
 
-  void saveValues() {
+  void saveValues(BuildContext context) {
     for (int i = 0; i < _textFieldsList.length; i++) {
       TextFieldWrapper textField = _textFieldsList[i];
       if (textField.textEditingController.text.isNotEmpty) {
@@ -157,12 +161,12 @@ class PlayersName extends StatelessWidget implements SetupPage {
         }
       }
     }
-    _setupBloc.setPlayersName.add(_savedValues);
+    Provider.of<SetupProvider>(context, listen: false).setPlayersName(_savedValues);
   }
 
   @override
-  bool onBackPressed() {
-    saveValues();
+  bool onBackPressed(BuildContext context) {
+    saveValues(context);
     return true;
   }
 
@@ -201,7 +205,7 @@ class PlayersName extends StatelessWidget implements SetupPage {
       return false;
     }
 
-    saveValues();
+    saveValues(context);
 
     if (_savedValues.length == _textFieldsList.length && isPlayerNamesValid()) {
       return true;

@@ -15,21 +15,20 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
-import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
+import 'package:friends_tournament/src/provider/setup_provider.dart';
 import 'package:friends_tournament/src/ui/error_dialog.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/views/settings/settings_screen.dart';
 import 'package:friends_tournament/src/views/setup/setup_pages_container.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_page.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
+import 'package:provider/provider.dart';
 
 class FinalScreen extends StatefulWidget {
   final Tournament tournament;
@@ -58,7 +57,6 @@ class _FinalScreenState extends State<FinalScreen> {
   @override
   Widget build(BuildContext context) {
     TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
-    SetupBloc setupBloc = SetupBlocProvider.of(context);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -214,13 +212,15 @@ class _FinalScreenState extends State<FinalScreen> {
                             Expanded(
                               child: RaisedButton(
                                 onPressed: () {
-                                  setupBloc.clearAll();
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => SetupBlocProvider(
-                                        child: SetupPagesContainer(),
-                                      ),
+                                      builder: (context) {
+                                        return ChangeNotifierProvider(
+                                          create: (context) => SetupProvider(),
+                                          child: SetupPagesContainer(),
+                                        );
+                                      },
                                     ),
                                   );
                                 },

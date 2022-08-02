@@ -17,16 +17,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:friends_tournament/src/bloc/setup_bloc.dart';
+import 'package:friends_tournament/src/provider/setup_provider.dart';
 import 'package:friends_tournament/src/ui/setup_counter_widget.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
+import 'package:provider/provider.dart';
 
 class MatchesNumber extends StatelessWidget implements SetupPage {
-  final SetupBloc _setupBloc;
-
-  MatchesNumber(this._setupBloc);
 
   @override
   Widget build(BuildContext context) {
@@ -78,10 +76,19 @@ class MatchesNumber extends StatelessWidget implements SetupPage {
                     width: 60,
                   ),
                 ),
-                SetupCounterWidget(
-                  inputStream: _setupBloc.setMatchesNumber,
-                  outputStream: _setupBloc.getMatchesNumber,
-                  minValue: 1,
+                Consumer<SetupProvider>(
+                  builder: (context, provider, child) {
+                    return SetupCounterWidget(
+                      minValue: 1,
+                      currentValue: provider.matchesNumber,
+                      onIncrease: (newValue) {
+                        provider.setMatchesNumber(newValue);
+                      },
+                      onDecrease: (newValue) {
+                        provider.setMatchesNumber(newValue);
+                      },
+                    );
+                  },
                 ),
                 Expanded(
                   flex: 4,
@@ -96,7 +103,7 @@ class MatchesNumber extends StatelessWidget implements SetupPage {
   }
 
   @override
-  bool onBackPressed() {
+  bool onBackPressed(BuildContext context) {
     return true;
   }
 

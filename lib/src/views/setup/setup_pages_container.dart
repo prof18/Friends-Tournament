@@ -15,12 +15,9 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
-import 'package:friends_tournament/src/bloc/setup_bloc.dart';
+import 'package:friends_tournament/src/provider/setup_provider.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/dialog_loader.dart';
 import 'package:friends_tournament/src/ui/error_dialog.dart';
@@ -34,6 +31,7 @@ import 'package:friends_tournament/src/views/setup/5_players_name.dart';
 import 'package:friends_tournament/src/views/setup/6_matches_name.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
+import 'package:provider/provider.dart';
 
 import '4_matches_number.dart';
 
@@ -51,36 +49,24 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
   final TextEditingController tournamentTextController =
       TextEditingController();
 
-  List<SetupPage> _allPages;
-
-  SetupBloc _setupBloc;
+  List<SetupPage> _allPages = [
+    TournamentName(),
+    PlayersNumber(),
+    PlayersAST(),
+    MatchesNumber(),
+    PlayersName(),
+    MatchesName(),
+  ];
 
   AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 450));
-
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      _setupBloc = SetupBlocProvider.of(context);
-
-      _setupBloc.getErrorChecker.listen((event) {
-        showErrorDialog(context);
-      });
-
-      setState(() {
-        _allPages = <SetupPage>[
-          TournamentName(_setupBloc),
-          PlayersNumber(_setupBloc),
-          PlayersAST(_setupBloc),
-          MatchesNumber(_setupBloc),
-          PlayersName(_setupBloc),
-          MatchesName(_setupBloc)
-        ];
-      });
-    });
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 450),
+    );
   }
 
   @override
@@ -134,7 +120,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
                                 customBorder: CircleBorder(),
                                 onTap: () {
                                   final page = _allPages[_currentPageIndex];
-                                  final canGoBack = page.onBackPressed();
+                                  final canGoBack = page.onBackPressed(context);
                                   if (canGoBack) {
                                     FocusScope.of(context).unfocus();
                                     _pageController.animateToPage(
@@ -290,7 +276,8 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
       ),
     );
 
-    final result = await _setupBloc.setupTournament();
+    final result = await Provider.of<SetupProvider>(context, listen: false)
+        .setupTournament();
 
     if (result) {
       _controller.reverse().then(
@@ -305,6 +292,8 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
               (Route<dynamic> route) => false);
         },
       );
+    } else {
+      showErrorDialog(context);
     }
   }
 }

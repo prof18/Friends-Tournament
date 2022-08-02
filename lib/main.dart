@@ -19,11 +19,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
-import 'package:friends_tournament/src/bloc/setup_bloc.dart';
-import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
 import 'package:friends_tournament/src/data/database/database_provider_impl.dart';
 import 'package:friends_tournament/src/data/database/local_data_source.dart';
@@ -53,6 +49,10 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
+  MyApp({
+    Key key,
+  }) : super(key: key);
+
   // This widget is the root of your application.
   @override
   _MyAppState createState() => _MyAppState();
@@ -72,14 +72,11 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-
   @override
   void dispose() {
     // TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
-    // SetupBloc setupBloc = SetupBlocProvider.of(context);
     //
     // tournamentBloc.dispose();
-    // setupBloc.dispose();
 // TODO: is crashing on UI tests
 
     super.dispose();
@@ -101,7 +98,8 @@ class _MyAppState extends State<MyApp> {
     }
 
     await precachePicture(
-        ExactAssetPicture(SvgPicture.svgStringDecoderBuilder, 'assets/intro-art.svg'),
+        ExactAssetPicture(
+            SvgPicture.svgStringDecoderBuilder, 'assets/intro-art.svg'),
         null);
     await precachePicture(
         ExactAssetPicture(
@@ -117,23 +115,28 @@ class _MyAppState extends State<MyApp> {
         null);
 
     await precachePicture(
-        ExactAssetPicture(SvgPicture.svgStringDecoderBuilder, 'assets/podium-art.svg'),
+        ExactAssetPicture(
+            SvgPicture.svgStringDecoderBuilder, 'assets/podium-art.svg'),
         null);
 
     await precachePicture(
-        ExactAssetPicture(SvgPicture.svgStringDecoderBuilder, 'assets/error-art.svg'),
+        ExactAssetPicture(
+            SvgPicture.svgStringDecoderBuilder, 'assets/error-art.svg'),
         null);
 
     await precachePicture(
-        ExactAssetPicture(SvgPicture.svgStringDecoderBuilder, 'assets/finish-art.svg'),
+        ExactAssetPicture(
+            SvgPicture.svgStringDecoderBuilder, 'assets/finish-art.svg'),
         null);
 
     await precachePicture(
-        ExactAssetPicture(SvgPicture.svgStringDecoderBuilder, 'assets/save-art.svg'),
+        ExactAssetPicture(
+            SvgPicture.svgStringDecoderBuilder, 'assets/save-art.svg'),
         null);
 
     await precachePicture(
-        ExactAssetPicture(SvgPicture.svgStringDecoderBuilder, 'assets/winner-art.svg'),
+        ExactAssetPicture(
+            SvgPicture.svgStringDecoderBuilder, 'assets/winner-art.svg'),
         null);
 
     setState(() {
@@ -144,49 +147,49 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return SetupBlocProvider(
-      child: TournamentBlocProvider(
-        child: MaterialApp(
-          title: 'Friends Tournament',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-            textTheme: GoogleFonts.montserratTextTheme(
-              Theme.of(context).textTheme,
-            ),
+    return TournamentBlocProvider(
+      child: MaterialApp(
+        title: 'Friends Tournament',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          textTheme: GoogleFonts.montserratTextTheme(
+            Theme.of(context).textTheme,
           ),
-
-          supportedLocales: [
-            Locale('en', ''),
-            Locale('it', ''),
-            Locale('pt', ''),
-            Locale('es', ''),
-            Locale('fr', ''),
-          ],
-          // These delegates make sure that the localization data for the proper language is loaded
-          localizationsDelegates: [
-            // A class which loads the translations from JSON files
-            AppLocalizations.delegate,
-            // Built-in localization of basic text for Material widgets
-            GlobalMaterialLocalizations.delegate,
-            // Built-in localization for text direction LTR/RTL
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          // Returns a locale which will be used by the app
-          localeResolutionCallback: (locale, supportedLocales) {
-            // Check if the current device locale is supported
-            for (var supportedLocale in supportedLocales) {
-              if (supportedLocale.languageCode == locale.languageCode) {
-                return supportedLocale;
-              }
-            }
-            // If the locale of the device is not supported, use the first one
-            // from the list (English, in this case).
-            return supportedLocales.first;
-          },
-          home: _isLoading
-              ? buildLoader()
-              : _isActive ? _buildTournamentScreen() : _buildWelcomeScreen(),
         ),
+
+        supportedLocales: [
+          Locale('en', ''),
+          Locale('it', ''),
+          Locale('pt', ''),
+          Locale('es', ''),
+          Locale('fr', ''),
+        ],
+        // These delegates make sure that the localization data for the proper language is loaded
+        localizationsDelegates: [
+          // A class which loads the translations from JSON files
+          AppLocalizations.delegate,
+          // Built-in localization of basic text for Material widgets
+          GlobalMaterialLocalizations.delegate,
+          // Built-in localization for text direction LTR/RTL
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        // Returns a locale which will be used by the app
+        localeResolutionCallback: (locale, supportedLocales) {
+          // Check if the current device locale is supported
+          for (var supportedLocale in supportedLocales) {
+            if (supportedLocale.languageCode == locale.languageCode) {
+              return supportedLocale;
+            }
+          }
+          // If the locale of the device is not supported, use the first one
+          // from the list (English, in this case).
+          return supportedLocales.first;
+        },
+        home: _isLoading
+            ? buildLoader()
+            : _isActive
+                ? _buildTournamentScreen()
+                : _buildWelcomeScreen(),
       ),
     );
   }

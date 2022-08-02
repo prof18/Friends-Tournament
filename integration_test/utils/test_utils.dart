@@ -1,9 +1,9 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:friends_tournament/main.dart';
-import 'package:friends_tournament/src/utils/widget_keys.dart';
-import 'package:friends_tournament/src/views/tournament/match_selection_tile.dart';
-import 'package:friends_tournament/src/views/tournament/session_player_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:friends_tournament/src/utils/widget_keys.dart';
+import 'package:friends_tournament/src/views/tournament/session_player_tile.dart';
+
+import '../../lib/main.dart' as app;
 
 Future<void> setupTournament(
     WidgetTester tester,
@@ -75,8 +75,7 @@ Future<void> setNumberOfPlayers(int players, WidgetTester tester) async {
 }
 
 Future<void> startAppAndSetTournamentName(WidgetTester tester, String tournamentName) async {
-  // Start app
-  await tester.pumpWidget(MyApp());
+  app.main();
   await tester.pumpAndSettle();
 
   // Welcome page

@@ -15,18 +15,15 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:friends_tournament/src/bloc/setup_bloc.dart';
+import 'package:friends_tournament/src/provider/setup_provider.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/setup_counter_widget.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
-import 'package:friends_tournament/src/style/app_style.dart';
+import 'package:provider/provider.dart';
 
 class PlayersAST extends StatelessWidget implements SetupPage {
-  final SetupBloc _setupBloc;
-
-  PlayersAST(this._setupBloc);
 
   @override
   Widget build(BuildContext context) {
@@ -78,11 +75,20 @@ class PlayersAST extends StatelessWidget implements SetupPage {
                   width: 60,
                 ),
               ),
-              SetupCounterWidget(
-                inputStream: _setupBloc.setPlayersAstNumber,
-                outputStream: _setupBloc.getPlayersAstNumber,
-                minValue: 2,
-                maxValue: _setupBloc.getCurrentPlayersNumber(),
+              Consumer<SetupProvider>(
+                builder: (context, provider, child) {
+                  return SetupCounterWidget(
+                    minValue: 2,
+                    currentValue: provider.playersAstNumber,
+                    onIncrease: (newValue) {
+                      provider.setPlayersAstNumber(newValue);
+                    },
+                    onDecrease: (newValue) {
+                      provider.setPlayersAstNumber(newValue);
+                    },
+                    maxValue: provider.playersNumber,
+                  );
+                },
               ),
               Expanded(
                 flex: 4,
@@ -96,15 +102,14 @@ class PlayersAST extends StatelessWidget implements SetupPage {
   }
 
   @override
-  bool onBackPressed() {
+  bool onBackPressed(BuildContext context) {
     return true;
   }
 
   @override
   bool onNextPressed(BuildContext context) {
-    if (_setupBloc.getCurrentPlayersNumber() -
-            _setupBloc.getCurrentPlayersAstNumber() ==
-        1) {
+    final provider = Provider.of<SetupProvider>(context, listen: false);
+    if (provider.playersNumber - provider.playersAstNumber == 1) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(

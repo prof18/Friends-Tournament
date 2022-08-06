@@ -24,6 +24,7 @@ import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/provider/setup_provider.dart';
 import 'package:friends_tournament/src/ui/error_dialog.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/settings/settings_screen.dart';
 import 'package:friends_tournament/src/views/setup/setup_pages_container.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_page.dart';
@@ -165,6 +166,7 @@ class _FinalScreenState extends State<FinalScreen> {
                                   style: TextStyle(
                                       fontSize: 36,
                                       fontWeight: FontWeight.bold),
+                                  key: winnerTextKey,
                                 ),
                               ),
                             );
@@ -183,6 +185,7 @@ class _FinalScreenState extends State<FinalScreen> {
                                 padding: const EdgeInsets.only(
                                     right: MarginsRaw.regular),
                                 child: RaisedButton(
+                                  key: tournamentEndedLeaderboardButtonKey,
                                   onPressed: () {
                                     Navigator.push(
                                       context,

@@ -11,13 +11,10 @@ void main() {
     binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
   }
 
-  final String tournamentName = "TournamentName";
-
   group('Setup Tests error path', () {
     testWidgets(
         'Setting up a tournament with 3 players and 2 ast is not possible',
             (WidgetTester tester) async {
-
 
           await startAppAndSetTournamentName(tester, tournamentName);
 

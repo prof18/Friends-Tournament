@@ -22,6 +22,7 @@ import 'package:friends_tournament/src/data/model/app/ui_session.dart';
 import 'package:friends_tournament/src/data/model/db/player_session.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/widget_keys.dart';
 
 class SessionPlayerTile extends StatefulWidget {
   final UIPlayer player;
@@ -96,6 +97,7 @@ class _SessionPlayerTileState extends State<SessionPlayerTile> {
                           padding:
                               const EdgeInsets.only(right: MarginsRaw.small),
                           child: GestureDetector(
+                            key: getKeyForScoreDecrease(widget.player.name),
                             onTap: _decrementScore,
                             child: Icon(
                               Icons.remove,
@@ -108,6 +110,7 @@ class _SessionPlayerTileState extends State<SessionPlayerTile> {
                       Padding(
                         padding: const EdgeInsets.only(left: MarginsRaw.small),
                         child: GestureDetector(
+                          key: getKeyForScoreIncrease(widget.player.name),
                           onTap: () => _incrementScore(),
                           child: Icon(
                             Icons.add,

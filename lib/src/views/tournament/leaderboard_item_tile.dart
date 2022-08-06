@@ -19,6 +19,7 @@ import 'package:flutter/widgets.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/ui/utils.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
+import 'package:friends_tournament/src/utils/widget_keys.dart';
 
 class LeaderboardItemTile extends StatelessWidget {
   final UIPlayer uiPlayer;
@@ -52,6 +53,7 @@ class LeaderboardItemTile extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                 ),
+                key: getKeyForLeaderboardPlayerPosition(uiPlayer.name),
               ),
             ),
             Padding(
@@ -71,6 +73,7 @@ class LeaderboardItemTile extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 24,
                 ),
+                key: getKeyForLeaderboardPlayerScore(uiPlayer.name),
               ),
             ),
           ],

@@ -5,6 +5,16 @@ import 'package:friends_tournament/src/views/tournament/session_player_tile.dart
 
 import '../../lib/main.dart' as app;
 
+final String tournamentName = "TournamentName";
+final String player1Name = "Player1";
+final String player2Name = "Player2";
+final String player3Name = "Player3";
+final String player4Name = "Player4";
+final String match1Name = "Match1";
+final String match2Name = "Match2";
+final String round1Name = "Round 1";
+final String round2Name = "Round 2";
+
 Future<void> setupTournament(
     WidgetTester tester,
     String tournamentName,

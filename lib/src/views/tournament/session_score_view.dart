@@ -24,6 +24,7 @@ import 'package:friends_tournament/src/data/model/app/ui_session.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/utils.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/tournament/session_item_widget.dart';
 
 class SessionScoreView extends StatefulWidget {
@@ -97,6 +98,7 @@ class _SessionScoreViewState extends State<SessionScoreView> {
           builder: (context, snapshot) {
             return FloatingActionButton(
                 backgroundColor: AppColors.blue,
+                key: saveFabKey,
                 onPressed: () {
                   _showSaveDialog(
                       snapshot.data.isActive == 0, snapshot.data.name);
@@ -191,6 +193,7 @@ class _SessionScoreViewState extends State<SessionScoreView> {
               },
             ),
             FlatButton(
+              key: saveScoreOkKey,
               child: Text(AppLocalizations.of(context).translate('generic_ok')),
               onPressed: () async {
                 await _tournamentBloc.endMatch();

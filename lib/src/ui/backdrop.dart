@@ -127,6 +127,7 @@ class _BackdropState extends State<Backdrop>
             visible: !_panelExpanded,
             child: IconButton(
               icon: Icon(CustomIcons.podium),
+              key: leaderboardButtonKey,
               onPressed: () async {
                 final tournament = await tournamentBloc.activeTournament.first;
                 Navigator.push(
@@ -229,6 +230,7 @@ class _BackdropState extends State<Backdrop>
                   },
                 ),
                 FlatButton(
+                  key: endTournamentKey,
                   child: Text(
                       AppLocalizations.of(context).translate('generic_ok')),
                   onPressed: () async {

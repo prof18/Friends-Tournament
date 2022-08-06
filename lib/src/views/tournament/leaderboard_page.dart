@@ -25,6 +25,7 @@ import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/ui/error_dialog.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_item_tile.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 
@@ -92,6 +93,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                             child: SizedBox(
                               width: 60,
                               child: IconButton(
+                                key: leaderboardBackButtonKey,
                                 icon: const Icon(Icons.arrow_back_ios),
                                 onPressed: () {
                                   if (!widget.isFromFinalScreen) {

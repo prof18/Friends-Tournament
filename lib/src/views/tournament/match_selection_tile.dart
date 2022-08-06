@@ -19,6 +19,7 @@ import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
 import 'package:friends_tournament/src/ui/utils.dart';
+import 'package:friends_tournament/src/utils/widget_keys.dart';
 
 class MatchSelectionTile extends StatefulWidget {
   final UIMatch match;
@@ -44,6 +45,7 @@ class _MatchSelectionTileState extends State<MatchSelectionTile> {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
+            key: getKeyForMatchChange(widget.match.name),
             onTap: () {
               _tournamentBloc.setCurrentMatch.add(widget.match);
               widget.controller.fling(velocity: 1.0);

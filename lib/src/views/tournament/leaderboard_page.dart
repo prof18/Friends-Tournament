@@ -23,17 +23,18 @@ import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.d
 import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
+import 'package:friends_tournament/src/provider/leaderboard_provider.dart';
 import 'package:friends_tournament/src/ui/error_dialog.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_item_tile.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
+import 'package:provider/provider.dart';
 
 class LeaderboardScreen extends StatefulWidget {
-  final Tournament tournament;
   final bool isFromFinalScreen;
 
-  LeaderboardScreen({this.tournament, this.isFromFinalScreen});
+  LeaderboardScreen({this.isFromFinalScreen});
 
   @override
   _LeaderboardScreenState createState() => _LeaderboardScreenState();
@@ -44,23 +45,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   var statusBarBrightness = Brightness.dark;
 
   @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
-      tournamentBloc.computeLeaderboard(widget.tournament);
-
-      tournamentBloc.getErrorChecker.listen((event) {
-        showErrorDialog(context);
-      });
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
-
     return WillPopScope(
       onWillPop: () {
         if (!widget.isFromFinalScreen) {
@@ -149,26 +134,24 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                         flex: 6,
                         child: Padding(
                           padding: Margins.small,
-                          child: StreamBuilder<List<UIPlayer>>(
-                            initialData: [],
-                            stream: tournamentBloc.leaderboardPlayers,
-                            builder: (context, snapshot) {
-                              return snapshot.data.isNotEmpty
-                                  ? ListView.builder(
-                                      itemCount: snapshot.data.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        UIPlayer uiPlayer =
-                                            snapshot.data[index];
-                                        return LeaderboardItemTile(
-                                          uiPlayer: uiPlayer,
-                                          position: index + 1,
-                                        );
-                                      },
-                                    )
-                                  : _renderEmptyLeaderboard();
-                            },
-                          ),
+                          child: Consumer<LeaderboardProvider>(
+                              builder: (context, provider, child) {
+                            return provider.leaderboardPlayers.isNotEmpty
+                                ? ListView.builder(
+                                    itemCount:
+                                        provider.leaderboardPlayers.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      UIPlayer uiPlayer =
+                                          provider.leaderboardPlayers[index];
+                                      return LeaderboardItemTile(
+                                        uiPlayer: uiPlayer,
+                                        position: index + 1,
+                                      );
+                                    },
+                                  )
+                                : _renderEmptyLeaderboard();
+                          }),
                         ),
                       )
                     ],

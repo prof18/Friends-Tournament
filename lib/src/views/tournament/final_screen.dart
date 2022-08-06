@@ -21,6 +21,7 @@ import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.d
 import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
+import 'package:friends_tournament/src/provider/leaderboard_provider.dart';
 import 'package:friends_tournament/src/provider/setup_provider.dart';
 import 'package:friends_tournament/src/ui/error_dialog.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
@@ -32,10 +33,6 @@ import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:provider/provider.dart';
 
 class FinalScreen extends StatefulWidget {
-  final Tournament tournament;
-
-  FinalScreen(this.tournament);
-
   @override
   _FinalScreenState createState() => _FinalScreenState();
 }
@@ -45,20 +42,23 @@ class _FinalScreenState extends State<FinalScreen> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
-      tournamentBloc.computeLeaderboard(widget.tournament);
+    final leaderboardProvider = Provider.of<LeaderboardProvider>(
+      context,
+      listen: false,
+    );
 
-      tournamentBloc.getErrorChecker.listen((event) {
+    void errorListener() {
+      if (leaderboardProvider.showError) {
         showErrorDialog(context);
-      });
-    });
+        leaderboardProvider.resetErrorFlag();
+      }
+    }
+
+    leaderboardProvider.addListener(errorListener);
   }
 
   @override
   Widget build(BuildContext context) {
-    TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: AnnotatedRegion(
@@ -76,17 +76,23 @@ class _FinalScreenState extends State<FinalScreen> {
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(
-                          top: 36, left: MarginsRaw.regular, right: MarginsRaw.regular),
+                          top: 36,
+                          left: MarginsRaw.regular,
+                          right: MarginsRaw.regular),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.only(right: MarginsRaw.small),
-                              child: Text(
-                            widget.tournament.name,
-                                style: TextStyle(fontSize: 28),
-                              ),
+                              padding: const EdgeInsets.only(
+                                  right: MarginsRaw.small),
+                              child: Consumer<LeaderboardProvider>(
+                                  builder: (context, provider, child) {
+                                return Text(
+                                  provider.tournamentName,
+                                  style: TextStyle(fontSize: 28),
+                                );
+                              }),
                             ),
                           ),
                           GestureDetector(
@@ -151,26 +157,25 @@ class _FinalScreenState extends State<FinalScreen> {
                     ),
                     Expanded(
                       flex: 3,
-                      child: StreamBuilder<List<UIPlayer>>(
-                          stream: tournamentBloc.leaderboardPlayers,
-                          builder: (context, snapshot) {
-                            return Align(
-                              alignment: FractionalOffset.topLeft,
-                              child: Padding(
-                                padding: Margins.regular,
-                                child: Text(
-                                  snapshot.hasData
-                                      ? "${snapshot.data.first.name} 🎉"
-                                      : AppLocalizations.of(context)
-                                          .translate('winner_error_message'),
-                                  style: TextStyle(
-                                      fontSize: 36,
-                                      fontWeight: FontWeight.bold),
-                                  key: winnerTextKey,
-                                ),
+                      child: Consumer<LeaderboardProvider>(
+                        builder: (context, provider, child) {
+                          return Align(
+                            alignment: FractionalOffset.topLeft,
+                            child: Padding(
+                              padding: Margins.regular,
+                              child: Text(
+                                provider.leaderboardPlayers.isNotEmpty
+                                    ? "${provider.leaderboardPlayers.first.name} 🎉"
+                                    : AppLocalizations.of(context)
+                                        .translate('winner_error_message'),
+                                style: TextStyle(
+                                    fontSize: 36, fontWeight: FontWeight.bold),
+                                key: winnerTextKey,
                               ),
-                            );
-                          }),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                     Align(
                       alignment: FractionalOffset.bottomCenter,
@@ -190,9 +195,16 @@ class _FinalScreenState extends State<FinalScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => LeaderboardScreen(
-                                            tournament: widget.tournament,
-                                            isFromFinalScreen: true),
+                                        builder: (_) => ChangeNotifierProvider<
+                                            LeaderboardProvider>.value(
+                                          value:
+                                              Provider.of<LeaderboardProvider>(
+                                            context,
+                                            listen: false,
+                                          ),
+                                          child: LeaderboardScreen(
+                                              isFromFinalScreen: true),
+                                        ),
                                       ),
                                     );
                                   },
@@ -253,13 +265,6 @@ class _FinalScreenState extends State<FinalScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _renderEmptyLeaderboard() {
-    return Center(
-      child: Text(AppLocalizations.of(context)
-          .translate('something_goes_wrong_message')),
     );
   }
 }

@@ -77,8 +77,11 @@ void main() {
         print("Change to other match");
 
         // Save match
+        // To make sure that the snackbar is not showed anymore
+        await Future<void>.delayed(Duration(seconds: 3));
         await tester.tap(find.byKey(saveFabKey));
         await tester.pumpAndSettle();
+
 
         await tester.tap(find.byKey(saveScoreOkKey));
         await tester.pumpAndSettle();

@@ -21,12 +21,14 @@ import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.d
 import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
+import 'package:friends_tournament/src/provider/leaderboard_provider.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/custom_icons_icons.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/tournament/final_screen.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_page.dart';
+import 'package:provider/provider.dart';
 
 class Backdrop extends StatefulWidget {
   final Widget dropdownWidget;
@@ -129,12 +131,17 @@ class _BackdropState extends State<Backdrop>
               icon: Icon(CustomIcons.podium),
               key: leaderboardButtonKey,
               onPressed: () async {
+                // TODO: fix this
                 final tournament = await tournamentBloc.activeTournament.first;
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => LeaderboardScreen(
-                        tournament: tournament, isFromFinalScreen: false),
+                    builder: (context) =>
+                        ChangeNotifierProvider(
+                          create: (context) =>
+                              LeaderboardProvider(tournament),
+                          child: LeaderboardScreen(isFromFinalScreen: false),
+                        ),
                   ),
                 );
               },
@@ -239,8 +246,10 @@ class _BackdropState extends State<Backdrop>
                     await tournamentBloc.endTournament();
                     Navigator.of(context)?.pushAndRemoveUntil(
                         MaterialPageRoute(
-                          builder: (context) => TournamentBlocProvider(
-                            child: FinalScreen(tournament),
+                          builder: (context) => ChangeNotifierProvider(
+                            create: (context) =>
+                                LeaderboardProvider(tournament),
+                            child: FinalScreen(),
                           ),
                         ),
                         (Route<dynamic> route) => false);

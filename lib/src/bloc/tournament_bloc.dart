@@ -43,7 +43,6 @@ class TournamentBloc {
   final _currentMatchController = BehaviorSubject<UIMatch>();
   final _updateCurrentMatchController = BehaviorSubject<UIMatch>();
   final _updatePlayerScoreController = StreamController<PlayerSession>();
-  final _leaderboardPlayersController = BehaviorSubject<List<UIPlayer>>();
   final _currentMatchNameController = BehaviorSubject<String>();
   final _tournamentFinishedController = StreamController<void>();
   final _errorController = BehaviorSubject<void>();
@@ -60,9 +59,6 @@ class TournamentBloc {
       _tournamentMatchesController.stream;
 
   Stream<UIMatch> get currentMatch => _currentMatchController.stream;
-
-  Stream<List<UIPlayer>> get leaderboardPlayers =>
-      _leaderboardPlayersController.stream;
 
   Stream<String> get currentMatchName => _currentMatchNameController.stream;
 
@@ -87,7 +83,6 @@ class TournamentBloc {
     _currentMatchController.close();
     _updateCurrentMatchController.close();
     _updatePlayerScoreController.close();
-    _leaderboardPlayersController.close();
     _currentMatchNameController.close();
     _tournamentFinishedController.close();
     _errorController.close();
@@ -226,7 +221,7 @@ class TournamentBloc {
               id: uiScore.id, name: uiScore.name, score: uiScore.score))
           .toList();
 
-      _leaderboardPlayersController.add(players);
+      // _leaderboardPlayersController.add(players);
     } catch (error, stackTrace) {
       await reportError(error, stackTrace);
       _errorController.add(null);

@@ -1,10 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:friends_tournament/src/data/database/database_provider.dart';
-import 'package:friends_tournament/src/data/database/database_provider_impl.dart';
-import 'package:friends_tournament/src/data/database/local_data_source.dart';
-import 'package:friends_tournament/src/data/setup_repository.dart';
+import 'package:friends_tournament/src/utils/service_locator.dart';
 
 class SetupProvider with ChangeNotifier {
   /// The min value for a meaningful tournament is two players
@@ -57,12 +54,8 @@ class SetupProvider with ChangeNotifier {
   }
 
   Future<bool> setupTournament() async {
-    DatabaseProvider databaseProvider = DatabaseProviderImpl.get;
-    LocalDataSource localDataSource = LocalDataSource(databaseProvider);
-    SetupRepository repository = new SetupRepository(localDataSource);
-
     try {
-      await repository.setupTournament(_playersNumber, _playersAstNumber,
+      await setupRepository.setupTournament(_playersNumber, _playersAstNumber,
           _matchesNumber, _tournamentName, _playersName, _matchesName);
       return true;
     } catch (error, stackTrace) {

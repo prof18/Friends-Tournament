@@ -25,12 +25,14 @@ import 'package:friends_tournament/src/data/database/database_provider_impl.dart
 import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/data/tournament_repository.dart';
+import 'package:friends_tournament/src/provider/leaderboard_provider.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/utils/error_reporting.dart';
 import 'package:friends_tournament/src/views/tournament/final_screen.dart';
 import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
 import 'package:friends_tournament/src/views/welcome_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   // Run the whole app in a zone to capture all uncaught errors.
@@ -83,6 +85,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   _loadData() async {
+    // TODO: make a provider here?
     DatabaseProvider databaseProvider = DatabaseProviderImpl.get;
     LocalDataSource localDataSource = LocalDataSource(databaseProvider);
     final repository = TournamentRepository(localDataSource);
@@ -205,7 +208,14 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget _buildWelcomeScreen() {
-    return _lastTournament != null ? FinalScreen(_lastTournament) : Welcome();
+    return _lastTournament != null ? _buildFinalScreen() : Welcome();
+  }
+
+  Widget _buildFinalScreen() {
+    return ChangeNotifierProvider(
+      create: (context) => LeaderboardProvider(_lastTournament),
+      child: FinalScreen(),
+    );
   }
 
   Widget _buildTournamentScreen() {

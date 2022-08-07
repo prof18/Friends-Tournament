@@ -20,11 +20,13 @@ import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.d
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/app/ui_session.dart';
 import 'package:friends_tournament/src/data/model/db/player_session.dart';
+import 'package:friends_tournament/src/provider/tournament_provider.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';
+import 'package:provider/provider.dart';
 
-class SessionPlayerTile extends StatefulWidget {
+class SessionPlayerTile extends StatelessWidget {
   final UIPlayer player;
   final int step;
   final UISession session;
@@ -37,19 +39,10 @@ class SessionPlayerTile extends StatefulWidget {
     @required this.player,
     @required this.session,
     this.step = 1,
-  }): super(key: key);
-
-  @override
-  _SessionPlayerTileState createState() => _SessionPlayerTileState();
-}
-
-class _SessionPlayerTileState extends State<SessionPlayerTile> {
-  TournamentBloc tournamentBloc;
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    tournamentBloc = TournamentBlocProvider.of(context);
-
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 16.0),
       child: Material(
@@ -62,7 +55,7 @@ class _SessionPlayerTileState extends State<SessionPlayerTile> {
               padding: const EdgeInsets.only(
                   top: MarginsRaw.regular, left: MarginsRaw.regular),
               child: Text(
-                widget.player.name,
+                player.name,
                 style: TextStyle(fontSize: 16),
               ),
             ),
@@ -76,7 +69,7 @@ class _SessionPlayerTileState extends State<SessionPlayerTile> {
                     child: Column(
                       children: [
                         Text(
-                          widget.player.score.toString(),
+                          player.score.toString(),
                           style: TextStyle(fontSize: 32),
                         ),
                         Text(
@@ -92,13 +85,13 @@ class _SessionPlayerTileState extends State<SessionPlayerTile> {
                   child: Row(
                     children: [
                       Visibility(
-                        visible: widget.player.score == 0 ? false : true,
+                        visible: player.score == 0 ? false : true,
                         child: Padding(
                           padding:
                               const EdgeInsets.only(right: MarginsRaw.small),
                           child: GestureDetector(
-                            key: getKeyForScoreDecrease(widget.player.name),
-                            onTap: _decrementScore,
+                            key: getKeyForScoreDecrease(player.name),
+                            onTap: () => _decrementScore(context),
                             child: Icon(
                               Icons.remove,
                               size: 36,
@@ -110,8 +103,8 @@ class _SessionPlayerTileState extends State<SessionPlayerTile> {
                       Padding(
                         padding: const EdgeInsets.only(left: MarginsRaw.small),
                         child: GestureDetector(
-                          key: getKeyForScoreIncrease(widget.player.name),
-                          onTap: () => _incrementScore(),
+                          key: getKeyForScoreIncrease(player.name),
+                          onTap: () => _incrementScore(context),
                           child: Icon(
                             Icons.add,
                             size: 36,
@@ -130,19 +123,32 @@ class _SessionPlayerTileState extends State<SessionPlayerTile> {
     );
   }
 
-  _incrementScore() {
-    tournamentBloc.setPlayerScore.add(
-      PlayerSession(widget.player.id, widget.session.id,
-          widget.player.score + widget.step),
+  _incrementScore(BuildContext context) {
+    print("click increment");
+    Provider.of<TournamentProvider>(
+      context,
+      listen: false,
+    ).setPlayerScore(
+      PlayerSession(
+        player.id,
+        session.id,
+        player.score + step,
+      ),
     );
   }
 
-  _decrementScore() {
-    int score = widget.player.score;
-    if (score - widget.step >= 0) {
-      tournamentBloc.setPlayerScore.add(
-        PlayerSession(widget.player.id, widget.session.id,
-            widget.player.score - widget.step),
+  _decrementScore(BuildContext context) {
+    int score = player.score;
+    if (score - step >= 0) {
+      Provider.of<TournamentProvider>(
+        context,
+        listen: false,
+      ).setPlayerScore(
+        PlayerSession(
+          player.id,
+          session.id,
+          player.score - step,
+        ),
       );
     }
   }

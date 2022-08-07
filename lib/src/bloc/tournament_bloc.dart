@@ -48,23 +48,23 @@ class TournamentBloc {
   final _errorController = BehaviorSubject<void>();
 
   // Input
-  Sink<UIMatch> get setCurrentMatch => _updateCurrentMatchController.sink;
+  // Sink<UIMatch> get setCurrentMatch => _updateCurrentMatchController.sink;
 
-  Sink<PlayerSession> get setPlayerScore => _updatePlayerScoreController.sink;
+  // Sink<PlayerSession> get setPlayerScore => _updatePlayerScoreController.sink;
 
   // Output
-  Stream<Tournament> get activeTournament => _activeTournamentController.stream;
+  // Stream<Tournament> get activeTournament => _activeTournamentController.stream;
 
-  Stream<List<UIMatch>> get tournamentMatches =>
-      _tournamentMatchesController.stream;
+  // Stream<List<UIMatch>> get tournamentMatches =>
+  //     _tournamentMatchesController.stream;
 
-  Stream<UIMatch> get currentMatch => _currentMatchController.stream;
+  // Stream<UIMatch> get currentMatch => _currentMatchController.stream;
 
-  Stream<String> get currentMatchName => _currentMatchNameController.stream;
+  // Stream<String> get currentMatchName => _currentMatchNameController.stream;
 
-  Stream<void> get tournamentIsOver => _tournamentFinishedController.stream;
+  // Stream<void> get tournamentIsOver => _tournamentFinishedController.stream;
 
-  Stream<void> get getErrorChecker => _errorController.stream;
+  // Stream<void> get getErrorChecker => _errorController.stream;
 
   /* *************
   *

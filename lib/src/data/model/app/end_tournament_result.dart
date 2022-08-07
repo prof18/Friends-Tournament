@@ -1,0 +1,4 @@
+enum EndTournamentResult {
+  success,
+  error,
+}

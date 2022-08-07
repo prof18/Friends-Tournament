@@ -22,10 +22,12 @@ import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/provider/leaderboard_provider.dart';
+import 'package:friends_tournament/src/provider/tournament_provider.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/custom_icons_icons.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';
+import 'package:friends_tournament/src/views/tournament/end_tournament_dialog.dart';
 import 'package:friends_tournament/src/views/tournament/final_screen.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_page.dart';
 import 'package:provider/provider.dart';
@@ -65,14 +67,22 @@ class _BackdropState extends State<Backdrop>
       }
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
+    final tournamentProvider = Provider.of<TournamentProvider>(
+      context,
+      listen: false,
+    );
 
-      tournamentBloc.tournamentIsOver.listen((event) {
-        _showEndTournamentDialog(
-            AppLocalizations.of(context).translate('match_finished_message'));
-      });
-    });
+    void listener() {
+      // if (tournamentProvider.triggerEndTournament) {
+      //   _showEndTournamentDialog(
+      //     tournamentProvider,
+      //     AppLocalizations.of(context).translate('match_finished_message'),
+      //   );
+      //   tournamentProvider.resetEndTournamentTrigger();
+      // }
+    }
+
+    tournamentProvider.addListener(listener);
   }
 
   bool get _isPanelVisible {
@@ -93,8 +103,6 @@ class _BackdropState extends State<Backdrop>
 
   @override
   Widget build(BuildContext context) {
-    TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.blue,
@@ -102,13 +110,12 @@ class _BackdropState extends State<Backdrop>
         title: AnimatedOpacity(
           opacity: _panelExpanded ? 0.0 : 1.0,
           duration: Duration(milliseconds: 200),
-          child: StreamBuilder<UIMatch>(
-            stream: tournamentBloc.currentMatch,
-            builder: (context, snapshot) {
-              return snapshot.hasData
+          child: Consumer<TournamentProvider>(
+            builder: (context, provider, child) {
+              return provider.currentMatch != null
                   ? Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: Text(snapshot.data.name),
+                      child: Text(provider.currentMatch.name),
                     )
                   : Container();
             },
@@ -130,18 +137,18 @@ class _BackdropState extends State<Backdrop>
             child: IconButton(
               icon: Icon(CustomIcons.podium),
               key: leaderboardButtonKey,
-              onPressed: () async {
-                // TODO: fix this
-                final tournament = await tournamentBloc.activeTournament.first;
+              onPressed: () {
+                final tournament = Provider.of<TournamentProvider>(
+                  context,
+                  listen: false,
+                ).activeTournament;
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        ChangeNotifierProvider(
-                          create: (context) =>
-                              LeaderboardProvider(tournament),
-                          child: LeaderboardScreen(isFromFinalScreen: false),
-                        ),
+                    builder: (context) => ChangeNotifierProvider(
+                      create: (context) => LeaderboardProvider(tournament),
+                      child: LeaderboardScreen(isFromFinalScreen: false),
+                    ),
                   ),
                 );
               },
@@ -154,8 +161,12 @@ class _BackdropState extends State<Backdrop>
             child: IconButton(
               icon: Icon(CustomIcons.flag_checkered),
               onPressed: () {
-                _showEndTournamentDialog(AppLocalizations.of(context)
-                    .translate('finish_tournament_message'));
+                showEndTournamentDialog(
+                  context,
+                  Provider.of<TournamentProvider>(context, listen: false),
+                  AppLocalizations.of(context)
+                      .translate('finish_tournament_message'),
+                );
               },
               tooltip: AppLocalizations.of(context)
                   .translate('finish_tournament_tooltip'),
@@ -187,79 +198,6 @@ class _BackdropState extends State<Backdrop>
           )
         ],
       ),
-    );
-  }
-
-  _showEndTournamentDialog(String message) {
-    TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
-
-    showDialog(
-      context: context,
-      barrierDismissible: false, // user must tap button for close dialog!
-      builder: (BuildContext context) {
-        return StreamBuilder<Tournament>(
-          stream: tournamentBloc.activeTournament,
-          builder: (context, snapshot) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(MarginsRaw.borderRadius),
-                ),
-              ),
-              title: snapshot.hasData ? Text(snapshot.data.name) : Container(),
-              content: Container(
-                height: 250,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: SvgPicture.asset(
-                        'assets/finish-art.svg',
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: MarginsRaw.regular),
-                      child: Text(
-                        message,
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text(
-                      AppLocalizations.of(context).translate('generic_cancel')),
-                  onPressed: () {
-                    Navigator.of(context)?.pop();
-                  },
-                ),
-                FlatButton(
-                  key: endTournamentKey,
-                  child: Text(
-                      AppLocalizations.of(context).translate('generic_ok')),
-                  onPressed: () async {
-                    final tournament =
-                        await tournamentBloc.activeTournament.first;
-                    await tournamentBloc.endTournament();
-                    Navigator.of(context)?.pushAndRemoveUntil(
-                        MaterialPageRoute(
-                          builder: (context) => ChangeNotifierProvider(
-                            create: (context) =>
-                                LeaderboardProvider(tournament),
-                            child: FinalScreen(),
-                          ),
-                        ),
-                        (Route<dynamic> route) => false);
-                  },
-                )
-              ],
-            );
-          },
-        );
-      },
     );
   }
 }

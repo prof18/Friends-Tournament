@@ -26,6 +26,7 @@ import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/data/tournament_repository.dart';
 import 'package:friends_tournament/src/provider/leaderboard_provider.dart';
+import 'package:friends_tournament/src/provider/tournament_provider.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/utils/error_reporting.dart';
 import 'package:friends_tournament/src/views/tournament/final_screen.dart';
@@ -219,6 +220,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget _buildTournamentScreen() {
-    return TournamentScreen();
+    return ChangeNotifierProvider(
+        create: (context) => TournamentProvider(),
+        child: TournamentScreen(),
+    );
   }
 }

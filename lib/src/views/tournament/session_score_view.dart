@@ -19,13 +19,18 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
+import 'package:friends_tournament/src/data/model/app/end_match_result.dart';
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
 import 'package:friends_tournament/src/data/model/app/ui_session.dart';
+import 'package:friends_tournament/src/provider/tournament_provider.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
+import 'package:friends_tournament/src/ui/error_dialog.dart';
 import 'package:friends_tournament/src/ui/utils.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';
+import 'package:friends_tournament/src/views/tournament/end_tournament_dialog.dart';
 import 'package:friends_tournament/src/views/tournament/session_item_widget.dart';
+import 'package:provider/provider.dart';
 
 class SessionScoreView extends StatefulWidget {
   final List<UISession> sessions;
@@ -41,7 +46,6 @@ class _SessionScoreViewState extends State<SessionScoreView> {
   bool _panelExpanded = false;
 
   bool hideFab = false;
-  TournamentBloc _tournamentBloc;
 
   ScrollController _scrollController;
 
@@ -87,30 +91,27 @@ class _SessionScoreViewState extends State<SessionScoreView> {
 
   @override
   Widget build(BuildContext context) {
-    _tournamentBloc = TournamentBlocProvider.of(context);
-
     return Scaffold(
       floatingActionButton: AnimatedOpacity(
-        opacity: _panelExpanded || hideFab ? 0.0 : 1.0,
-        duration: Duration(milliseconds: 100),
-        child: StreamBuilder<UIMatch>(
-          stream: _tournamentBloc.currentMatch,
-          builder: (context, snapshot) {
-            return FloatingActionButton(
+          opacity: _panelExpanded || hideFab ? 0.0 : 1.0,
+          duration: Duration(milliseconds: 100),
+          child: Consumer<TournamentProvider>(
+            builder: (context, provider, child) {
+              return FloatingActionButton(
                 backgroundColor: AppColors.blue,
                 key: saveFabKey,
                 onPressed: () {
-                  _showSaveDialog(
-                      snapshot.data.isActive == 0, snapshot.data.name);
+                  _showSaveDialog(provider, provider.currentMatch.isActive == 0,
+                      provider.currentMatch.name);
                 },
-                child: snapshot.hasData
-                    ? snapshot.data.isActive == 0
+                child: provider.currentMatch != null
+                    ? provider.currentMatch.isActive == 0
                         ? Icon(Icons.edit)
                         : Icon(Icons.save)
-                    : Container());
-          },
-        ),
-      ),
+                    : Container(),
+              );
+            },
+          )),
       body: renderBody(context),
     );
   }
@@ -149,7 +150,7 @@ class _SessionScoreViewState extends State<SessionScoreView> {
     );
   }
 
-  _showSaveDialog(bool isEdit, String matchName) {
+  _showSaveDialog(TournamentProvider provider, bool isEdit, String matchName) {
     showDialog(
       context: context,
       barrierDismissible: false, // user must tap button for close dialog!
@@ -196,8 +197,21 @@ class _SessionScoreViewState extends State<SessionScoreView> {
               key: saveScoreOkKey,
               child: Text(AppLocalizations.of(context).translate('generic_ok')),
               onPressed: () async {
-                await _tournamentBloc.endMatch();
-                Navigator.of(context)?.pop();
+                EndMatchStatus status = await provider.endMatch();
+                if (status == EndMatchStatus.end_tournament) {
+                  Navigator.of(context)?.pop();
+                  showEndTournamentDialog(
+                    context,
+                    provider,
+                    AppLocalizations.of(context)
+                        .translate('finish_tournament_message'),
+                  );
+                } else if (status == EndMatchStatus.error) {
+                  Navigator.of(context)?.pop();
+                  showErrorDialog(context);
+                } else {
+                  Navigator.of(context)?.pop();
+                } // TODO: check also error?
               },
             )
           ],

@@ -16,11 +16,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
-import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
-import 'package:friends_tournament/src/data/model/app/ui_match.dart';
-import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/provider/leaderboard_provider.dart';
 import 'package:friends_tournament/src/provider/tournament_provider.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
@@ -28,7 +23,6 @@ import 'package:friends_tournament/src/ui/custom_icons_icons.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/tournament/end_tournament_dialog.dart';
-import 'package:friends_tournament/src/views/tournament/final_screen.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_page.dart';
 import 'package:provider/provider.dart';
 

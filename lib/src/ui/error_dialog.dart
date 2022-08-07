@@ -16,14 +16,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
 import 'package:friends_tournament/src/data/database/database_provider_impl.dart';
 import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/tournament_repository.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/views/welcome_screen.dart';
-import 'package:friends_tournament/src/style/app_style.dart';
 
 showErrorDialog(BuildContext context) {
   final DatabaseProvider databaseProvider = DatabaseProviderImpl.get;
@@ -72,9 +71,7 @@ showErrorDialog(BuildContext context) {
               await repository.finishAllTournament();
               Navigator.of(context)?.pushAndRemoveUntil(
                   MaterialPageRoute(
-                    builder: (context) => TournamentBlocProvider(
-                      child: Welcome(),
-                    ),
+                    builder: (context) => Welcome(),
                   ),
                   (Route<dynamic> route) => false);
             },

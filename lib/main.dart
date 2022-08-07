@@ -19,7 +19,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
 import 'package:friends_tournament/src/data/database/database_provider_impl.dart';
 import 'package:friends_tournament/src/data/database/local_data_source.dart';
@@ -151,50 +150,48 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return TournamentBlocProvider(
-      child: MaterialApp(
-        title: 'Friends Tournament',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          textTheme: GoogleFonts.montserratTextTheme(
-            Theme.of(context).textTheme,
-          ),
+    return MaterialApp(
+      title: 'Friends Tournament',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        textTheme: GoogleFonts.montserratTextTheme(
+          Theme.of(context).textTheme,
         ),
-
-        supportedLocales: [
-          Locale('en', ''),
-          Locale('it', ''),
-          Locale('pt', ''),
-          Locale('es', ''),
-          Locale('fr', ''),
-        ],
-        // These delegates make sure that the localization data for the proper language is loaded
-        localizationsDelegates: [
-          // A class which loads the translations from JSON files
-          AppLocalizations.delegate,
-          // Built-in localization of basic text for Material widgets
-          GlobalMaterialLocalizations.delegate,
-          // Built-in localization for text direction LTR/RTL
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        // Returns a locale which will be used by the app
-        localeResolutionCallback: (locale, supportedLocales) {
-          // Check if the current device locale is supported
-          for (var supportedLocale in supportedLocales) {
-            if (supportedLocale.languageCode == locale.languageCode) {
-              return supportedLocale;
-            }
-          }
-          // If the locale of the device is not supported, use the first one
-          // from the list (English, in this case).
-          return supportedLocales.first;
-        },
-        home: _isLoading
-            ? buildLoader()
-            : _isActive
-                ? _buildTournamentScreen()
-                : _buildWelcomeScreen(),
       ),
+
+      supportedLocales: [
+        Locale('en', ''),
+        Locale('it', ''),
+        Locale('pt', ''),
+        Locale('es', ''),
+        Locale('fr', ''),
+      ],
+      // These delegates make sure that the localization data for the proper language is loaded
+      localizationsDelegates: [
+        // A class which loads the translations from JSON files
+        AppLocalizations.delegate,
+        // Built-in localization of basic text for Material widgets
+        GlobalMaterialLocalizations.delegate,
+        // Built-in localization for text direction LTR/RTL
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      // Returns a locale which will be used by the app
+      localeResolutionCallback: (locale, supportedLocales) {
+        // Check if the current device locale is supported
+        for (var supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale.languageCode) {
+            return supportedLocale;
+          }
+        }
+        // If the locale of the device is not supported, use the first one
+        // from the list (English, in this case).
+        return supportedLocales.first;
+      },
+      home: _isLoading
+          ? buildLoader()
+          : _isActive
+              ? _buildTournamentScreen()
+              : _buildWelcomeScreen(),
     );
   }
 

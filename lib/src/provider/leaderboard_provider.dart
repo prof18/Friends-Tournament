@@ -1,13 +1,9 @@
 import 'dart:collection';
 
 import 'package:flutter/widgets.dart';
-import 'package:friends_tournament/src/data/database/database_provider.dart';
-import 'package:friends_tournament/src/data/database/database_provider_impl.dart';
-import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/model/app/ui_final_score.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
-import 'package:friends_tournament/src/data/tournament_repository.dart';
 import 'package:friends_tournament/src/utils/error_reporting.dart';
 import 'package:friends_tournament/src/utils/service_locator.dart';
 

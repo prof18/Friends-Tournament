@@ -16,7 +16,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/provider/setup_provider.dart';
 import 'package:friends_tournament/src/provider/tournament_provider.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
@@ -286,11 +285,9 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
           Navigator.pop(context);
           Navigator.of(context)?.pushAndRemoveUntil(
               MaterialPageRoute(
-                builder: (context) => TournamentBlocProvider(
-                  child: ChangeNotifierProvider(
-                    create: (context) => TournamentProvider(),
-                    child: TournamentScreen(),
-                  ),
+                builder: (context) => ChangeNotifierProvider(
+                  create: (context) => TournamentProvider(),
+                  child: TournamentScreen(),
                 ),
               ),
               (Route<dynamic> route) => false);

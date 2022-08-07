@@ -20,7 +20,6 @@ import 'package:friends_tournament/src/data/database/dao/player_session_dao.dart
 import 'package:friends_tournament/src/data/database/dao/tournament_dao.dart';
 import 'package:friends_tournament/src/data/database/dao/tournament_player_dao.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
-import 'package:friends_tournament/src/data/database/database_provider_impl.dart';
 import 'package:friends_tournament/src/data/database/db_queries.dart';
 import 'package:friends_tournament/src/data/model/db/match.dart' as tournament;
 import 'package:friends_tournament/src/data/model/db/player_session.dart';

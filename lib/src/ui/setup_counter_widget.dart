@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';

@@ -19,7 +19,6 @@ import 'package:friends_tournament/src/data/database/database_provider.dart';
 import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/model/app/ui_final_score.dart';
 import 'package:friends_tournament/src/data/tournament_repository.dart';
-import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import '../utils/db/ongoing_database_provider.dart';

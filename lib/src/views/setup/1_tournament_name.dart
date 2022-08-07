@@ -17,10 +17,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/provider/setup_provider.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/text_field_decoration.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
-import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:provider/provider.dart';
 
 class TournamentName extends StatelessWidget implements SetupPage {

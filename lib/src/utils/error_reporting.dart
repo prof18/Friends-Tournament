@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import 'package:sentry/sentry.dart';
+
 
 
 Future<void> reportError(dynamic error, dynamic stackTrace) async {

@@ -16,17 +16,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
-import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
-import 'package:friends_tournament/src/data/model/app/ui_match.dart';
 import 'package:friends_tournament/src/provider/tournament_provider.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/backdrop.dart';
 import 'package:friends_tournament/src/ui/center_loader.dart';
 import 'package:friends_tournament/src/ui/error_dialog.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/tournament/match_selection_tile.dart';
 import 'package:friends_tournament/src/views/tournament/session_score_view.dart';
-import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:provider/provider.dart';
 
 class TournamentScreen extends StatefulWidget {

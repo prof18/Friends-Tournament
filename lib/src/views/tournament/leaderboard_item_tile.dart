@@ -17,7 +17,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
-import 'package:friends_tournament/src/ui/utils.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';
 

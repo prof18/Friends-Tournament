@@ -20,10 +20,10 @@ import 'package:friends_tournament/src/utils/widget_keys.dart';
 
 class SetupCounterWidget extends StatelessWidget {
   final int minValue;
-  final int maxValue;
-  final int currentValue;
-  final Function(int value) onIncrease;
-  final Function(int value) onDecrease;
+  final int? maxValue;
+  final int? currentValue;
+  final Function(int value)? onIncrease;
+  final Function(int value)? onDecrease;
 
   SetupCounterWidget({
     this.minValue = 0,
@@ -65,7 +65,7 @@ class SetupCounterWidget extends StatelessWidget {
                       padding: const EdgeInsets.only(right: MarginsRaw.small),
                       child: GestureDetector(
                         key: counterWidgetMinusButton,
-                        onTap: () => onDecrease(currentValue - 1),
+                        onTap: () => onDecrease!(currentValue! - 1),
                         child: Icon(
                           Icons.remove,
                           size: 36,
@@ -75,12 +75,12 @@ class SetupCounterWidget extends StatelessWidget {
                     ),
                   ),
                   Visibility(
-                    visible: maxValue != null ? currentValue < maxValue : true,
+                    visible: maxValue != null ? currentValue! < maxValue! : true,
                     child: Padding(
                       padding: const EdgeInsets.only(left: MarginsRaw.small),
                       child: GestureDetector(
                         key: counterWidgetPlusButton,
-                        onTap: () => onIncrease(currentValue + 1),
+                        onTap: () => onIncrease!(currentValue! + 1),
                         child: Icon(
                           Icons.add,
                           size: 36,

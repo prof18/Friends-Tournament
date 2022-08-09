@@ -85,7 +85,7 @@ class _FinalScreenState extends State<FinalScreen> {
                               child: Consumer<LeaderboardProvider>(
                                   builder: (context, provider, child) {
                                 return Text(
-                                  provider.tournamentName,
+                                  provider.tournamentName!,
                                   style: TextStyle(fontSize: 28),
                                 );
                               }),
@@ -145,8 +145,7 @@ class _FinalScreenState extends State<FinalScreen> {
                             right: MarginsRaw.regular,
                             bottom: MarginsRaw.regular),
                         child: Text(
-                          AppLocalizations.of(context)
-                              .translate('winner_title'),
+                          AppLocalizations.translate(context, 'winner_title',),
                           style: TextStyle(fontSize: 28),
                         ),
                       ),
@@ -162,8 +161,8 @@ class _FinalScreenState extends State<FinalScreen> {
                               child: Text(
                                 provider.leaderboardPlayers.isNotEmpty
                                     ? "${provider.leaderboardPlayers.first.name} 🎉"
-                                    : AppLocalizations.of(context)
-                                        .translate('winner_error_message'),
+                                    : AppLocalizations.translate(context, 'winner_error_message',),
+
                                 style: TextStyle(
                                     fontSize: 36, fontWeight: FontWeight.bold),
                                 key: winnerTextKey,
@@ -213,8 +212,7 @@ class _FinalScreenState extends State<FinalScreen> {
                                   textColor: Colors.white,
                                   padding: Margins.regular,
                                   child: Text(
-                                    AppLocalizations.of(context)
-                                        .translate('leaderboard'),
+                                    AppLocalizations.translate(context, 'leaderboard',),
                                     style: TextStyle(fontSize: 16),
                                   ),
                                 ),
@@ -244,8 +242,7 @@ class _FinalScreenState extends State<FinalScreen> {
                                 textColor: Colors.white,
                                 padding: Margins.regular,
                                 child: Text(
-                                  AppLocalizations.of(context)
-                                      .translate('new_tournament_button'),
+                                  AppLocalizations.translate(context, 'new_tournament_button',),
                                   style: TextStyle(fontSize: 16),
                                 ),
                               ),

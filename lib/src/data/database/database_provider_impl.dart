@@ -29,10 +29,11 @@ import 'package:sqflite/sqflite.dart';
 /// This class contains the db object that the applications requires.
 /// For testing, we need to create a Fake Database provider
 class DatabaseProviderImpl implements DatabaseProvider {
+
   static final _instance = DatabaseProviderImpl._internal();
   static DatabaseProviderImpl get = _instance;
   bool isInitialized = false;
-  Database _db;
+  Database? _db;
 
   // private constructor
   DatabaseProviderImpl._internal();
@@ -59,13 +60,13 @@ class DatabaseProviderImpl implements DatabaseProvider {
   @override
   Future<Database> db() async {
     if (_db == null) await _init();
-    return _db;
+    return _db!;
   }
 
   @override
   Future<void> closeDb() async {
     if (_db != null) {
-      _db.close();
+      _db!.close();
     }
   }
 }

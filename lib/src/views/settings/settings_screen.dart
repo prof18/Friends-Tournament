@@ -89,8 +89,7 @@ class SettingsScreen extends StatelessWidget {
                       right: MarginsRaw.regular,
                     ),
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('friends_tournament_claim'),
+                      AppLocalizations.translate(context, 'friends_tournament_claim',),
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 18),
                     ),
@@ -103,7 +102,7 @@ class SettingsScreen extends StatelessWidget {
                       _openURL("https://github.com/prof18/Friends-Tournament/");
                     },
                     child: SettingsTile(
-                      AppLocalizations.of(context).translate('show_github'),
+                      AppLocalizations.translate(context, 'show_github',),
                     ),
                   ),
                   GestureDetector(
@@ -112,7 +111,7 @@ class SettingsScreen extends StatelessWidget {
                           "https://github.com/prof18/Friends-Tournament/blob/master/privacy_policy.md");
                     },
                     child: SettingsTile(
-                      AppLocalizations.of(context).translate('privacy_policy'),
+                      AppLocalizations.translate(context, 'privacy_policy',),
                     ),
                   ),
                   GestureDetector(
@@ -123,7 +122,7 @@ class SettingsScreen extends StatelessWidget {
                               <a href="https://it.freepik.com/foto-vettori-gratuito/design">Vectors and illustrations from freepik - freepik.com</a>''');
                       });
 
-                      Navigator.of(context)?.push(MaterialPageRoute<void>(
+                      Navigator.of(context).push(MaterialPageRoute<void>(
                         builder: (context) => Theme(
                           data: Theme.of(context).copyWith(
                               textTheme: Typography.material2018(
@@ -141,8 +140,7 @@ class SettingsScreen extends StatelessWidget {
                       ));
                     },
                     child: SettingsTile(
-                      AppLocalizations.of(context)
-                          .translate('open_source_license'),
+                      AppLocalizations.translate(context, 'open_source_license',),
                     ),
                   ),
                   SizedBox(
@@ -159,7 +157,7 @@ class SettingsScreen extends StatelessWidget {
                       builder: (context, snapshot) {
                         return Text(
                           snapshot.hasData
-                              ? "${AppLocalizations.of(context).translate('app_version')}: ${snapshot.data}"
+                              ? "${AppLocalizations.translate(context, 'app_version',)}: ${snapshot.data}"
                               : "",
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 14, color: Colors.black38),
@@ -175,8 +173,7 @@ class SettingsScreen extends StatelessWidget {
                         style: TextStyle(color: Colors.black38, fontSize: 16),
                         children: <TextSpan>[
                           TextSpan(
-                            text: AppLocalizations.of(context)
-                                .translate('developed_by'),
+                            text: AppLocalizations.translate(context, 'developed_by',),
                           ),
                           TextSpan(
                               style: TextStyle(color: AppColors.blue),

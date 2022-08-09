@@ -24,7 +24,7 @@ class LeaderboardItemTile extends StatelessWidget {
   final UIPlayer uiPlayer;
   final int position;
 
-  LeaderboardItemTile({@required this.uiPlayer, @required this.position});
+  LeaderboardItemTile({required this.uiPlayer, required this.position});
 
   @override
   Widget build(BuildContext context) {

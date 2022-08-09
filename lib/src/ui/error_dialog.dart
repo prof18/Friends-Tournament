@@ -39,8 +39,7 @@ showErrorDialog(BuildContext context) {
             Radius.circular(MarginsRaw.borderRadius),
           ),
         ),
-        title: Text(AppLocalizations.of(context)
-            .translate('something_not_working_title')),
+        title: Text(AppLocalizations.translate(context, 'something_not_working_title',),),
         content: Container(
           height: 250,
           child: Column(
@@ -55,8 +54,7 @@ showErrorDialog(BuildContext context) {
               Padding(
                 padding: const EdgeInsets.only(top: MarginsRaw.regular),
                 child: Text(
-                  AppLocalizations.of(context)
-                      .translate('something_not_working_message'),
+                  AppLocalizations.translate(context, 'something_not_working_message',),
                   style: TextStyle(fontSize: 18),
                 ),
               )
@@ -66,10 +64,11 @@ showErrorDialog(BuildContext context) {
         actions: <Widget>[
           FlatButton(
             child: Text(
-                AppLocalizations.of(context).translate('restart_from_scratch')),
+                AppLocalizations.translate(context, 'restart_from_scratch',),
+              ),
             onPressed: () async {
               await repository.finishAllTournament();
-              Navigator.of(context)?.pushAndRemoveUntil(
+              Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(
                     builder: (context) => Welcome(),
                   ),

@@ -12,8 +12,8 @@ import 'package:friends_tournament/src/utils/error_reporting.dart';
 import 'package:friends_tournament/src/utils/service_locator.dart';
 
 class TournamentProvider with ChangeNotifier {
-  Tournament _activeTournament;
-  Tournament get activeTournament => _activeTournament;
+  Tournament? _activeTournament;
+  Tournament? get activeTournament => _activeTournament;
 
   /// A list of all the matches the composes the actual tournament.
   /// When the user select a specific match, we filter it from the list, save
@@ -23,8 +23,8 @@ class TournamentProvider with ChangeNotifier {
       UnmodifiableListView(_tournamentMatches);
 
   /// The match that is actually selected and visible in the UI.
-  UIMatch _currentMatch;
-  UIMatch get currentMatch => _currentMatch;
+  UIMatch? _currentMatch;
+  UIMatch? get currentMatch => _currentMatch;
 
   bool _showTournamentInitError = false;
   bool get showTournamentInitError => _showTournamentInitError;
@@ -72,13 +72,13 @@ class TournamentProvider with ChangeNotifier {
 
   setCurrentMatch(UIMatch match) {
     match.isSelected = true;
-    _currentMatch.isSelected = false;
+    _currentMatch!.isSelected = false;
     _currentMatch = match;
     notifyListeners();
   }
 
   setPlayerScore(PlayerSession playerSession) {
-    UISession session = _currentMatch.matchSessions
+    UISession session = _currentMatch!.matchSessions
         .firstWhere((session) => session.id == playerSession.sessionId);
 
     UIPlayer player = session.sessionPlayers
@@ -90,15 +90,20 @@ class TournamentProvider with ChangeNotifier {
   }
 
   Future<EndMatchStatus> endMatch() async {
+    if (_currentMatch == null || _activeTournament == null) {
+      // TODO: send also a string
+      // await reportError(error, stackTrace);
+      return EndMatchStatus.error;
+    }
     try {
       // save the current progress on the database
-      _currentMatch.isActive = 0;
-      _currentMatch.isSelected = false;
+      _currentMatch!.isActive = 0;
+      _currentMatch!.isSelected = false;
 
-      await tournamentRepository.finishMatch(_currentMatch, _activeTournament);
+      await tournamentRepository.finishMatch(_currentMatch!, _activeTournament!);
 
       // the current match is no active. Select another as active
-      int currentMatchIndex = _tournamentMatches.indexOf(_currentMatch);
+      int currentMatchIndex = _tournamentMatches.indexOf(_currentMatch!);
       // it could be the last match
       int nextMatchIndex = currentMatchIndex + 1;
       if (nextMatchIndex > _tournamentMatches.length - 1) {
@@ -121,8 +126,13 @@ class TournamentProvider with ChangeNotifier {
   }
 
   Future<EndTournamentResult> endTournament() async {
+    if (_activeTournament == null) {
+      // TODO: send also a string
+      // await reportError(error, stackTrace);
+      return EndTournamentResult.error;
+    }
     try {
-      await tournamentRepository.finishTournament(_activeTournament);
+      await tournamentRepository.finishTournament(_activeTournament!);
       return EndTournamentResult.success;
     } catch (error, stackTrace) {
       await reportError(error, stackTrace);

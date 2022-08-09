@@ -33,9 +33,9 @@ class MatchSessionDao implements Dao<MatchSession> {
 
   @override
   List<MatchSession> fromList(List<Map<String, dynamic>> query) {
-    var matchSessionList = List<MatchSession>();
+    var matchSessionList = <MatchSession>[];
     for (Map map in query) {
-      matchSessionList.add(fromMap(map));
+      matchSessionList.add(fromMap(map as Map<String, dynamic>));
     }
     return matchSessionList;
   }

@@ -35,9 +35,9 @@ class TournamentScreen extends StatefulWidget {
 
 class _TournamentScreenState extends State<TournamentScreen>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+ late AnimationController _controller;
 
-  String matchName;
+  String? matchName;
 
   @override
   void initState() {
@@ -54,7 +54,7 @@ class _TournamentScreenState extends State<TournamentScreen>
     );
 
     matchName = tournamentProvider.currentMatch != null
-        ? tournamentProvider.currentMatch.name
+        ? tournamentProvider.currentMatch!.name
         : null;
 
     tournamentProvider.addListener(() {
@@ -64,7 +64,7 @@ class _TournamentScreenState extends State<TournamentScreen>
       }
 
       final newMatchName = tournamentProvider.currentMatch != null
-          ? tournamentProvider.currentMatch.name
+          ? tournamentProvider.currentMatch!.name
           : null;
 
       if (matchName == null) {
@@ -78,21 +78,6 @@ class _TournamentScreenState extends State<TournamentScreen>
         );
       }
     });
-
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
-    //
-    //   tournamentBloc.currentMatchName.listen((matchName) {
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(
-    //         content: Text("Match \"$matchName\" selected."),
-    //       ),
-    //     );
-    //   });
-    //
-    //   tournamentBloc.getErrorChecker.listen((event) {
-    //   });
-    // });
   }
 
   @override
@@ -148,7 +133,7 @@ class _TournamentScreenState extends State<TournamentScreen>
       builder: (context, provider, child) {
         return provider.currentMatch != null
             ? SessionScoreView(
-                sessions: provider.currentMatch.matchSessions,
+                sessions: provider.currentMatch!.matchSessions,
                 controller: _controller,
               )
             : renderCenterLoader();

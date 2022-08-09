@@ -34,8 +34,8 @@ class SessionPlayerTile extends StatelessWidget {
 
   SessionPlayerTile({
     key: Key,
-    @required this.player,
-    @required this.session,
+    required this.player,
+    required this.session,
     this.step = 1,
   }) : super(key: key);
 
@@ -71,7 +71,7 @@ class SessionPlayerTile extends StatelessWidget {
                           style: TextStyle(fontSize: 32),
                         ),
                         Text(
-                          AppLocalizations.of(context).translate('score'),
+                          AppLocalizations.translate(context, 'score',),
                           style: TextStyle(fontSize: 12),
                         )
                       ],

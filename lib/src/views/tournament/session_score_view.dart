@@ -30,8 +30,8 @@ import 'package:friends_tournament/src/views/tournament/session_item_widget.dart
 import 'package:provider/provider.dart';
 
 class SessionScoreView extends StatefulWidget {
-  final List<UISession> sessions;
-  final AnimationController controller;
+  final List<UISession>? sessions;
+  final AnimationController? controller;
 
   SessionScoreView({this.sessions, this.controller});
 
@@ -44,12 +44,12 @@ class _SessionScoreViewState extends State<SessionScoreView> {
 
   bool hideFab = false;
 
-  ScrollController _scrollController;
+  ScrollController? _scrollController;
 
   @override
   void initState() {
     super.initState();
-    widget.controller.addStatusListener((status) {
+    widget.controller!.addStatusListener((status) {
       if (status == AnimationStatus.reverse) {
         setState(() {
           _panelExpanded = true;
@@ -62,8 +62,8 @@ class _SessionScoreViewState extends State<SessionScoreView> {
     });
     _scrollController = ScrollController();
 
-    _scrollController.addListener(() {
-      switch (_scrollController.position.userScrollDirection) {
+    _scrollController!.addListener(() {
+      switch (_scrollController!.position.userScrollDirection) {
         case ScrollDirection.forward:
           setState(() {
             hideFab = false;
@@ -83,7 +83,7 @@ class _SessionScoreViewState extends State<SessionScoreView> {
   @override
   void dispose() {
     super.dispose();
-    _scrollController.dispose();
+    _scrollController!.dispose();
   }
 
   @override
@@ -98,11 +98,11 @@ class _SessionScoreViewState extends State<SessionScoreView> {
                 backgroundColor: AppColors.blue,
                 key: saveFabKey,
                 onPressed: () {
-                  _showSaveDialog(provider, provider.currentMatch.isActive == 0,
-                      provider.currentMatch.name);
+                  _showSaveDialog(provider, provider.currentMatch!.isActive == 0,
+                      provider.currentMatch!.name);
                 },
                 child: provider.currentMatch != null
-                    ? provider.currentMatch.isActive == 0
+                    ? provider.currentMatch!.isActive == 0
                         ? Icon(Icons.edit)
                         : Icon(Icons.save)
                     : Container(),
@@ -126,18 +126,18 @@ class _SessionScoreViewState extends State<SessionScoreView> {
         ),
         child: ListView.builder(
           controller: _scrollController,
-          itemCount: widget.sessions.length,
+          itemCount: widget.sessions!.length,
           itemBuilder: (context, index) {
             return Container(
               width: MediaQuery.of(context).size.width * 0.75,
               child: Padding(
-                padding: index == widget.sessions.length - 1
+                padding: index == widget.sessions!.length - 1
                     ? const EdgeInsets.only(
                         bottom: MarginsRaw.large,
                       )
                     : const EdgeInsets.all(0.0),
                 child: SessionItemWidget(
-                  session: widget.sessions[index],
+                  session: widget.sessions![index],
                 ),
               ),
             );
@@ -147,7 +147,7 @@ class _SessionScoreViewState extends State<SessionScoreView> {
     );
   }
 
-  _showSaveDialog(TournamentProvider provider, bool isEdit, String matchName) {
+  _showSaveDialog(TournamentProvider provider, bool isEdit, String? matchName) {
     showDialog(
       context: context,
       barrierDismissible: false, // user must tap button for close dialog!
@@ -158,7 +158,7 @@ class _SessionScoreViewState extends State<SessionScoreView> {
               Radius.circular(MarginsRaw.borderRadius),
             ),
           ),
-          title: Text(matchName),
+          title: Text(matchName!),
           content: Container(
             height: 250,
             child: Column(
@@ -173,9 +173,9 @@ class _SessionScoreViewState extends State<SessionScoreView> {
                 Padding(
                   padding: const EdgeInsets.only(top: MarginsRaw.regular),
                   child: Text(
-                    AppLocalizations.of(context).translate(isEdit
+                    AppLocalizations.translate(context, isEdit
                         ? "match_score_update_message"
-                        : "match_score_save_message"),
+                        : "match_score_save_message",),
                     style: TextStyle(fontSize: 18),
                   ),
                 )
@@ -185,30 +185,30 @@ class _SessionScoreViewState extends State<SessionScoreView> {
           actions: <Widget>[
             FlatButton(
               child: Text(
-                  AppLocalizations.of(context).translate('generic_cancel')),
+                  AppLocalizations.translate(context, 'generic_cancel',),
+                  ),
               onPressed: () {
-                Navigator.of(context)?.pop();
+                Navigator.of(context).pop();
               },
             ),
             FlatButton(
               key: saveScoreOkKey,
-              child: Text(AppLocalizations.of(context).translate('generic_ok')),
+              child: Text(AppLocalizations.translate(context, 'generic_ok',),),
               onPressed: () async {
                 EndMatchStatus status = await provider.endMatch();
                 if (status == EndMatchStatus.end_tournament) {
-                  Navigator.of(context)?.pop();
+                  Navigator.of(context).pop();
                   showEndTournamentDialog(
                     context,
                     provider,
-                    AppLocalizations.of(context)
-                        .translate('finish_tournament_message'),
+                    AppLocalizations.translate(context, 'finish_tournament_message',),
                   );
                 } else if (status == EndMatchStatus.error) {
-                  Navigator.of(context)?.pop();
+                  Navigator.of(context).pop();
                   showErrorDialog(context);
                 } else {
-                  Navigator.of(context)?.pop();
-                } // TODO: check also error?
+                  Navigator.of(context).pop();
+                }
               },
             )
           ],

@@ -20,7 +20,7 @@ class CustomIcons {
 
   static const _kFontFam = 'CustomIcons';
 
-  static const _kFontPkg = null;
+  static const dynamic _kFontPkg = null;
 
   static const IconData podium = IconData(
       0xea70, fontFamily: _kFontFam, fontPackage: _kFontPkg);

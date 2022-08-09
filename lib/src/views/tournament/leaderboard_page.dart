@@ -27,7 +27,7 @@ import 'package:friends_tournament/src/views/tournament/leaderboard_item_tile.da
 import 'package:provider/provider.dart';
 
 class LeaderboardScreen extends StatefulWidget {
-  final bool isFromFinalScreen;
+  final bool? isFromFinalScreen;
 
   LeaderboardScreen({this.isFromFinalScreen});
 
@@ -43,7 +43,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        if (!widget.isFromFinalScreen) {
+        if (!widget.isFromFinalScreen!) {
           setState(() {
             statusBarColor = AppColors.blue;
             statusBarBrightness = Brightness.light;
@@ -76,7 +76,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                                 key: leaderboardBackButtonKey,
                                 icon: const Icon(Icons.arrow_back_ios),
                                 onPressed: () {
-                                  if (!widget.isFromFinalScreen) {
+                                  if (!widget.isFromFinalScreen!) {
                                     setState(() {
                                       statusBarColor = AppColors.blue;
                                       statusBarBrightness = Brightness.light;
@@ -91,8 +91,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                             padding:
                                 const EdgeInsets.only(top: MarginsRaw.regular),
                             child: Text(
-                              AppLocalizations.of(context)
-                                  .translate('leaderboard'),
+                              AppLocalizations.translate(context, 'leaderboard',),
                               style: TextStyle(fontSize: 28),
                             ),
                           ),
@@ -162,8 +161,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
 
   Widget _renderEmptyLeaderboard() {
     return Center(
-      child: Text(AppLocalizations.of(context)
-          .translate('no_matches_started_yet_label')),
+      child: Text(AppLocalizations.translate(context, 'no_matches_started_yet_label',)),
     );
   }
 }

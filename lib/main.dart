@@ -52,7 +52,7 @@ void main() {
 
 class MyApp extends StatefulWidget {
   MyApp({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   // This widget is the root of your application.
@@ -63,7 +63,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   var _isLoading = true;
   var _isActive = false;
-  Tournament _lastTournament;
+  Tournament? _lastTournament;
 
   @override
   void initState() {
@@ -179,7 +179,7 @@ class _MyAppState extends State<MyApp> {
       localeResolutionCallback: (locale, supportedLocales) {
         // Check if the current device locale is supported
         for (var supportedLocale in supportedLocales) {
-          if (supportedLocale.languageCode == locale.languageCode) {
+          if (supportedLocale.languageCode == locale!.languageCode) {
             return supportedLocale;
           }
         }
@@ -211,7 +211,7 @@ class _MyAppState extends State<MyApp> {
 
   Widget _buildFinalScreen() {
     return ChangeNotifierProvider(
-      create: (context) => LeaderboardProvider(_lastTournament),
+      create: (context) => LeaderboardProvider(_lastTournament!),
       child: FinalScreen(),
     );
   }

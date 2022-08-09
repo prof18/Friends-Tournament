@@ -26,6 +26,8 @@ import 'package:friends_tournament/src/views/tournament/end_tournament_dialog.da
 import 'package:friends_tournament/src/views/tournament/leaderboard_page.dart';
 import 'package:provider/provider.dart';
 
+import 'error_dialog.dart';
+
 class Backdrop extends StatefulWidget {
   final Widget dropdownWidget;
   final Widget contentWidget;
@@ -39,7 +41,7 @@ class Backdrop extends StatefulWidget {
 
 class _BackdropState extends State<Backdrop>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
   static const _PANEL_HEADER_HEIGHT = 32.0;
 
   bool _panelExpanded = false;
@@ -60,23 +62,6 @@ class _BackdropState extends State<Backdrop>
         });
       }
     });
-
-    final tournamentProvider = Provider.of<TournamentProvider>(
-      context,
-      listen: false,
-    );
-
-    void listener() {
-      // if (tournamentProvider.triggerEndTournament) {
-      //   _showEndTournamentDialog(
-      //     tournamentProvider,
-      //     AppLocalizations.of(context).translate('match_finished_message'),
-      //   );
-      //   tournamentProvider.resetEndTournamentTrigger();
-      // }
-    }
-
-    tournamentProvider.addListener(listener);
   }
 
   bool get _isPanelVisible {
@@ -109,7 +94,7 @@ class _BackdropState extends State<Backdrop>
               return provider.currentMatch != null
                   ? Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: Text(provider.currentMatch.name),
+                      child: Text(provider.currentMatch!.name),
                     )
                   : Container();
             },
@@ -136,18 +121,23 @@ class _BackdropState extends State<Backdrop>
                   context,
                   listen: false,
                 ).activeTournament;
+
+                if (tournament == null) {
+                  // TODO: report error to firebase
+                  showErrorDialog(context);
+                }
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => ChangeNotifierProvider(
-                      create: (context) => LeaderboardProvider(tournament),
+                      create: (context) => LeaderboardProvider(tournament!),
                       child: LeaderboardScreen(isFromFinalScreen: false),
                     ),
                   ),
                 );
               },
-              tooltip: AppLocalizations.of(context)
-                  .translate('show_leaderboard_tooltip'),
+              tooltip: AppLocalizations.translate(context, 'show_leaderboard_tooltip',),
             ),
           ),
           Visibility(
@@ -158,12 +148,10 @@ class _BackdropState extends State<Backdrop>
                 showEndTournamentDialog(
                   context,
                   Provider.of<TournamentProvider>(context, listen: false),
-                  AppLocalizations.of(context)
-                      .translate('finish_tournament_message'),
+                  AppLocalizations.translate(context, 'finish_tournament_message',),
                 );
               },
-              tooltip: AppLocalizations.of(context)
-                  .translate('finish_tournament_tooltip'),
+              tooltip: AppLocalizations.translate(context, 'finish_tournament_tooltip',),
             ),
           ),
         ],

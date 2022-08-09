@@ -52,8 +52,7 @@ class TournamentName extends StatelessWidget implements SetupPage {
                     bottom: MarginsRaw.small,
                   ),
                   child: Text(
-                    AppLocalizations.of(context)
-                        .translate('tournament_name_title'),
+                    AppLocalizations.translate(context, 'tournament_name_title',),
                     style: TextStyle(
                       fontSize: 36,
                       fontWeight: FontWeight.bold,
@@ -87,8 +86,7 @@ class TournamentName extends StatelessWidget implements SetupPage {
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
                     decoration: getTextFieldDecoration(
-                      AppLocalizations.of(context)
-                          .translate('tournament_name_title'),
+                      AppLocalizations.translate(context, 'tournament_name_title',),
                     ),
                   ),
                 ),
@@ -116,8 +114,7 @@ class TournamentName extends StatelessWidget implements SetupPage {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.of(context)
-                .translate('tournament_name_empty_fields_message'),
+            AppLocalizations.translate(context, 'tournament_name_empty_fields_message',),
           ),
         ),
       );

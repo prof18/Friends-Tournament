@@ -44,10 +44,10 @@ import 'package:flutter/material.dart';
 ///   });
 ///
 class DialogLoader extends StatefulWidget {
-  final String text;
-  final AnimationController controller;
+  final String? text;
+  final AnimationController? controller;
 
-  DialogLoader({this.text, @required this.controller});
+  DialogLoader({this.text, required this.controller});
 
   @override
   State<StatefulWidget> createState() => DialogLoaderState();
@@ -55,14 +55,14 @@ class DialogLoader extends StatefulWidget {
 
 class DialogLoaderState extends State<DialogLoader>
     with SingleTickerProviderStateMixin {
-  Animation<double> scaleAnimation;
+  late Animation<double> scaleAnimation;
 
   @override
   void initState() {
     super.initState();
     scaleAnimation =
-        CurvedAnimation(parent: widget.controller, curve: Curves.elasticInOut);
-    widget.controller.forward();
+        CurvedAnimation(parent: widget.controller!, curve: Curves.elasticInOut);
+    widget.controller!.forward();
   }
 
   @override
@@ -86,7 +86,7 @@ class DialogLoaderState extends State<DialogLoader>
                   Padding(
                     padding: const EdgeInsets.only(
                         top: 16.0, left: 16.0, right: 16.0),
-                    child: Text(widget.text),
+                    child: Text(widget.text!),
                   )
                 ],
               ),

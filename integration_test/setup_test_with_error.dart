@@ -7,22 +7,19 @@ import 'utils/test_utils.dart';
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  if (binding is LiveTestWidgetsFlutterBinding) {
-    binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
-  }
+  binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
 
   group('Setup Tests error path', () {
     testWidgets(
         'Setting up a tournament with 3 players and 2 ast is not possible',
-            (WidgetTester tester) async {
+        (WidgetTester tester) async {
+      await startAppAndSetTournamentName(tester, tournamentName);
 
-          await startAppAndSetTournamentName(tester, tournamentName);
+      await setNumberOfPlayers(3, tester);
 
-          await setNumberOfPlayers(3, tester);
+      await setupNumberOfPlayerAtSameTime(2, tester);
 
-          await setupNumberOfPlayerAtSameTime(2, tester);
-
-          expect(find.byType(SnackBar), findsOneWidget);
-        });
+      expect(find.byType(SnackBar), findsOneWidget);
+    });
   });
 }

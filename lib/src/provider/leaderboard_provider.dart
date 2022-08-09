@@ -12,8 +12,8 @@ class LeaderboardProvider with ChangeNotifier {
     _computeLeaderboard(tournament);
   }
 
-  String _tournamentName = "";
-  String get tournamentName => _tournamentName;
+  String? _tournamentName = "";
+  String? get tournamentName => _tournamentName;
 
   List<UIPlayer> _leaderboardPlayers = [];
   UnmodifiableListView<UIPlayer> get leaderboardPlayers =>

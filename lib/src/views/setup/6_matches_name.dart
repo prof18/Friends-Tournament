@@ -28,7 +28,7 @@ import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:provider/provider.dart';
 
 class MatchesName extends StatelessWidget implements SetupPage {
-  final List<TextFieldWrapper> _textFieldsList = new List<TextFieldWrapper>();
+  final List<TextFieldWrapper> _textFieldsList = <TextFieldWrapper>[];
   final Map<int, String> _savedValues = new HashMap();
 
   @override
@@ -74,10 +74,10 @@ class MatchesName extends StatelessWidget implements SetupPage {
       for (int i = 0; i < matchesNumber; i++) {
         TextFieldWrapper textFieldWrapper = TextFieldWrapper(
             TextEditingController(),
-            "${AppLocalizations.of(context).translate('match_label')} ${i + 1}");
+            "${AppLocalizations.translate(context, 'match_label',)} ${i + 1}");
         if (matchesName.containsKey(i)) {
           textFieldWrapper.value = matchesName[i];
-          textFieldWrapper.textEditingController.text = matchesName[i];
+          textFieldWrapper.textEditingController.text = matchesName[i]!;
         }
         _textFieldsList.add(textFieldWrapper);
       }
@@ -101,7 +101,7 @@ class MatchesName extends StatelessWidget implements SetupPage {
               left: MarginsRaw.regular,
               right: MarginsRaw.regular),
           child: Text(
-            AppLocalizations.of(context).translate('matches_name_title'),
+            AppLocalizations.translate(context, 'matches_name_title',),
             style: TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.bold,
@@ -197,7 +197,7 @@ class MatchesName extends StatelessWidget implements SetupPage {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.of(context).translate('match_name_duplicated'),
+            AppLocalizations.translate(context, 'match_name_duplicated',),
           ),
         ),
       );
@@ -212,8 +212,7 @@ class MatchesName extends StatelessWidget implements SetupPage {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.of(context)
-                .translate('matches_name_empty_fields_message'),
+            AppLocalizations.translate(context, 'matches_name_empty_fields_message',),
           ),
         ),
       );

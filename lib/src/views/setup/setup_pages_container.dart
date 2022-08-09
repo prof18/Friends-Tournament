@@ -58,7 +58,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
     MatchesName(),
   ];
 
-  AnimationController _controller;
+  AnimationController? _controller;
 
   @override
   void initState() {
@@ -73,7 +73,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
   void dispose() {
     super.dispose();
     _pageController.dispose();
-    _controller.dispose();
+    _controller!.dispose();
   }
 
   _onPageChanged(int index) {
@@ -136,8 +136,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
                                       top: MarginsRaw.medium,
                                       right: MarginsRaw.medium),
                                   child: Text(
-                                    AppLocalizations.of(context)
-                                        .translate('generic_back'),
+                                    AppLocalizations.translate(context, 'generic_back',),
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 14.0,
@@ -176,10 +175,9 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
                                     top: MarginsRaw.medium,
                                     left: MarginsRaw.medium),
                                 child: Text(
-                                  AppLocalizations.of(context).translate(
-                                      _currentPageIndex == _allPages.length - 1
-                                          ? "generic_done"
-                                          : "generic_next"),
+                                  AppLocalizations.translate(context, _currentPageIndex == _allPages.length - 1
+                                      ? "generic_done"
+                                      : "generic_next",),
                                   style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14.0,
@@ -234,28 +232,27 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
             ),
           ),
           title: Text(
-            AppLocalizations.of(context).translate('tournament_building_title'),
+            AppLocalizations.translate(context, 'tournament_building_title',),
           ),
           content: Text(
-            AppLocalizations.of(context)
-                .translate('tournament_building_message'),
+            AppLocalizations.translate(context, 'tournament_building_message',),
           ),
           actions: <Widget>[
             FlatButton(
               child: Text(
-                  AppLocalizations.of(context).translate('generic_cancel')),
+                  AppLocalizations.translate(context, 'generic_cancel',),
+                  ),
               onPressed: () {
-                Navigator.of(context)?.pop();
+                Navigator.of(context).pop();
               },
             ),
             FlatButton(
               key: finishSetupProceedButtonKey,
               child: Text(
-                AppLocalizations.of(context)
-                    .translate('tournament_building_go_button'),
+                AppLocalizations.translate(context, 'tournament_building_go_button',),
               ),
               onPressed: () {
-                Navigator.of(context)?.pop();
+                Navigator.of(context).pop();
                 _showLoaderAndStartProcess();
               },
             )
@@ -271,8 +268,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
       barrierDismissible: false,
       builder: (_) => DialogLoader(
         controller: _controller,
-        text: AppLocalizations.of(context)
-            .translate('generating_tournament_message'),
+        text: AppLocalizations.translate(context, 'generating_tournament_message',),
       ),
     );
 
@@ -280,10 +276,10 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
         .setupTournament();
 
     if (result) {
-      _controller.reverse().then(
+      _controller!.reverse().then(
         (_) {
           Navigator.pop(context);
-          Navigator.of(context)?.pushAndRemoveUntil(
+          Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) => ChangeNotifierProvider(
                   create: (context) => TournamentProvider(),

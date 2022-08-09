@@ -177,7 +177,7 @@ void main() {
 
       setupRepository.matches.forEach((match) {
 
-        var uniques = new LinkedHashMap<String, void>();
+        var uniques = new LinkedHashMap<String?, void>();
 
         final List<MatchSession> matchSessionList = setupRepository
             .matchSessionList

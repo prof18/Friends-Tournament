@@ -46,7 +46,7 @@ class SetupRepository {
   /// -------
   static final SetupRepository _singleton = new SetupRepository._internal();
 
-  LocalDataSource localDataSource;
+  late LocalDataSource localDataSource;
 
   factory SetupRepository(LocalDataSource localDataSource) {
     _singleton.localDataSource = localDataSource;
@@ -65,24 +65,24 @@ class SetupRepository {
   *
   * ************** */
   @visibleForTesting
-  List<Player> players = List<Player>();
+  List<Player> players = <Player>[];
   @visibleForTesting
-  List<Session> sessions = List<Session>();
+  List<Session> sessions = <Session>[];
   @visibleForTesting
-  List<Match> matches = List<Match>();
+  List<Match> matches = <Match>[];
   @visibleForTesting
-  List<PlayerSession> playerSessionList = List<PlayerSession>();
+  List<PlayerSession> playerSessionList = <PlayerSession>[];
   @visibleForTesting
-  List<MatchSession> matchSessionList = List<MatchSession>();
-  List<TournamentMatch> _tournamentMatchList = List<TournamentMatch>();
-  List<TournamentPlayer> _tournamentPlayerList = List<TournamentPlayer>();
+  List<MatchSession> matchSessionList = <MatchSession>[];
+  List<TournamentMatch> _tournamentMatchList = <TournamentMatch>[];
+  List<TournamentPlayer> _tournamentPlayerList = <TournamentPlayer>[];
 
-  Tournament _tournament;
+  late Tournament _tournament;
 
-  int _playersNumber;
-  int _playersAstNumber;
-  int _matchesNumber;
-  String _tournamentName;
+  late int _playersNumber;
+  late int _playersAstNumber;
+  late int _matchesNumber;
+  late String _tournamentName;
 
   Future setupTournament(
       int playersNumber,
@@ -91,8 +91,14 @@ class SetupRepository {
       String tournamentName,
       Map<int, String> playersName,
       Map<int, String> matchesName) async {
-    createTournament(playersNumber, playersAstNumber, matchesNumber,
-        tournamentName, playersName, matchesName);
+    createTournament(
+      playersNumber,
+      playersAstNumber,
+      matchesNumber,
+      tournamentName,
+      playersName,
+      matchesName,
+    );
     await save();
     players = [];
     sessions = [];
@@ -218,7 +224,7 @@ class SetupRepository {
     matches.forEach((match) {
       // number of sessions for the same match
       int sessionsNumber = (_playersNumber / _playersAstNumber).ceil();
-      var currentSessionPlayers = List<String>();
+      var currentSessionPlayers = <String>[];
       for (int i = 0; i < sessionsNumber; i++) {
         var sessionName = "Round ${i + 1}";
         var sessionId = generateSessionId(match.id, sessionName);
@@ -235,8 +241,11 @@ class SetupRepository {
               continue;
             } else {
               currentSessionPlayers.add(playerCandidate.id);
-              var playerSession =
-                  PlayerSession(playerCandidate.id, sessionId, 0);
+              var playerSession = PlayerSession(
+                playerCandidate.id,
+                sessionId,
+                0,
+              );
               playerSessionList.add(playerSession);
               break;
             }

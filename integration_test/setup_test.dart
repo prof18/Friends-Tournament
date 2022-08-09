@@ -6,9 +6,7 @@ import 'utils/test_utils.dart';
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  if (binding is LiveTestWidgetsFlutterBinding) {
-    binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
-  }
+  binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
 
   group('Setup Test Happy path', () {
     testWidgets('Happy path with 4 players, 2 ast and 2 matches',

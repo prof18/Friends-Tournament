@@ -17,7 +17,7 @@
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 
-InputDecoration getTextFieldDecoration(String hintText) {
+InputDecoration getTextFieldDecoration(String? hintText) {
   return InputDecoration(
       enabledBorder: OutlineInputBorder(
         borderRadius: const BorderRadius.all(

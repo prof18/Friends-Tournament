@@ -28,7 +28,7 @@ void main() {
   sqfliteFfiInit();
 
   group('Tournament repository setup tests ->', () {
-    TournamentRepository tournamentRepository;
+    late TournamentRepository tournamentRepository;
     LocalDataSource localDataSource;
 
     setUpAll(() async {
@@ -51,7 +51,7 @@ void main() {
       final tournament =
           await tournamentRepository.getCurrentActiveTournament();
       final uiMatches =
-          await tournamentRepository.getTournamentMatches(tournament.id);
+          await tournamentRepository.getTournamentMatches(tournament!.id);
 
       expect(uiMatches.length, TestTournament.matchesNumber);
     });
@@ -60,7 +60,7 @@ void main() {
       final tournament =
           await tournamentRepository.getCurrentActiveTournament();
       final uiMatches =
-          await tournamentRepository.getTournamentMatches(tournament.id);
+          await tournamentRepository.getTournamentMatches(tournament!.id);
 
       uiMatches.forEach((uiMatch) {
         final uiSessions = uiMatch.matchSessions;
@@ -77,7 +77,7 @@ void main() {
       final tournament =
           await tournamentRepository.getCurrentActiveTournament();
       final uiMatches =
-          await tournamentRepository.getTournamentMatches(tournament.id);
+          await tournamentRepository.getTournamentMatches(tournament!.id);
 
       uiMatches.asMap().forEach((index, uiMatch) {
         // The first match is active by default
@@ -93,7 +93,7 @@ void main() {
       final tournament =
           await tournamentRepository.getCurrentActiveTournament();
       final uiMatches =
-          await tournamentRepository.getTournamentMatches(tournament.id);
+          await tournamentRepository.getTournamentMatches(tournament!.id);
 
       uiMatches.forEach((uiMatch) {
         final uiSessions = uiMatch.matchSessions;
@@ -109,7 +109,7 @@ void main() {
       final tournament =
           await tournamentRepository.getCurrentActiveTournament();
       final uiMatches =
-          await tournamentRepository.getTournamentMatches(tournament.id);
+          await tournamentRepository.getTournamentMatches(tournament!.id);
 
       uiMatches.forEach((uiMatch) {
         final uiSessions = uiMatch.matchSessions;
@@ -128,15 +128,15 @@ void main() {
       final tournament =
           await tournamentRepository.getCurrentActiveTournament();
       final uiMatches =
-          await tournamentRepository.getTournamentMatches(tournament.id);
+          await tournamentRepository.getTournamentMatches(tournament!.id);
 
       uiMatches.forEach((uiMatch) {
-        final matchPlayers = List<String>();
+        final matchPlayers = <String>[];
         final uiSessions = uiMatch.matchSessions;
 
         uiSessions.forEach((uiSession) {
           final players = uiSession.sessionPlayers;
-          var sessionPlayers = List<String>();
+          var sessionPlayers = <String>[];
 
           players.forEach((player) {
             sessionPlayers.add(player.id);

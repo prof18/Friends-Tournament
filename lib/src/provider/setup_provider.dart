@@ -16,8 +16,7 @@ class SetupProvider with ChangeNotifier {
   int _matchesNumber = 1;
   int get matchesNumber => _matchesNumber;
 
-  String _tournamentName;
-  String get tournamentName => _tournamentName;
+  late String _tournamentName;
 
   Map<int, String> _playersName = {};
   UnmodifiableMapView<int, String> get playersName =>

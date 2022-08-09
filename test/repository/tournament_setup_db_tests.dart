@@ -30,15 +30,15 @@ void main() {
   sqfliteFfiInit();
 
   group('Tournament setup database checks ->', () {
-    SetupRepository setupRepository;
-    TournamentRepository tournamentRepository;
-    LocalDataSource localDataSource;
+    late SetupRepository setupRepository;
+    late TournamentRepository tournamentRepository;
+    LocalDataSource? localDataSource;
 
     setUpAll(() {
       DatabaseProvider databaseProvider = FakeDatabaseProvider.get;
       localDataSource = LocalDataSource(databaseProvider);
 
-      setupRepository = SetupRepository(localDataSource);
+      setupRepository = SetupRepository(localDataSource!);
       setupRepository.createTournament(
           TestTournament.playersNumber,
           TestTournament.playersAstNumber,
@@ -47,7 +47,7 @@ void main() {
           TestTournament.playersName,
           TestTournament.matchesName);
 
-      tournamentRepository = TournamentRepository(localDataSource);
+      tournamentRepository = TournamentRepository(localDataSource!);
     });
 
     test('Add new tournament with an active one in the db throws exception',
@@ -64,7 +64,7 @@ void main() {
 
       // Matches of the tournament
       final List<Map> dbMatches =
-          await localDataSource.getTournamentMatches(tournament.id);
+          await localDataSource!.getTournamentMatches(tournament!.id);
 
       // The tournament has 4 matches
       expect(dbMatches.length, TestTournament.matchesNumber);
@@ -77,17 +77,17 @@ void main() {
 
       // Matches of the tournament
       final List<Map> dbMatches =
-          await localDataSource.getTournamentMatches(tournament.id);
+          await localDataSource!.getTournamentMatches(tournament!.id);
 
       // The tournament has 4 matches
       expect(dbMatches.length, TestTournament.matchesNumber);
 
-      await Future.forEach(dbMatches.toList(), (row) async {
+      await Future.forEach(dbMatches.toList(), (dynamic row) async {
         final String idMatch = row['id_match'];
 
         // Sessions of the match
         final List<Map> dbMatchSessions =
-            await localDataSource.getMatchSessions(idMatch);
+            await localDataSource!.getMatchSessions(idMatch);
 
         // There are 4 players and 2 players can play at the same time -> 2 matches
         int sessionPerMatch =
@@ -105,24 +105,24 @@ void main() {
 
       // Matches of the tournament
       final List<Map> dbMatches =
-          await localDataSource.getTournamentMatches(tournament.id);
+          await localDataSource!.getTournamentMatches(tournament!.id);
 
       // The tournament has 4 matches
       expect(dbMatches.length, TestTournament.matchesNumber);
 
-      await Future.forEach(dbMatches.toList(), (row) async {
+      await Future.forEach(dbMatches.toList(), (dynamic row) async {
         final String idMatch = row['id_match'];
 
         // Sessions of the match
         final List<Map> dbMatchSessions =
-            await localDataSource.getMatchSessions(idMatch);
+            await localDataSource!.getMatchSessions(idMatch);
 
-        await Future.forEach(dbMatchSessions.toList(), (row) async {
+        await Future.forEach(dbMatchSessions.toList(), (dynamic row) async {
           final idSession = row['id_session'];
 
           // Player of the sessions
           final List<Map> dbPlayers =
-              await localDataSource.getSessionPlayers(idSession);
+              await localDataSource!.getSessionPlayers(idSession);
 
           expect(dbPlayers.length, TestTournament.playersAstNumber);
 
@@ -137,32 +137,32 @@ void main() {
 
       // Matches of the tournament
       final List<Map> dbMatches =
-      await localDataSource.getTournamentMatches(tournament.id);
+      await localDataSource!.getTournamentMatches(tournament!.id);
 
       // The tournament has 4 matches
       expect(dbMatches.length, TestTournament.matchesNumber);
 
-      await Future.forEach(dbMatches.toList(), (row) async {
+      await Future.forEach(dbMatches.toList(), (dynamic row) async {
         final String idMatch = row['id_match'];
 
         // Sessions of the match
         final List<Map> dbMatchSessions =
-        await localDataSource.getMatchSessions(idMatch);
+        await localDataSource!.getMatchSessions(idMatch);
 
         // By using a set we ensure that the elements are not repeated
         Set matchPlayerSet = Set();
 
-        await Future.forEach(dbMatchSessions.toList(), (row) async {
+        await Future.forEach(dbMatchSessions.toList(), (dynamic row) async {
           final idSession = row['id_session'];
 
           // Player of the sessions
           final List<Map> dbPlayers =
-          await localDataSource.getSessionPlayers(idSession);
+          await localDataSource!.getSessionPlayers(idSession);
 
           // By using a set we ensure that the elements are not repeated
           Set sessionPlayerSet = Set();
 
-          await Future.forEach(dbPlayers.toList(), (row) async {
+          await Future.forEach(dbPlayers.toList(), (dynamic row) async {
             final idPlayer = row['player_id'];
 
             matchPlayerSet.add(idPlayer);

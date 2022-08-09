@@ -51,8 +51,7 @@ class MatchesNumber extends StatelessWidget implements SetupPage {
                     bottom: MarginsRaw.small,
                   ),
                   child: Text(
-                    AppLocalizations.of(context)
-                        .translate('number_of_matches_title'),
+                    AppLocalizations.translate(context, 'number_of_matches_title',),
                     style: TextStyle(
                       fontSize: 36,
                       fontWeight: FontWeight.bold,

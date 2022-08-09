@@ -39,7 +39,7 @@ class UIMatch extends tournament.Match {
     return hasScore;
   }
 
-  UIMatch({this.matchSessions, id, name, isActive, order})
+  UIMatch({required this.matchSessions, id, name, isActive, order})
       : super(id, name, isActive, order);
 
   tournament.Match getParent() {

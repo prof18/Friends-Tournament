@@ -50,8 +50,7 @@ class PlayersAST extends StatelessWidget implements SetupPage {
                   bottom: MarginsRaw.small,
                 ),
                 child: Text(
-                  AppLocalizations.of(context)
-                      .translate('number_of_players_ast_title'),
+                  AppLocalizations.translate(context, 'number_of_players_ast_title',),
                   style: TextStyle(
                     fontSize: 36,
                     fontWeight: FontWeight.bold,
@@ -113,7 +112,7 @@ class PlayersAST extends StatelessWidget implements SetupPage {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.of(context).translate('match_with_one_player'),
+            AppLocalizations.translate(context, 'match_with_one_player',),
           ),
         ),
       );

@@ -23,8 +23,8 @@ class TextFieldTile extends StatefulWidget {
   final TextFieldWrapper textFieldWrapper;
 
   const TextFieldTile({
-    Key key,
-    @required this.textFieldWrapper,
+    Key? key,
+    required this.textFieldWrapper,
   })  : assert(textFieldWrapper != null),
         super(key: key);
 

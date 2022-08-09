@@ -22,9 +22,9 @@ import 'package:provider/provider.dart';
 
 class MatchSelectionTile extends StatelessWidget {
   final UIMatch match;
-  final AnimationController controller;
+  final AnimationController? controller;
 
-  MatchSelectionTile({Key key, this.match, this.controller}) : super(key: key);
+  MatchSelectionTile({Key? key, required this.match, this.controller}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class MatchSelectionTile extends StatelessWidget {
                 context,
                 listen: false,
               ).setCurrentMatch(match);
-              controller.fling(velocity: 1.0);
+              controller!.fling(velocity: 1.0);
             },
             child: Container(
               decoration: match.isSelected

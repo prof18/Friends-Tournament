@@ -9,9 +9,7 @@ import 'utils/test_utils.dart';
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  if (binding is LiveTestWidgetsFlutterBinding) {
-    binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
-  }
+  binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
 
   group('Tournament Test', () {
     testWidgets('Compute winner with 4 players, 2 ast and 2 matches',
@@ -61,12 +59,11 @@ void main() {
       await tester.tap(find.byKey(leaderboardBackButtonKey));
       await tester.pumpAndSettle();
 
-
       for (int i = 0; i < matches.length; i++) {
         final matchScore = matches[i];
         for (int j = 0; j < players.length; j++) {
           final player = players[j];
-          var score = matchScore[player];
+          var score = matchScore[player]!;
           print("Setting score: $score for player: $player");
           for (int k = 0; k < score; k++) {
             await tester.tap(find.byKey(getKeyForScoreIncrease(player)));
@@ -81,7 +78,6 @@ void main() {
         await Future<void>.delayed(Duration(seconds: 3));
         await tester.tap(find.byKey(saveFabKey));
         await tester.pumpAndSettle();
-
 
         await tester.tap(find.byKey(saveScoreOkKey));
         await tester.pumpAndSettle();
@@ -100,7 +96,7 @@ void main() {
 
       final finder = find.byKey(winnerTextKey);
       final widget = finder.evaluate().single.widget as Text;
-      final name = widget.data;
+      final name = widget.data!;
       expect(name.contains(player3Name), true);
 
       // Leaderboard check

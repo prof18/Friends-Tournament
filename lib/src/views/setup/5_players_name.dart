@@ -28,7 +28,7 @@ import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:provider/provider.dart';
 
 class PlayersName extends StatelessWidget implements SetupPage {
-  final List<TextFieldWrapper> _textFieldsList = new List<TextFieldWrapper>();
+  final List<TextFieldWrapper> _textFieldsList = <TextFieldWrapper>[];
   final Map<int, String> _savedValues = new HashMap();
 
   @override
@@ -74,10 +74,10 @@ class PlayersName extends StatelessWidget implements SetupPage {
       for (int i = 0; i < playersNumber; i++) {
         TextFieldWrapper textFieldWrapper = new TextFieldWrapper(
             TextEditingController(),
-            "${AppLocalizations.of(context).translate('player_label')} ${i + 1}");
+            "${AppLocalizations.translate(context, 'player_label',)} ${i + 1}");
         if (playersName.containsKey(i)) {
           textFieldWrapper.value = playersName[i];
-          textFieldWrapper.textEditingController.text = playersName[i];
+          textFieldWrapper.textEditingController.text = playersName[i]!;
         }
         _textFieldsList.add(textFieldWrapper);
       }
@@ -102,7 +102,7 @@ class PlayersName extends StatelessWidget implements SetupPage {
             bottom: MarginsRaw.small,
           ),
           child: Text(
-            AppLocalizations.of(context).translate('players_name_title'),
+            AppLocalizations.translate(context, 'players_name_title',),
             style: TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.bold,
@@ -198,7 +198,7 @@ class PlayersName extends StatelessWidget implements SetupPage {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.of(context).translate('player_name_duplicated'),
+            AppLocalizations.translate(context, 'player_name_duplicated',),
           ),
         ),
       );
@@ -213,8 +213,7 @@ class PlayersName extends StatelessWidget implements SetupPage {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.of(context)
-                .translate('player_name_empty_fields_message'),
+            AppLocalizations.translate(context, 'player_name_empty_fields_message',),
           ),
         ),
       );

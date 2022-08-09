@@ -23,7 +23,7 @@ import 'package:friends_tournament/src/views/tournament/session_player_tile.dart
 
 class SessionItemWidget extends StatelessWidget {
   SessionItemWidget({
-    @required this.session,
+    required this.session,
   });
 
   final UISession session;

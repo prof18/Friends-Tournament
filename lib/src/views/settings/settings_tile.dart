@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 
 class SettingsTile extends StatelessWidget {
-  final String title;
+  final String? title;
 
   SettingsTile(this.title);
 
@@ -36,7 +36,7 @@ class SettingsTile extends StatelessWidget {
           child: Padding(
             padding: Margins.regular,
             child: Text(
-              title,
+              title!,
               style: TextStyle(fontSize: 16),
             ),
           ),

@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 showEndTournamentDialog(
   BuildContext context,
   TournamentProvider provider,
-  String message,
+  String? message,
 ) {
   showDialog(
     context: context,
@@ -26,7 +26,7 @@ showEndTournamentDialog(
           ),
         ),
         title: provider.activeTournament != null
-            ? Text(provider.activeTournament.name)
+            ? Text(provider.activeTournament!.name)
             : Container(),
         content: Container(
           height: 250,
@@ -42,7 +42,7 @@ showEndTournamentDialog(
               Padding(
                 padding: const EdgeInsets.only(top: MarginsRaw.regular),
                 child: Text(
-                  message,
+                  message!,
                   style: TextStyle(fontSize: 18),
                 ),
               )
@@ -52,35 +52,34 @@ showEndTournamentDialog(
         actions: <Widget>[
           FlatButton(
             child:
-                Text(AppLocalizations.of(innerContext).translate('generic_cancel')),
+                Text(AppLocalizations.translate(context, 'generic_cancel',),),
             onPressed: () {
-              Navigator.of(innerContext)?.pop();
+              Navigator.of(innerContext).pop();
             },
           ),
           FlatButton(
             key: endTournamentKey,
-            child: Text(AppLocalizations.of(innerContext).translate('generic_ok')),
+            child: Text(AppLocalizations.translate(context, 'generic_ok',),),
             onPressed: () async {
               final tournament = provider.activeTournament;
               EndTournamentResult result = await provider.endTournament();
               if (result == EndTournamentResult.success) {
-                Navigator.of(innerContext)?.pushAndRemoveUntil(
+                Navigator.of(innerContext).pushAndRemoveUntil(
                     MaterialPageRoute(
                       builder: (context) => ChangeNotifierProvider(
-                        create: (context) => LeaderboardProvider(tournament),
+                        create: (context) => LeaderboardProvider(tournament!),
                         child: FinalScreen(),
                       ),
                     ),
                         (Route<dynamic> route) => false);
               } else {
-                Navigator.of(innerContext)?.pop();
+                Navigator.of(innerContext).pop();
                 showErrorDialog(innerContext);
               }
             },
           )
         ],
       );
-      ;
     },
   );
 }

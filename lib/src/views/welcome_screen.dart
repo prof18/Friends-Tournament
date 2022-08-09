@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -132,8 +131,7 @@ class Welcome extends StatelessWidget {
                               top: MarginsRaw.regular,
                             ),
                             child: Text(
-                              AppLocalizations.of(context).translate(
-                                  'friends_tournament_intro_message'),
+                              AppLocalizations.translate(context, 'friends_tournament_intro_message',),
                               style: GoogleFonts.nunito(
                                 textStyle: TextStyle(fontSize: 24),
                               ),
@@ -164,8 +162,7 @@ class Welcome extends StatelessWidget {
                                 );
                               },
                               child: Text(
-                                AppLocalizations.of(context)
-                                    .translate('start_tournament_btn'),
+                                AppLocalizations.translate(context, 'start_tournament_btn',),
                                 style: TextStyle(fontSize: 20),
                               ),
                             ),

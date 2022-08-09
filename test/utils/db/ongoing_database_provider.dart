@@ -32,7 +32,7 @@ class DatabaseProviderFromSQL implements DatabaseProvider {
   static final _instance = DatabaseProviderFromSQL._internal();
   static DatabaseProviderFromSQL get = _instance;
   bool isInitialized = false;
-  Database _db;
+  Database? _db;
 
   // private constructor
   DatabaseProviderFromSQL._internal();
@@ -78,13 +78,13 @@ class DatabaseProviderFromSQL implements DatabaseProvider {
   @override
   Future<Database> db() async {
     if (_db == null) await _init();
-    return _db;
+    return _db!;
   }
 
   @override
-  Future<void> closeDb() {
+  Future<void> closeDb() async {
     if (_db != null) {
-      _db.close();
+      _db!.close();
     }
   }
 }

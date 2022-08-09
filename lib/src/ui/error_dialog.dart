@@ -62,7 +62,7 @@ showErrorDialog(BuildContext context) {
           ),
         ),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             child: Text(
                 AppLocalizations.translate(context, 'restart_from_scratch',),
               ),

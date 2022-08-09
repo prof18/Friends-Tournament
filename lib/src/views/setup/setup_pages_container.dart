@@ -84,130 +84,128 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
 
   @override
   Widget build(BuildContext context) {
-    return _allPages == null
-        ? buildLoader()
-        : AnnotatedRegion(
-            value: SystemUiOverlayStyle(
-              statusBarColor: Colors.transparent,
-              statusBarIconBrightness: Brightness.dark,
-            ),
-            child: Scaffold(
-              body: SafeArea(
-                child: Container(
-                  child: Stack(
-                    alignment: AlignmentDirectional.bottomCenter,
-                    children: <Widget>[
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(bottom: MarginsRaw.xlarge),
-                        child: PageView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          controller: _pageController,
-                          onPageChanged: _onPageChanged,
-                          itemCount: _allPages.length,
-                          itemBuilder: (ctx, i) => _allPages[i],
-                        ),
-                      ),
-                      Stack(
-                        alignment: AlignmentDirectional.topStart,
-                        children: <Widget>[
-                          Visibility(
-                            visible: _currentPageIndex != 0,
-                            child: Align(
-                              alignment: Alignment.bottomLeft,
-                              child: InkWell(
-                                key: setupBackButtonKey,
-                                customBorder: CircleBorder(),
-                                onTap: () {
-                                  final page = _allPages[_currentPageIndex];
-                                  final canGoBack = page.onBackPressed(context);
-                                  if (canGoBack) {
-                                    FocusScope.of(context).unfocus();
-                                    _pageController.animateToPage(
-                                        _currentPageIndex -= 1,
-                                        duration: Duration(milliseconds: 250),
-                                        curve: Curves.ease);
-                                  }
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                      left: MarginsRaw.regular,
-                                      bottom: MarginsRaw.medium,
-                                      top: MarginsRaw.medium,
-                                      right: MarginsRaw.medium),
-                                  child: Text(
-                                    AppLocalizations.translate(context, 'generic_back',),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14.0,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: InkWell(
-                              key: setupNextButtonKey,
-                              customBorder: CircleBorder(),
-                              onTap: () {
-                                final page = _allPages[_currentPageIndex];
-                                final canGoForward =
-                                    page.onNextPressed(context);
-                                if (canGoForward) {
-                                  if (_currentPageIndex !=
-                                      _allPages.length - 1) {
-                                    FocusScope.of(context).unfocus();
-                                    _pageController.animateToPage(
-                                        _currentPageIndex += 1,
-                                        duration: Duration(milliseconds: 250),
-                                        curve: Curves.ease);
-                                  } else {
-                                    _showAlertDialog();
-                                  }
-                                }
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                    right: MarginsRaw.regular,
-                                    bottom: MarginsRaw.medium,
-                                    top: MarginsRaw.medium,
-                                    left: MarginsRaw.medium),
-                                child: Text(
-                                  AppLocalizations.translate(context, _currentPageIndex == _allPages.length - 1
-                                      ? "generic_done"
-                                      : "generic_next",),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14.0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            alignment: AlignmentDirectional.bottomCenter,
-                            margin: EdgeInsets.only(bottom: MarginsRaw.medium),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                for (int i = 0; i < _allPages.length; i++)
-                                  if (i == _currentPageIndex)
-                                    SlideDots(true)
-                                  else
-                                    SlideDots(false)
-                              ],
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+      ),
+      child: Scaffold(
+        body: SafeArea(
+          child: Container(
+            child: Stack(
+              alignment: AlignmentDirectional.bottomCenter,
+              children: <Widget>[
+                Padding(
+                  padding:
+                  const EdgeInsets.only(bottom: MarginsRaw.xlarge),
+                  child: PageView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    controller: _pageController,
+                    onPageChanged: _onPageChanged,
+                    itemCount: _allPages.length,
+                    itemBuilder: (ctx, i) => _allPages[i],
                   ),
                 ),
-              ),
+                Stack(
+                  alignment: AlignmentDirectional.topStart,
+                  children: <Widget>[
+                    Visibility(
+                      visible: _currentPageIndex != 0,
+                      child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: InkWell(
+                          key: setupBackButtonKey,
+                          customBorder: CircleBorder(),
+                          onTap: () {
+                            final page = _allPages[_currentPageIndex];
+                            final canGoBack = page.onBackPressed(context);
+                            if (canGoBack) {
+                              FocusScope.of(context).unfocus();
+                              _pageController.animateToPage(
+                                  _currentPageIndex -= 1,
+                                  duration: Duration(milliseconds: 250),
+                                  curve: Curves.ease);
+                            }
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                left: MarginsRaw.regular,
+                                bottom: MarginsRaw.medium,
+                                top: MarginsRaw.medium,
+                                right: MarginsRaw.medium),
+                            child: Text(
+                              AppLocalizations.translate(context, 'generic_back',),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: InkWell(
+                        key: setupNextButtonKey,
+                        customBorder: CircleBorder(),
+                        onTap: () {
+                          final page = _allPages[_currentPageIndex];
+                          final canGoForward =
+                          page.onNextPressed(context);
+                          if (canGoForward) {
+                            if (_currentPageIndex !=
+                                _allPages.length - 1) {
+                              FocusScope.of(context).unfocus();
+                              _pageController.animateToPage(
+                                  _currentPageIndex += 1,
+                                  duration: Duration(milliseconds: 250),
+                                  curve: Curves.ease);
+                            } else {
+                              _showAlertDialog();
+                            }
+                          }
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              right: MarginsRaw.regular,
+                              bottom: MarginsRaw.medium,
+                              top: MarginsRaw.medium,
+                              left: MarginsRaw.medium),
+                          child: Text(
+                            AppLocalizations.translate(context, _currentPageIndex == _allPages.length - 1
+                                ? "generic_done"
+                                : "generic_next",),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      alignment: AlignmentDirectional.bottomCenter,
+                      margin: EdgeInsets.only(bottom: MarginsRaw.medium),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          for (int i = 0; i < _allPages.length; i++)
+                            if (i == _currentPageIndex)
+                              SlideDots(true)
+                            else
+                              SlideDots(false)
+                        ],
+                      ),
+                    ),
+                  ],
+                )
+              ],
             ),
-          );
+          ),
+        ),
+      ),
+    );
   }
 
   Widget buildLoader() {
@@ -238,7 +236,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
             AppLocalizations.translate(context, 'tournament_building_message',),
           ),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                   AppLocalizations.translate(context, 'generic_cancel',),
                   ),
@@ -246,7 +244,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
                 Navigator.of(context).pop();
               },
             ),
-            FlatButton(
+            TextButton(
               key: finishSetupProceedButtonKey,
               child: Text(
                 AppLocalizations.translate(context, 'tournament_building_go_button',),

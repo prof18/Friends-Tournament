@@ -140,14 +140,11 @@ class Welcome extends StatelessWidget {
                           Padding(
                             padding:
                                 const EdgeInsets.only(top: MarginsRaw.regular),
-                            child: RaisedButton(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      MarginsRaw.borderRadius),
-                                  side: BorderSide(color: AppColors.blue)),
-                              color: AppColors.blue,
-                              textColor: Colors.white,
-                              padding: Margins.regular,
+                            child: ElevatedButton(
+                              child: Text(
+                                AppLocalizations.translate(context, 'start_tournament_btn',),
+                                style: TextStyle(fontSize: 20),
+                              ),
                               onPressed: () {
                                 Navigator.push(
                                   context,
@@ -161,11 +158,16 @@ class Welcome extends StatelessWidget {
                                   ),
                                 );
                               },
-                              child: Text(
-                                AppLocalizations.translate(context, 'start_tournament_btn',),
-                                style: TextStyle(fontSize: 20),
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        MarginsRaw.borderRadius),
+                                    side: BorderSide(color: AppColors.blue)),
+                                padding: Margins.regular,
+                                primary: AppColors.blue,
+                                textStyle: TextStyle(color: Colors.white)
                               ),
-                            ),
+                            )
                           ),
                         ],
                       ),

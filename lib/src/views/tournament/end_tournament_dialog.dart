@@ -50,14 +50,14 @@ showEndTournamentDialog(
           ),
         ),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             child:
                 Text(AppLocalizations.translate(context, 'generic_cancel',),),
             onPressed: () {
               Navigator.of(innerContext).pop();
             },
           ),
-          FlatButton(
+          TextButton(
             key: endTournamentKey,
             child: Text(AppLocalizations.translate(context, 'generic_ok',),),
             onPressed: () async {

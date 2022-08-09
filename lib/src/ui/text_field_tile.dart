@@ -25,8 +25,7 @@ class TextFieldTile extends StatefulWidget {
   const TextFieldTile({
     Key? key,
     required this.textFieldWrapper,
-  })  : assert(textFieldWrapper != null),
-        super(key: key);
+  })  : super(key: key);
 
   @override
   State<TextFieldTile> createState() {

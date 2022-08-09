@@ -145,7 +145,10 @@ class _FinalScreenState extends State<FinalScreen> {
                             right: MarginsRaw.regular,
                             bottom: MarginsRaw.regular),
                         child: Text(
-                          AppLocalizations.translate(context, 'winner_title',),
+                          AppLocalizations.translate(
+                            context,
+                            'winner_title',
+                          ),
                           style: TextStyle(fontSize: 28),
                         ),
                       ),
@@ -161,8 +164,10 @@ class _FinalScreenState extends State<FinalScreen> {
                               child: Text(
                                 provider.leaderboardPlayers.isNotEmpty
                                     ? "${provider.leaderboardPlayers.first.name} 🎉"
-                                    : AppLocalizations.translate(context, 'winner_error_message',),
-
+                                    : AppLocalizations.translate(
+                                        context,
+                                        'winner_error_message',
+                                      ),
                                 style: TextStyle(
                                     fontSize: 36, fontWeight: FontWeight.bold),
                                 key: winnerTextKey,
@@ -184,7 +189,7 @@ class _FinalScreenState extends State<FinalScreen> {
                               child: Padding(
                                 padding: const EdgeInsets.only(
                                     right: MarginsRaw.regular),
-                                child: RaisedButton(
+                                child: ElevatedButton(
                                   key: tournamentEndedLeaderboardButtonKey,
                                   onPressed: () {
                                     Navigator.push(
@@ -203,23 +208,30 @@ class _FinalScreenState extends State<FinalScreen> {
                                       ),
                                     );
                                   },
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        MarginsRaw.borderRadius),
-                                    side: BorderSide(color: AppColors.blue),
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          MarginsRaw.borderRadius),
+                                      side: BorderSide(color: AppColors.blue),
+                                    ),
+                                    primary: AppColors.blue,
+                                    textStyle: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                    padding: Margins.regular,
                                   ),
-                                  color: AppColors.blue,
-                                  textColor: Colors.white,
-                                  padding: Margins.regular,
                                   child: Text(
-                                    AppLocalizations.translate(context, 'leaderboard',),
+                                    AppLocalizations.translate(
+                                      context,
+                                      'leaderboard',
+                                    ),
                                     style: TextStyle(fontSize: 16),
                                   ),
                                 ),
                               ),
                             ),
                             Expanded(
-                              child: RaisedButton(
+                              child: ElevatedButton(
                                 onPressed: () {
                                   Navigator.push(
                                     context,
@@ -233,16 +245,23 @@ class _FinalScreenState extends State<FinalScreen> {
                                     ),
                                   );
                                 },
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      MarginsRaw.borderRadius),
-                                  side: BorderSide(color: AppColors.blue),
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        MarginsRaw.borderRadius),
+                                    side: BorderSide(color: AppColors.blue),
+                                  ),
+                                  primary: AppColors.blue,
+                                  textStyle: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                  padding: Margins.regular,
                                 ),
-                                color: AppColors.blue,
-                                textColor: Colors.white,
-                                padding: Margins.regular,
                                 child: Text(
-                                  AppLocalizations.translate(context, 'new_tournament_button',),
+                                  AppLocalizations.translate(
+                                    context,
+                                    'new_tournament_button',
+                                  ),
                                   style: TextStyle(fontSize: 16),
                                 ),
                               ),

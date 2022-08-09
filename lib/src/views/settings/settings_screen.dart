@@ -31,9 +31,7 @@ class SettingsScreen extends StatelessWidget {
   }
 
   static void _openURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    }
+    await launchUrl(Uri.parse(url));
   }
 
   @override
@@ -130,7 +128,7 @@ class SettingsScreen extends StatelessWidget {
                               ).black,
                               scaffoldBackgroundColor: Colors.white,
                               appBarTheme: AppBarTheme(
-                                brightness: Brightness.light,
+                                systemOverlayStyle: SystemUiOverlayStyle.light,
                               )),
                           child: LicensePage(
                             applicationName: "Friends Tournament",

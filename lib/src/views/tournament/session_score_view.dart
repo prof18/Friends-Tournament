@@ -183,7 +183,7 @@ class _SessionScoreViewState extends State<SessionScoreView> {
             ),
           ),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                   AppLocalizations.translate(context, 'generic_cancel',),
                   ),
@@ -191,7 +191,7 @@ class _SessionScoreViewState extends State<SessionScoreView> {
                 Navigator.of(context).pop();
               },
             ),
-            FlatButton(
+            TextButton(
               key: saveScoreOkKey,
               child: Text(AppLocalizations.translate(context, 'generic_ok',),),
               onPressed: () async {

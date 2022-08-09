@@ -89,7 +89,7 @@ Future<void> startAppAndSetTournamentName(WidgetTester tester, String tournament
   await tester.pumpAndSettle();
 
   // Welcome page
-  await tester.tap(find.byType(RaisedButton));
+  await tester.tap(find.byType(ElevatedButton));
   await tester.pumpAndSettle();
 
   // Tournament Name

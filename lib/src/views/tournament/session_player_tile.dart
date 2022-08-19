@@ -32,8 +32,8 @@ class SessionPlayerTile extends StatelessWidget {
   final double buttonSize = 20;
   final double iconSize = 16;
 
-  SessionPlayerTile({
-    key: Key,
+  const SessionPlayerTile({
+    Key? key,
     required this.player,
     required this.session,
     this.step = 1,
@@ -54,7 +54,7 @@ class SessionPlayerTile extends StatelessWidget {
                   top: MarginsRaw.regular, left: MarginsRaw.regular),
               child: Text(
                 player.name,
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
             ),
             Row(
@@ -68,11 +68,11 @@ class SessionPlayerTile extends StatelessWidget {
                       children: [
                         Text(
                           player.score.toString(),
-                          style: TextStyle(fontSize: 32),
+                          style: const TextStyle(fontSize: 32),
                         ),
                         Text(
                           AppLocalizations.translate(context, 'score',),
-                          style: TextStyle(fontSize: 12),
+                          style: const TextStyle(fontSize: 12),
                         )
                       ],
                     ),
@@ -90,7 +90,7 @@ class SessionPlayerTile extends StatelessWidget {
                           child: GestureDetector(
                             key: getKeyForScoreDecrease(player.name),
                             onTap: () => _decrementScore(context),
-                            child: Icon(
+                            child: const Icon(
                               Icons.remove,
                               size: 36,
                               color: Colors.black38,
@@ -103,7 +103,7 @@ class SessionPlayerTile extends StatelessWidget {
                         child: GestureDetector(
                           key: getKeyForScoreIncrease(player.name),
                           onTap: () => _incrementScore(context),
-                          child: Icon(
+                          child: const Icon(
                             Icons.add,
                             size: 36,
                             color: Colors.black,
@@ -122,7 +122,6 @@ class SessionPlayerTile extends StatelessWidget {
   }
 
   _incrementScore(BuildContext context) {
-    print("click increment");
     Provider.of<TournamentProvider>(
       context,
       listen: false,

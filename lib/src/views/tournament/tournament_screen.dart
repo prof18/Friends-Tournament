@@ -27,15 +27,15 @@ import 'package:friends_tournament/src/views/tournament/session_score_view.dart'
 import 'package:provider/provider.dart';
 
 class TournamentScreen extends StatefulWidget {
-  TournamentScreen();
+  const TournamentScreen({Key? key}) : super(key: key);
 
   @override
-  _TournamentScreenState createState() => _TournamentScreenState();
+  State<TournamentScreen> createState() => _TournamentScreenState();
 }
 
 class _TournamentScreenState extends State<TournamentScreen>
     with SingleTickerProviderStateMixin {
- late AnimationController _controller;
+  late AnimationController _controller;
 
   String? matchName;
 
@@ -59,7 +59,7 @@ class _TournamentScreenState extends State<TournamentScreen>
 
     tournamentProvider.addListener(() {
       if (tournamentProvider.showTournamentInitError) {
-        showErrorDialog(context);
+        showErrorDialog(context, mounted);
         tournamentProvider.resetErrorTrigger();
       }
 
@@ -68,9 +68,9 @@ class _TournamentScreenState extends State<TournamentScreen>
           : null;
 
       if (matchName == null) {
-        this.matchName = newMatchName;
-      } else if (newMatchName != this.matchName) {
-        this.matchName = newMatchName;
+        matchName = newMatchName;
+      } else if (newMatchName != matchName) {
+        matchName = newMatchName;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Match \"$matchName\" selected."),

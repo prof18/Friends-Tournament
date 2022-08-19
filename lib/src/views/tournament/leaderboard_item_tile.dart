@@ -23,7 +23,11 @@ class LeaderboardItemTile extends StatelessWidget {
   final UIPlayer uiPlayer;
   final int position;
 
-  LeaderboardItemTile({required this.uiPlayer, required this.position});
+  const LeaderboardItemTile({
+    Key? key,
+    required this.uiPlayer,
+    required this.position,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +52,7 @@ class LeaderboardItemTile extends StatelessWidget {
               ),
               child: Text(
                 position.toString(),
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                 ),
                 key: getKeyForLeaderboardPlayerPosition(uiPlayer.name),
@@ -58,17 +62,17 @@ class LeaderboardItemTile extends StatelessWidget {
               padding: Margins.regular,
               child: Text(
                 uiPlayer.name,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 24,
                 ),
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Padding(
               padding: Margins.regular,
               child: Text(
                 uiPlayer.score.toString(),
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 24,
                 ),
                 key: getKeyForLeaderboardPlayerScore(uiPlayer.name),

@@ -18,12 +18,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/provider/setup_provider.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
-import 'package:friends_tournament/src/ui/setup_counter_widget.dart';
+import 'package:friends_tournament/src/ui/text_field_decoration.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:provider/provider.dart';
 
-class PlayersNumber extends StatelessWidget implements SetupPage {
+class TournamentName extends StatelessWidget implements SetupPage {
+  final TextEditingController _tournamentController =
+      TextEditingController();
+
+  TournamentName({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +44,7 @@ class PlayersNumber extends StatelessWidget implements SetupPage {
                   child: Padding(
                     padding: const EdgeInsets.only(top: MarginsRaw.regular),
                     child: SvgPicture.asset(
-                      'assets/players_art.svg',
+                      'assets/intro-art.svg',
                     ),
                   ),
                 ),
@@ -50,8 +54,8 @@ class PlayersNumber extends StatelessWidget implements SetupPage {
                     bottom: MarginsRaw.small,
                   ),
                   child: Text(
-                    AppLocalizations.translate(context, 'number_of_players_title',),
-                    style: TextStyle(
+                    AppLocalizations.translate(context, 'tournament_name_title',),
+                    style: const TextStyle(
                       fontSize: 36,
                       fontWeight: FontWeight.bold,
                     ),
@@ -74,19 +78,19 @@ class PlayersNumber extends StatelessWidget implements SetupPage {
                     width: 60,
                   ),
                 ),
-                Consumer<SetupProvider>(
-                  builder: (context, provider, child) {
-                    return SetupCounterWidget(
-                      minValue: 2,
-                      currentValue: provider.playersNumber,
-                      onIncrease: (newValue) {
-                        provider.setPlayersNumber(newValue);
-                      },
-                      onDecrease: (newValue) {
-                        provider.setPlayersNumber(newValue);
-                      },
-                    );
-                  },
+                Material(
+                  elevation: MarginsRaw.elevation,
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(MarginsRaw.borderRadius),
+                  ),
+                  child: TextField(
+                    controller: _tournamentController,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    decoration: getTextFieldDecoration(
+                      AppLocalizations.translate(context, 'tournament_name_title',),
+                    ),
+                  ),
                 ),
                 Expanded(
                   flex: 4,
@@ -102,23 +106,25 @@ class PlayersNumber extends StatelessWidget implements SetupPage {
 
   @override
   bool onBackPressed(BuildContext context) {
+    // Nothing to do here!
     return true;
   }
 
   @override
   bool onNextPressed(BuildContext context) {
-    final provider = Provider.of<SetupProvider>(context, listen: false);
-    if (provider.playersNumber != 0) {
-      return true;
-    } else {
+    if (_tournamentController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.translate(context, 'player_name_empty_fields',),
+            AppLocalizations.translate(context, 'tournament_name_empty_fields_message',),
           ),
         ),
       );
       return false;
     }
+    Provider.of<SetupProvider>(context, listen: false)
+        .setTournamentName(_tournamentController.text);
+
+    return true;
   }
 }

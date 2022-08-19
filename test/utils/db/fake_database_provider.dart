@@ -24,7 +24,6 @@ import 'package:friends_tournament/src/data/database/dao/tournament_match_dao.da
 import 'package:friends_tournament/src/data/database/dao/tournament_player_dao.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class FakeDatabaseProvider implements DatabaseProvider {

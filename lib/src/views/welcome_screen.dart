@@ -26,18 +26,20 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class Welcome extends StatelessWidget {
+  const Welcome({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: AnnotatedRegion(
-          value: SystemUiOverlayStyle(
+          value: const SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
             statusBarIconBrightness: Brightness.dark,
           ),
           child: Padding(
             padding: Margins.regular,
-            child: Container(
+            child: SizedBox(
               width: double.infinity,
               height: double.infinity,
               child: Column(
@@ -53,10 +55,10 @@ class Welcome extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SettingsScreen()),
+                                  builder: (context) => const SettingsScreen()),
                             );
                           },
-                          child: Icon(
+                          child: const Icon(
                             Icons.settings,
                             color: Colors.black38,
                           ),
@@ -93,7 +95,7 @@ class Welcome extends StatelessWidget {
                                 Text(
                                   "Friends",
                                   style: GoogleFonts.nunito(
-                                    textStyle: TextStyle(
+                                    textStyle: const TextStyle(
                                       fontSize: 42,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -102,7 +104,7 @@ class Welcome extends StatelessWidget {
                                 Text(
                                   "Tournament",
                                   style: GoogleFonts.nunito(
-                                    textStyle: TextStyle(
+                                    textStyle: const TextStyle(
                                       fontSize: 42,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -131,44 +133,50 @@ class Welcome extends StatelessWidget {
                               top: MarginsRaw.regular,
                             ),
                             child: Text(
-                              AppLocalizations.translate(context, 'friends_tournament_intro_message',),
+                              AppLocalizations.translate(
+                                context,
+                                'friends_tournament_intro_message',
+                              ),
                               style: GoogleFonts.nunito(
-                                textStyle: TextStyle(fontSize: 24),
+                                textStyle: const TextStyle(fontSize: 24),
                               ),
                             ),
                           ),
                           Padding(
-                            padding:
-                                const EdgeInsets.only(top: MarginsRaw.regular),
-                            child: ElevatedButton(
-                              child: Text(
-                                AppLocalizations.translate(context, 'start_tournament_btn',),
-                                style: TextStyle(fontSize: 20),
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return ChangeNotifierProvider(
-                                        create: (context) => SetupProvider(),
-                                        child: SetupPagesContainer(),
-                                      );
-                                    },
+                              padding: const EdgeInsets.only(
+                                  top: MarginsRaw.regular),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return ChangeNotifierProvider(
+                                          create: (context) => SetupProvider(),
+                                          child: const SetupPagesContainer(),
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            MarginsRaw.borderRadius),
+                                        side:
+                                            BorderSide(color: AppColors.blue)),
+                                    padding: Margins.regular,
+                                    primary: AppColors.blue,
+                                    textStyle:
+                                        const TextStyle(color: Colors.white)),
+                                child: Text(
+                                  AppLocalizations.translate(
+                                    context,
+                                    'start_tournament_btn',
                                   ),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        MarginsRaw.borderRadius),
-                                    side: BorderSide(color: AppColors.blue)),
-                                padding: Margins.regular,
-                                primary: AppColors.blue,
-                                textStyle: TextStyle(color: Colors.white)
-                              ),
-                            )
-                          ),
+                                  style: const TextStyle(fontSize: 20),
+                                ),
+                              )),
                         ],
                       ),
                     ),

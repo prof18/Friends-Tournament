@@ -44,7 +44,7 @@ class SetupRepository {
   // Implement singleton
   // To get back it, simple call: MyClass myObj = new MyClass();
   /// -------
-  static final SetupRepository _singleton = new SetupRepository._internal();
+  static final SetupRepository _singleton = SetupRepository._internal();
 
   late LocalDataSource localDataSource;
 
@@ -57,7 +57,7 @@ class SetupRepository {
 
   /// -------
 
-  final _random = new Random();
+  final _random = Random();
 
   /* *************
   *
@@ -135,10 +135,10 @@ class SetupRepository {
       throw TooMuchPlayersASTException();
     }
 
-    this._playersNumber = playersNumber;
-    this._playersAstNumber = playersAstNumber;
-    this._matchesNumber = matchesNumber;
-    this._tournamentName = tournamentName;
+    _playersNumber = playersNumber;
+    _playersAstNumber = playersAstNumber;
+    _matchesNumber = matchesNumber;
+    _tournamentName = tournamentName;
 
     debugPrint("*** Starting Tournament Generation");
     debugPrint("Players number -> $playersNumber");
@@ -148,7 +148,7 @@ class SetupRepository {
     debugPrint("players Name -> $playersName");
     debugPrint("matches name -> $matchesName");
 
-    this._tournament = Tournament(
+    _tournament = Tournament(
         generateTournamentId(_tournamentName),
         _tournamentName,
         _playersNumber,
@@ -221,7 +221,7 @@ class SetupRepository {
   /// and the [Session] is saved in the [playerSessionList]
   ///
   void _generateTournament() {
-    matches.forEach((match) {
+    for (var match in matches) {
       // number of sessions for the same match
       int sessionsNumber = (_playersNumber / _playersAstNumber).ceil();
       var currentSessionPlayers = <String>[];
@@ -234,7 +234,6 @@ class SetupRepository {
         matchSessionList.add(matchSession);
         for (int j = 0; j < _playersAstNumber; j++) {
           while (true) {
-            print("Inside while");
             int playerIndex = _random.nextInt(_playersNumber);
             final playerCandidate = players[playerIndex];
             if (currentSessionPlayers.contains(playerCandidate.id)) {
@@ -252,12 +251,12 @@ class SetupRepository {
           }
         }
       }
-    });
+    }
   }
 
   @visibleForTesting
   Future save() async {
-    print("Launching the save process");
+    debugPrint("Launching the save process");
 
     final dao = TournamentDao();
     final tournament = await localDataSource.getActiveTournament(dao);
@@ -270,55 +269,55 @@ class SetupRepository {
 
     // save tournament
     localDataSource.insertToBatch(_tournament, TournamentDao());
-    print(_tournament.toString());
+    debugPrint(_tournament.toString());
 
     var playerDao = PlayerDao();
-    players.forEach((player) {
+    for (var player in players) {
       localDataSource.insertIgnoreToBatch(player, playerDao);
-      print(player.toString());
-    });
+      debugPrint(player.toString());
+    }
 
     // save sessions
     var sessionDao = SessionDao();
-    sessions.forEach((session) {
+    for (var session in sessions) {
       localDataSource.insertToBatch(session, sessionDao);
-      print(session.toString());
-    });
+      debugPrint(session.toString());
+    }
 
     // save matches
     var matchDao = MatchDao();
-    matches.forEach((match) {
+    for (var match in matches) {
       localDataSource.insertToBatch(match, matchDao);
-      print(match.toString());
-    });
+      debugPrint(match.toString());
+    }
 
     // save tournament player
     var tournamentPlayerDao = TournamentPlayerDao();
-    _tournamentPlayerList.forEach((tournamentPlayer) {
+    for (var tournamentPlayer in _tournamentPlayerList) {
       localDataSource.insertToBatch(tournamentPlayer, tournamentPlayerDao);
-      print(tournamentPlayer.toString());
-    });
+      debugPrint(tournamentPlayer.toString());
+    }
 
     // save player session
     var playerSessionDao = PlayerSessionDao();
-    playerSessionList.forEach((playerSession) {
+    for (var playerSession in playerSessionList) {
       localDataSource.insertToBatch(playerSession, playerSessionDao);
-      print(playerSession.toString());
-    });
+      debugPrint(playerSession.toString());
+    }
 
     // save match session
     var matchSessionDao = MatchSessionDao();
-    matchSessionList.forEach((matchSession) {
+    for (var matchSession in matchSessionList) {
       localDataSource.insertToBatch(matchSession, matchSessionDao);
-      print(matchSession.toString());
-    });
+      debugPrint(matchSession.toString());
+    }
 
     // save tournament match
     var tournamentMatchDao = TournamentMatchDao();
-    _tournamentMatchList.forEach((tournamentMatch) {
-      print(tournamentMatch.toString());
+    for (var tournamentMatch in _tournamentMatchList) {
+      debugPrint(tournamentMatch.toString());
       localDataSource.insertToBatch(tournamentMatch, tournamentMatchDao);
-    });
+    }
 
     await localDataSource.flushBatch();
   }

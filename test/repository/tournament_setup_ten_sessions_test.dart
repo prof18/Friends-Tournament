@@ -29,10 +29,10 @@ void main() {
     LocalDataSource localDataSource = LocalDataSource(databaseProvider);
     final SetupRepository setupRepository = SetupRepository(localDataSource);
 
-   final int playersNumber = 20;
-   final int playersAstNumber = 2;
-   final int matchesNumber = 2;
-   final String tournamentName = "Test Tournament";
+   const int playersNumber = 20;
+   const int playersAstNumber = 2;
+   const int matchesNumber = 2;
+   const String tournamentName = "Test Tournament";
    final Map<int, String> playersName = {
       0: "Player1",
       1: "Player2",

@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:friends_tournament/main.dart' as app;
 import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/tournament/session_player_tile.dart';
 
-import '../../lib/main.dart' as app;
-
-final String tournamentName = "TournamentName";
-final String player1Name = "Player1";
-final String player2Name = "Player2";
-final String player3Name = "Player3";
-final String player4Name = "Player4";
-final String match1Name = "Match1";
-final String match2Name = "Match2";
-final String round1Name = "Round 1";
-final String round2Name = "Round 2";
+const String tournamentName = "TournamentName";
+const String player1Name = "Player1";
+const String player2Name = "Player2";
+const String player3Name = "Player3";
+const String player4Name = "Player4";
+const String match1Name = "Match1";
+const String match2Name = "Match2";
+const String round1Name = "Round 1";
+const String round2Name = "Round 2";
 
 Future<void> setupTournament(
-    WidgetTester tester,
-    String tournamentName,
-    List<String> players,
-    List<String> matches,
-    int playerAtTheSameTime,
-    ) async {
+  WidgetTester tester,
+  String tournamentName,
+  List<String> players,
+  List<String> matches,
+  int playerAtTheSameTime,
+) async {
   // Start app
   await startAppAndSetTournamentName(tester, tournamentName);
 
@@ -66,7 +65,8 @@ Future<void> setupTournament(
   await tester.pumpAndSettle();
 }
 
-Future<void> setupNumberOfPlayerAtSameTime(int playerAtTheSameTime, WidgetTester tester) async {
+Future<void> setupNumberOfPlayerAtSameTime(
+    int playerAtTheSameTime, WidgetTester tester) async {
   for (int i = 0; i < playerAtTheSameTime - 2; i++) {
     await tester.tap(find.byKey(setupNextButtonKey));
     await tester.pumpAndSettle();
@@ -84,7 +84,8 @@ Future<void> setNumberOfPlayers(int players, WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> startAppAndSetTournamentName(WidgetTester tester, String tournamentName) async {
+Future<void> startAppAndSetTournamentName(
+    WidgetTester tester, String tournamentName) async {
   app.main();
   await tester.pumpAndSettle();
 
@@ -99,19 +100,19 @@ Future<void> startAppAndSetTournamentName(WidgetTester tester, String tournament
 }
 
 Future<void> checkTournament(
-    WidgetTester tester,
-    List<String> matches,
-    List<String> rounds,
-    List<String> players,
-    ) async {
+  WidgetTester tester,
+  List<String> matches,
+  List<String> rounds,
+  List<String> players,
+) async {
   // Match view button
   await tester.tap(find.byKey(matchViewButtonKey));
   await tester.pumpAndSettle();
 
   // Match Name
-  matches.forEach((match) {
+  for (var match in matches) {
     expect(find.text(match), findsWidgets);
-  });
+  }
 
   // Close view
   await tester.tap(find.byKey(matchViewButtonKey));
@@ -128,8 +129,8 @@ Future<void> checkTournament(
     expect(score, 0);
   }
 
-  players.forEach((player) {
+  for (var player in players) {
     // Players name are present
     expect(find.text(player), findsOneWidget);
-  });
+  }
 }

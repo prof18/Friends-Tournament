@@ -25,19 +25,20 @@ class SetupCounterWidget extends StatelessWidget {
   final Function(int value)? onIncrease;
   final Function(int value)? onDecrease;
 
-  SetupCounterWidget({
+  const SetupCounterWidget({
+    Key? key,
     this.minValue = 0,
     this.maxValue,
     this.currentValue,
     this.onIncrease,
     this.onDecrease,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Material(
       elevation: MarginsRaw.elevation,
-      borderRadius: BorderRadius.all(
+      borderRadius: const BorderRadius.all(
         Radius.circular(MarginsRaw.borderRadius),
       ),
       child: Padding(
@@ -51,7 +52,7 @@ class SetupCounterWidget extends StatelessWidget {
                 padding: Margins.regular,
                 child: Text(
                   currentValue.toString(),
-                  style: TextStyle(fontSize: 28),
+                  style: const TextStyle(fontSize: 28),
                 ),
               ),
             ),
@@ -66,7 +67,7 @@ class SetupCounterWidget extends StatelessWidget {
                       child: GestureDetector(
                         key: counterWidgetMinusButton,
                         onTap: () => onDecrease!(currentValue! - 1),
-                        child: Icon(
+                        child: const Icon(
                           Icons.remove,
                           size: 36,
                           color: Colors.black38,
@@ -75,13 +76,14 @@ class SetupCounterWidget extends StatelessWidget {
                     ),
                   ),
                   Visibility(
-                    visible: maxValue != null ? currentValue! < maxValue! : true,
+                    visible:
+                        maxValue != null ? currentValue! < maxValue! : true,
                     child: Padding(
                       padding: const EdgeInsets.only(left: MarginsRaw.small),
                       child: GestureDetector(
                         key: counterWidgetPlusButton,
                         onTap: () => onIncrease!(currentValue! + 1),
-                        child: Icon(
+                        child: const Icon(
                           Icons.add,
                           size: 36,
                           color: Colors.black,

@@ -9,4 +9,4 @@ DatabaseProvider _databaseProvider = DatabaseProviderImpl.get;
 LocalDataSource _localDataSource = LocalDataSource(_databaseProvider);
 
 final tournamentRepository = TournamentRepository(_localDataSource);
-final SetupRepository setupRepository = new SetupRepository(_localDataSource);
+final SetupRepository setupRepository = SetupRepository(_localDataSource);

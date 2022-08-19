@@ -29,10 +29,10 @@ import 'package:provider/provider.dart';
 class LeaderboardScreen extends StatefulWidget {
   final bool? isFromFinalScreen;
 
-  LeaderboardScreen({this.isFromFinalScreen});
+  const LeaderboardScreen({Key? key, this.isFromFinalScreen}) : super(key: key);
 
   @override
-  _LeaderboardScreenState createState() => _LeaderboardScreenState();
+  State<LeaderboardScreen> createState() => _LeaderboardScreenState();
 }
 
 class _LeaderboardScreenState extends State<LeaderboardScreen> {
@@ -92,7 +92,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                                 const EdgeInsets.only(top: MarginsRaw.regular),
                             child: Text(
                               AppLocalizations.translate(context, 'leaderboard',),
-                              style: TextStyle(fontSize: 28),
+                              style: const TextStyle(fontSize: 28),
                             ),
                           ),
                         ],

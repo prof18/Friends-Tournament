@@ -24,21 +24,23 @@ import 'package:friends_tournament/src/ui/error_dialog.dart';
 import 'package:friends_tournament/src/ui/slide_dots.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';
-import 'package:friends_tournament/src/views/setup/1_tournament_name.dart';
-import 'package:friends_tournament/src/views/setup/2_player_number.dart';
-import 'package:friends_tournament/src/views/setup/3_player_ast_number.dart';
-import 'package:friends_tournament/src/views/setup/5_players_name.dart';
-import 'package:friends_tournament/src/views/setup/6_matches_name.dart';
+import 'package:friends_tournament/src/views/setup/_1_tournament_name.dart';
+import 'package:friends_tournament/src/views/setup/_2_player_number.dart';
+import 'package:friends_tournament/src/views/setup/_3_player_ast_number.dart';
+import 'package:friends_tournament/src/views/setup/_5_players_name.dart';
+import 'package:friends_tournament/src/views/setup/_6_matches_name.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
 import 'package:provider/provider.dart';
 
-import '4_matches_number.dart';
+import '_4_matches_number.dart';
 
 /// Adapted from https://github.com/CODEHOMIE/Flutter-Onboarding-UI-Concept/blob/master/lib/ui_view/slider_layout_view.dart
 class SetupPagesContainer extends StatefulWidget {
+  const SetupPagesContainer({Key? key}) : super(key: key);
+
   @override
-  _SetupPagesContainerState createState() => _SetupPagesContainerState();
+  State<SetupPagesContainer> createState() => _SetupPagesContainerState();
 }
 
 class _SetupPagesContainerState extends State<SetupPagesContainer>
@@ -49,11 +51,11 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
   final TextEditingController tournamentTextController =
       TextEditingController();
 
-  List<SetupPage> _allPages = [
+  final List<SetupPage> _allPages = [
     TournamentName(),
-    PlayersNumber(),
-    PlayersAST(),
-    MatchesNumber(),
+    const PlayersNumber(),
+    const PlayersAST(),
+    const MatchesNumber(),
     PlayersName(),
     MatchesName(),
   ];
@@ -65,7 +67,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 450),
+      duration: const Duration(milliseconds: 450),
     );
   }
 
@@ -85,98 +87,56 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion(
-      value: SystemUiOverlayStyle(
+      value: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.dark,
       ),
       child: Scaffold(
         body: SafeArea(
-          child: Container(
-            child: Stack(
-              alignment: AlignmentDirectional.bottomCenter,
-              children: <Widget>[
-                Padding(
-                  padding:
-                  const EdgeInsets.only(bottom: MarginsRaw.xlarge),
-                  child: PageView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    controller: _pageController,
-                    onPageChanged: _onPageChanged,
-                    itemCount: _allPages.length,
-                    itemBuilder: (ctx, i) => _allPages[i],
-                  ),
+          child: Stack(
+            alignment: AlignmentDirectional.bottomCenter,
+            children: <Widget>[
+              Padding(
+                padding:
+                const EdgeInsets.only(bottom: MarginsRaw.xlarge),
+                child: PageView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  controller: _pageController,
+                  onPageChanged: _onPageChanged,
+                  itemCount: _allPages.length,
+                  itemBuilder: (ctx, i) => _allPages[i],
                 ),
-                Stack(
-                  alignment: AlignmentDirectional.topStart,
-                  children: <Widget>[
-                    Visibility(
-                      visible: _currentPageIndex != 0,
-                      child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: InkWell(
-                          key: setupBackButtonKey,
-                          customBorder: CircleBorder(),
-                          onTap: () {
-                            final page = _allPages[_currentPageIndex];
-                            final canGoBack = page.onBackPressed(context);
-                            if (canGoBack) {
-                              FocusScope.of(context).unfocus();
-                              _pageController.animateToPage(
-                                  _currentPageIndex -= 1,
-                                  duration: Duration(milliseconds: 250),
-                                  curve: Curves.ease);
-                            }
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                left: MarginsRaw.regular,
-                                bottom: MarginsRaw.medium,
-                                top: MarginsRaw.medium,
-                                right: MarginsRaw.medium),
-                            child: Text(
-                              AppLocalizations.translate(context, 'generic_back',),
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomRight,
+              ),
+              Stack(
+                alignment: AlignmentDirectional.topStart,
+                children: <Widget>[
+                  Visibility(
+                    visible: _currentPageIndex != 0,
+                    child: Align(
+                      alignment: Alignment.bottomLeft,
                       child: InkWell(
-                        key: setupNextButtonKey,
-                        customBorder: CircleBorder(),
+                        key: setupBackButtonKey,
+                        customBorder: const CircleBorder(),
                         onTap: () {
                           final page = _allPages[_currentPageIndex];
-                          final canGoForward =
-                          page.onNextPressed(context);
-                          if (canGoForward) {
-                            if (_currentPageIndex !=
-                                _allPages.length - 1) {
-                              FocusScope.of(context).unfocus();
-                              _pageController.animateToPage(
-                                  _currentPageIndex += 1,
-                                  duration: Duration(milliseconds: 250),
-                                  curve: Curves.ease);
-                            } else {
-                              _showAlertDialog();
-                            }
+                          final canGoBack = page.onBackPressed(context);
+                          if (canGoBack) {
+                            FocusScope.of(context).unfocus();
+                            _pageController.animateToPage(
+                                _currentPageIndex -= 1,
+                                duration: const Duration(milliseconds: 250),
+                                curve: Curves.ease);
                           }
                         },
                         child: Padding(
-                          padding: EdgeInsets.only(
-                              right: MarginsRaw.regular,
+                          padding: const EdgeInsets.only(
+                              left: MarginsRaw.regular,
                               bottom: MarginsRaw.medium,
                               top: MarginsRaw.medium,
-                              left: MarginsRaw.medium),
+                              right: MarginsRaw.medium),
                           child: Text(
-                            AppLocalizations.translate(context, _currentPageIndex == _allPages.length - 1
-                                ? "generic_done"
-                                : "generic_next",),
-                            style: TextStyle(
+                            AppLocalizations.translate(context, 'generic_back',),
+                            style: const TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 14.0,
                             ),
@@ -184,24 +144,64 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
                         ),
                       ),
                     ),
-                    Container(
-                      alignment: AlignmentDirectional.bottomCenter,
-                      margin: EdgeInsets.only(bottom: MarginsRaw.medium),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          for (int i = 0; i < _allPages.length; i++)
-                            if (i == _currentPageIndex)
-                              SlideDots(true)
-                            else
-                              SlideDots(false)
-                        ],
+                  ),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: InkWell(
+                      key: setupNextButtonKey,
+                      customBorder: const CircleBorder(),
+                      onTap: () {
+                        final page = _allPages[_currentPageIndex];
+                        final canGoForward =
+                        page.onNextPressed(context);
+                        if (canGoForward) {
+                          if (_currentPageIndex !=
+                              _allPages.length - 1) {
+                            FocusScope.of(context).unfocus();
+                            _pageController.animateToPage(
+                                _currentPageIndex += 1,
+                                duration: const Duration(milliseconds: 250),
+                                curve: Curves.ease);
+                          } else {
+                            _showAlertDialog();
+                          }
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            right: MarginsRaw.regular,
+                            bottom: MarginsRaw.medium,
+                            top: MarginsRaw.medium,
+                            left: MarginsRaw.medium),
+                        child: Text(
+                          AppLocalizations.translate(context, _currentPageIndex == _allPages.length - 1
+                              ? "generic_done"
+                              : "generic_next",),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.0,
+                          ),
+                        ),
                       ),
                     ),
-                  ],
-                )
-              ],
-            ),
+                  ),
+                  Container(
+                    alignment: AlignmentDirectional.bottomCenter,
+                    margin: const EdgeInsets.only(bottom: MarginsRaw.medium),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        for (int i = 0; i < _allPages.length; i++)
+                          if (i == _currentPageIndex)
+                            const SlideDots(true)
+                          else
+                            const SlideDots(false)
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            ],
           ),
         ),
       ),
@@ -209,7 +209,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
   }
 
   Widget buildLoader() {
-    return Material(
+    return const Material(
       child: SafeArea(
         child: Center(
           child: CircularProgressIndicator(),
@@ -224,7 +224,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
       barrierDismissible: false, // user must tap button for close dialog!
       builder: (BuildContext context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(MarginsRaw.borderRadius),
             ),
@@ -281,14 +281,15 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
               MaterialPageRoute(
                 builder: (context) => ChangeNotifierProvider(
                   create: (context) => TournamentProvider(),
-                  child: TournamentScreen(),
+                  child: const TournamentScreen(),
                 ),
               ),
               (Route<dynamic> route) => false);
         },
       );
     } else {
-      showErrorDialog(context);
+      if (!mounted) return;
+      showErrorDialog(context, mounted);
     }
   }
 }

@@ -25,6 +25,8 @@ import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({Key? key}) : super(key: key);
+
   static Future<String> getAppVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     return packageInfo.version;
@@ -40,7 +42,7 @@ class SettingsScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: AnnotatedRegion(
-          value: SystemUiOverlayStyle(
+          value: const SystemUiOverlayStyle(
             statusBarColor: Colors.white,
             statusBarIconBrightness: Brightness.dark,
           ),
@@ -73,7 +75,7 @@ class SettingsScreen extends StatelessWidget {
                       width: 80,
                     ),
                   ),
-                  Padding(
+                  const Padding(
                     padding: Margins.regular,
                     child: Text(
                       "Friends Tournament",
@@ -89,10 +91,10 @@ class SettingsScreen extends StatelessWidget {
                     child: Text(
                       AppLocalizations.translate(context, 'friends_tournament_claim',),
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 18),
+                      style: const TextStyle(fontSize: 18),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: MarginsRaw.medium,
                   ),
                   GestureDetector(
@@ -115,7 +117,7 @@ class SettingsScreen extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       LicenseRegistry.addLicense(() async* {
-                        yield LicenseEntryWithLineBreaks(
+                        yield const LicenseEntryWithLineBreaks(
                             <String>['freepik'], '''
                               <a href="https://it.freepik.com/foto-vettori-gratuito/design">Vectors and illustrations from freepik - freepik.com</a>''');
                       });
@@ -127,10 +129,10 @@ class SettingsScreen extends StatelessWidget {
                                 platform: Theme.of(context).platform,
                               ).black,
                               scaffoldBackgroundColor: Colors.white,
-                              appBarTheme: AppBarTheme(
+                              appBarTheme: const AppBarTheme(
                                 systemOverlayStyle: SystemUiOverlayStyle.light,
                               )),
-                          child: LicensePage(
+                          child: const LicensePage(
                             applicationName: "Friends Tournament",
                             applicationLegalese: "© 2019-2020 Marco Gomiero",
                           ),
@@ -141,7 +143,7 @@ class SettingsScreen extends StatelessWidget {
                       AppLocalizations.translate(context, 'open_source_license',),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: MarginsRaw.medium,
                   ),
                   Padding(
@@ -158,7 +160,7 @@ class SettingsScreen extends StatelessWidget {
                               ? "${AppLocalizations.translate(context, 'app_version',)}: ${snapshot.data}"
                               : "",
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 14, color: Colors.black38),
+                          style: const TextStyle(fontSize: 14, color: Colors.black38),
                         );
                       },
                     ),
@@ -168,7 +170,7 @@ class SettingsScreen extends StatelessWidget {
                         top: MarginsRaw.regular, bottom: MarginsRaw.small),
                     child: RichText(
                       text: TextSpan(
-                        style: TextStyle(color: Colors.black38, fontSize: 16),
+                        style: const TextStyle(color: Colors.black38, fontSize: 16),
                         children: <TextSpan>[
                           TextSpan(
                             text: AppLocalizations.translate(context, 'developed_by',),

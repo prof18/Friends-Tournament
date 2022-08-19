@@ -25,6 +25,8 @@ import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:provider/provider.dart';
 
 class MatchesNumber extends StatelessWidget implements SetupPage {
+  const MatchesNumber({Key? key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,7 @@ class MatchesNumber extends StatelessWidget implements SetupPage {
                   ),
                   child: Text(
                     AppLocalizations.translate(context, 'number_of_matches_title',),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 36,
                       fontWeight: FontWeight.bold,
                     ),

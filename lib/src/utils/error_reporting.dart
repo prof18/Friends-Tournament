@@ -1,9 +1,10 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/widgets.dart';
 
 Future<void> reportError(dynamic exception, StackTrace? stackTrace, String reason) async {
   if (isInDebugMode) {
-    print(exception);
-    print(stackTrace);
+    debugPrint(exception);
+    debugPrint(stackTrace.toString());
   } else {
     await FirebaseCrashlytics.instance.recordError(
         exception,

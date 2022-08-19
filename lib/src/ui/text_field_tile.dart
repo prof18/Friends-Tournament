@@ -38,16 +38,14 @@ class _TextFieldTileState extends State<TextFieldTile> {
   Widget build(BuildContext context) {
     return Padding(
       padding: Margins.small,
-      child: Container(
-        child: Material(
-          elevation: MarginsRaw.elevation,
-          borderRadius: BorderRadius.all(
-            Radius.circular(MarginsRaw.borderRadius),
-          ),
-          child: TextField(
-            controller: widget.textFieldWrapper.textEditingController,
-            decoration: getTextFieldDecoration(widget.textFieldWrapper.label),
-          ),
+      child: Material(
+        elevation: MarginsRaw.elevation,
+        borderRadius: const BorderRadius.all(
+          Radius.circular(MarginsRaw.borderRadius),
+        ),
+        child: TextField(
+          controller: widget.textFieldWrapper.textEditingController,
+          decoration: getTextFieldDecoration(widget.textFieldWrapper.label),
         ),
       ),
     );

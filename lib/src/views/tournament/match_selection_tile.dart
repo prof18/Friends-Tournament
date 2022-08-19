@@ -24,7 +24,7 @@ class MatchSelectionTile extends StatelessWidget {
   final UIMatch match;
   final AnimationController? controller;
 
-  MatchSelectionTile({Key? key, required this.match, this.controller}) : super(key: key);
+  const MatchSelectionTile({Key? key, required this.match, this.controller}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,13 +44,13 @@ class MatchSelectionTile extends StatelessWidget {
             },
             child: Container(
               decoration: match.isSelected
-                  ? BoxDecoration(
+                  ? const BoxDecoration(
                       border: Border(
                           bottom: BorderSide(
                       color: Colors.white,
                       width: 3.0,
                     )))
-                  : BoxDecoration(),
+                  : const BoxDecoration(),
               child: Padding(
                 padding: match.isSelected
                     ? const EdgeInsets.only(
@@ -58,7 +58,7 @@ class MatchSelectionTile extends StatelessWidget {
                     : const EdgeInsets.all(0.0),
                 child: Text(
                   match.name,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 24,
                     color: Colors.white,
                   ),

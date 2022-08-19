@@ -33,7 +33,7 @@ class LocalDataSource {
   // Implement singleton
   // To get back it, simple call: MyClass myObj = new MyClass();
   /// -------
-  static final LocalDataSource _singleton = new LocalDataSource._internal();
+  static final LocalDataSource _singleton = LocalDataSource._internal();
 
   late DatabaseProvider databaseProvider;
 
@@ -96,7 +96,7 @@ class LocalDataSource {
       where: 'is_active = ?',
       whereArgs: [1],
     );
-    if (maps.length > 0) {
+    if (maps.isNotEmpty) {
       return dao.fromMap(maps.first as Map<String, dynamic>);
     }
     return null;
@@ -107,7 +107,7 @@ class LocalDataSource {
     TournamentDao dao = TournamentDao();
     final db = await databaseProvider.db();
     List<Map> maps = await db.query(dao.tableName);
-    if (maps.length > 0) {
+    if (maps.isNotEmpty) {
       return dao.fromList(maps as List<Map<String, dynamic>>);
     }
     return [];
@@ -167,7 +167,7 @@ class LocalDataSource {
     await db.update(
       dao.tableName,
       dao.toMap(match),
-      where: dao.columnId + " = ?",
+      where: "${dao.columnId} = ?",
       whereArgs: [match.id],
     );
     return;
@@ -179,7 +179,7 @@ class LocalDataSource {
     await db.update(
       dao.tableName,
       dao.toMap(playerSession),
-      where: dao.columnSessionId + " = ? AND " + dao.columnPlayerId + " = ?",
+      where: "${dao.columnSessionId} = ? AND ${dao.columnPlayerId} = ?",
       whereArgs: [playerSession.sessionId, playerSession.playerId],
     );
     return;
@@ -191,7 +191,7 @@ class LocalDataSource {
     await db.update(
       dao.tableName,
       dao.toMap(tournamentPlayer),
-      where: dao.columnIdTournament + " = ? AND " + dao.columnIdPlayer + " = ?",
+      where: "${dao.columnIdTournament} = ? AND ${dao.columnIdPlayer} = ?",
       whereArgs: [tournamentPlayer.tournamentId, tournamentPlayer.playerId],
     );
   }
@@ -215,7 +215,7 @@ class LocalDataSource {
     await db.update(
       dao.tableName,
       dao.toMap(tournament),
-      where: dao.columnId + " = ?",
+      where: "${dao.columnId} = ?",
       whereArgs: [tournament.id],
     );
   }

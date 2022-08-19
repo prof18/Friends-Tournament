@@ -30,7 +30,6 @@ import 'package:friends_tournament/src/data/tournament_repository.dart';
 import 'package:friends_tournament/src/provider/leaderboard_provider.dart';
 import 'package:friends_tournament/src/provider/tournament_provider.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
-import 'package:friends_tournament/src/utils/error_reporting.dart';
 import 'package:friends_tournament/src/views/tournament/final_screen.dart';
 import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
 import 'package:friends_tournament/src/views/welcome_screen.dart';
@@ -46,20 +45,20 @@ void main() async {
 
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
-    runApp(MyApp());
+    runApp(const MyApp());
   },
           (error, stack,) =>
           FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({
+  const MyApp({
     Key? key,
   }) : super(key: key);
 
   // This widget is the root of your application.
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -151,7 +150,7 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
 
-      supportedLocales: [
+      supportedLocales: const [
         Locale('en', ''),
         Locale('it', ''),
         Locale('pt', ''),
@@ -159,7 +158,7 @@ class _MyAppState extends State<MyApp> {
         Locale('fr', ''),
       ],
       // These delegates make sure that the localization data for the proper language is loaded
-      localizationsDelegates: [
+      localizationsDelegates: const [
         // A class which loads the translations from JSON files
         AppLocalizations.delegate,
         // Built-in localization of basic text for Material widgets
@@ -188,7 +187,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget buildLoader() {
-    return Material(
+    return const Material(
       child: SafeArea(
         child: Center(
           child: CircularProgressIndicator(),
@@ -198,20 +197,20 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget _buildWelcomeScreen() {
-    return _lastTournament != null ? _buildFinalScreen() : Welcome();
+    return _lastTournament != null ? _buildFinalScreen() : const Welcome();
   }
 
   Widget _buildFinalScreen() {
     return ChangeNotifierProvider(
       create: (context) => LeaderboardProvider(_lastTournament!),
-      child: FinalScreen(),
+      child: const FinalScreen(),
     );
   }
 
   Widget _buildTournamentScreen() {
     return ChangeNotifierProvider(
         create: (context) => TournamentProvider(),
-        child: TournamentScreen(),
+        child: const TournamentScreen(),
     );
   }
 }

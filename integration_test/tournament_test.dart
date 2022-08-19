@@ -64,18 +64,16 @@ void main() {
         for (int j = 0; j < players.length; j++) {
           final player = players[j];
           var score = matchScore[player]!;
-          print("Setting score: $score for player: $player");
+          debugPrint("Setting score: $score for player: $player");
           for (int k = 0; k < score; k++) {
             await tester.tap(find.byKey(getKeyForScoreIncrease(player)));
             await tester.pumpAndSettle();
           }
         }
 
-        print("Change to other match");
-
         // Save match
         // To make sure that the snackbar is not showed anymore
-        await Future<void>.delayed(Duration(seconds: 3));
+        await Future<void>.delayed(const Duration(seconds: 3));
         await tester.tap(find.byKey(saveFabKey));
         await tester.pumpAndSettle();
 

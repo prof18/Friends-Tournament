@@ -33,10 +33,10 @@ class SessionScoreView extends StatefulWidget {
   final List<UISession>? sessions;
   final AnimationController? controller;
 
-  SessionScoreView({this.sessions, this.controller});
+  const SessionScoreView({Key? key, this.sessions, this.controller}) : super(key: key);
 
   @override
-  _SessionScoreViewState createState() => _SessionScoreViewState();
+  State<SessionScoreView> createState() => _SessionScoreViewState();
 }
 
 class _SessionScoreViewState extends State<SessionScoreView> {
@@ -91,7 +91,7 @@ class _SessionScoreViewState extends State<SessionScoreView> {
     return Scaffold(
       floatingActionButton: AnimatedOpacity(
           opacity: _panelExpanded || hideFab ? 0.0 : 1.0,
-          duration: Duration(milliseconds: 100),
+          duration: const Duration(milliseconds: 100),
           child: Consumer<TournamentProvider>(
             builder: (context, provider, child) {
               return FloatingActionButton(
@@ -103,8 +103,8 @@ class _SessionScoreViewState extends State<SessionScoreView> {
                 },
                 child: provider.currentMatch != null
                     ? provider.currentMatch!.isActive == 0
-                        ? Icon(Icons.edit)
-                        : Icon(Icons.save)
+                        ? const Icon(Icons.edit)
+                        : const Icon(Icons.save)
                     : Container(),
               );
             },
@@ -117,18 +117,18 @@ class _SessionScoreViewState extends State<SessionScoreView> {
     return Container(
       color: AppColors.blue,
       child: Container(
-        decoration: new BoxDecoration(
+        decoration: BoxDecoration(
           color: hexToColor("#eeeeee"),
-          borderRadius: new BorderRadius.only(
-            topLeft: const Radius.circular(20.0),
-            topRight: const Radius.circular(20.0),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
           ),
         ),
         child: ListView.builder(
           controller: _scrollController,
           itemCount: widget.sessions!.length,
           itemBuilder: (context, index) {
-            return Container(
+            return SizedBox(
               width: MediaQuery.of(context).size.width * 0.75,
               child: Padding(
                 padding: index == widget.sessions!.length - 1
@@ -153,13 +153,13 @@ class _SessionScoreViewState extends State<SessionScoreView> {
       barrierDismissible: false, // user must tap button for close dialog!
       builder: (BuildContext context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(MarginsRaw.borderRadius),
             ),
           ),
           title: Text(matchName!),
-          content: Container(
+          content: SizedBox(
             height: 250,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,7 +176,7 @@ class _SessionScoreViewState extends State<SessionScoreView> {
                     AppLocalizations.translate(context, isEdit
                         ? "match_score_update_message"
                         : "match_score_save_message",),
-                    style: TextStyle(fontSize: 18),
+                    style: const TextStyle(fontSize: 18),
                   ),
                 )
               ],
@@ -196,16 +196,18 @@ class _SessionScoreViewState extends State<SessionScoreView> {
               child: Text(AppLocalizations.translate(context, 'generic_ok',),),
               onPressed: () async {
                 EndMatchStatus status = await provider.endMatch();
-                if (status == EndMatchStatus.end_tournament) {
+                if (!mounted) return;
+                if (status == EndMatchStatus.endTournament) {
                   Navigator.of(context).pop();
                   showEndTournamentDialog(
                     context,
                     provider,
                     AppLocalizations.translate(context, 'finish_tournament_message',),
+                    mounted,
                   );
                 } else if (status == EndMatchStatus.error) {
                   Navigator.of(context).pop();
-                  showErrorDialog(context);
+                  showErrorDialog(context, mounted);
                 } else {
                   Navigator.of(context).pop();
                 }

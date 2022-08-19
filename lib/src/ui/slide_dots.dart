@@ -20,12 +20,12 @@ import 'package:friends_tournament/src/style/app_style.dart';
 /// Adapted from https://github.com/CODEHOMIE/Flutter-Onboarding-UI-Concept/blob/master/lib/widgets/slide_dots.dart
 class SlideDots extends StatelessWidget {
   final bool isActive;
-  SlideDots(this.isActive);
+  const SlideDots(this.isActive, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 150),
       margin: const EdgeInsets.symmetric(horizontal: 3.3),
       height: isActive ? 10 : 6,
       width: isActive ? 10 : 6,
@@ -40,7 +40,7 @@ class SlideDots extends StatelessWidget {
                 color: Colors.transparent,
                 width: 1,
               ),
-        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderRadius: const BorderRadius.all(Radius.circular(12)),
       ),
     );
   }

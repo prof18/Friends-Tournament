@@ -136,7 +136,7 @@ class TournamentProvider with ChangeNotifier {
       if (nextMatchIndex > _tournamentMatches.length - 1) {
         // we can finish the entire tournament. So notify the fact to the UI.
         notifyListeners();
-        return EndMatchStatus.end_tournament;
+        return EndMatchStatus.endTournament;
       } else {
         UIMatch nextMatch = _tournamentMatches[nextMatchIndex];
         nextMatch.isActive = 1;
@@ -144,7 +144,7 @@ class TournamentProvider with ChangeNotifier {
         await tournamentRepository.updateMatch(nextMatch);
         _currentMatch = nextMatch;
         notifyListeners();
-        return EndMatchStatus.next_match;
+        return EndMatchStatus.nextMatch;
       }
     } catch (error, stackTrace) {
       await reportError(

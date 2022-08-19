@@ -150,7 +150,7 @@ void main() {
         await localDataSource!.getMatchSessions(idMatch);
 
         // By using a set we ensure that the elements are not repeated
-        Set matchPlayerSet = Set();
+        Set matchPlayerSet = {};
 
         await Future.forEach(dbMatchSessions.toList(), (dynamic row) async {
           final idSession = row['id_session'];
@@ -160,7 +160,7 @@ void main() {
           await localDataSource!.getSessionPlayers(idSession);
 
           // By using a set we ensure that the elements are not repeated
-          Set sessionPlayerSet = Set();
+          Set sessionPlayerSet = {};
 
           await Future.forEach(dbPlayers.toList(), (dynamic row) async {
             final idPlayer = row['player_id'];

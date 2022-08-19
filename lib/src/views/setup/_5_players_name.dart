@@ -27,17 +27,19 @@ import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:provider/provider.dart';
 
-class MatchesName extends StatelessWidget implements SetupPage {
+class PlayersName extends StatelessWidget implements SetupPage {
   final List<TextFieldWrapper> _textFieldsList = <TextFieldWrapper>[];
-  final Map<int, String> _savedValues = new HashMap();
+  final Map<int, String> _savedValues = HashMap();
+
+  PlayersName({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Consumer<SetupProvider>(
       builder: (context, provider, child) {
         return createBody(
-          provider.matchesNumber,
-          provider.matchesName,
+          provider.playersNumber,
+          provider.playersName,
           context,
         );
       },
@@ -45,8 +47,8 @@ class MatchesName extends StatelessWidget implements SetupPage {
   }
 
   Widget createBody(
-    int matchesNumber,
-    UnmodifiableMapView<int, String> matches,
+    int playersNumber,
+    UnmodifiableMapView<int, String> players,
     BuildContext context,
   ) {
     return Column(
@@ -54,8 +56,8 @@ class MatchesName extends StatelessWidget implements SetupPage {
         Expanded(
           child: Container(
             child: renderTextFields(
-              matchesNumber,
-              matches,
+              playersNumber,
+              players,
               context,
             ),
           ),
@@ -65,19 +67,19 @@ class MatchesName extends StatelessWidget implements SetupPage {
   }
 
   Widget renderTextFields(
-    int matchesNumber,
-    Map<int, String> matchesName,
+    int playersNumber,
+    Map<int, String> playersName,
     BuildContext context,
   ) {
-    if (_textFieldsList.length != matchesNumber) {
+    if (_textFieldsList.length != playersNumber) {
       _textFieldsList.clear();
-      for (int i = 0; i < matchesNumber; i++) {
+      for (int i = 0; i < playersNumber; i++) {
         TextFieldWrapper textFieldWrapper = TextFieldWrapper(
             TextEditingController(),
-            "${AppLocalizations.translate(context, 'match_label',)} ${i + 1}");
-        if (matchesName.containsKey(i)) {
-          textFieldWrapper.value = matchesName[i];
-          textFieldWrapper.textEditingController.text = matchesName[i]!;
+            "${AppLocalizations.translate(context, 'player_label',)} ${i + 1}");
+        if (playersName.containsKey(i)) {
+          textFieldWrapper.value = playersName[i];
+          textFieldWrapper.textEditingController.text = playersName[i]!;
         }
         _textFieldsList.add(textFieldWrapper);
       }
@@ -90,19 +92,20 @@ class MatchesName extends StatelessWidget implements SetupPage {
           child: Padding(
             padding: Margins.regular,
             child: SvgPicture.asset(
-              'assets/matches-art.svg',
+              'assets/players_art.svg',
             ),
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(
-              top: MarginsRaw.regular,
-              bottom: MarginsRaw.small,
-              left: MarginsRaw.regular,
-              right: MarginsRaw.regular),
+            top: MarginsRaw.regular,
+            left: MarginsRaw.regular,
+            right: MarginsRaw.regular,
+            bottom: MarginsRaw.small,
+          ),
           child: Text(
-            AppLocalizations.translate(context, 'matches_name_title',),
-            style: TextStyle(
+            AppLocalizations.translate(context, 'players_name_title',),
+            style: const TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.bold,
             ),
@@ -110,9 +113,10 @@ class MatchesName extends StatelessWidget implements SetupPage {
         ),
         Padding(
           padding: const EdgeInsets.only(
-              top: MarginsRaw.regular,
-              left: MarginsRaw.regular,
-              right: MarginsRaw.regular),
+            top: MarginsRaw.regular,
+            left: MarginsRaw.regular,
+            right: MarginsRaw.regular,
+          ),
           child: Container(
             alignment: Alignment.topLeft,
             decoration: BoxDecoration(
@@ -135,28 +139,16 @@ class MatchesName extends StatelessWidget implements SetupPage {
               right: MarginsRaw.small,
             ),
             child: ListView.builder(
-              itemBuilder: (BuildContext context, int index) {
-                return TextFieldTile(
-                    key: getKeyForMatchNameTextField(index),
-                    textFieldWrapper: _textFieldsList[index]);
-              },
-              itemCount: _textFieldsList.length,
-            ),
+                itemBuilder: (BuildContext context, int index) {
+                  return TextFieldTile(
+                      key: getKeyForPlayerNameTextField(index),
+                      textFieldWrapper: _textFieldsList[index]);
+                },
+                itemCount: _textFieldsList.length),
           ),
-        )
+        ),
       ],
     );
-  }
-
-  /// Return true if the list is valid, i.e. every match has a name
-  bool isMatchNamesValid() {
-    for (int i = 0; i < _textFieldsList.length; i++) {
-      TextFieldWrapper textField = _textFieldsList[i];
-      if (textField.textEditingController.text.trim().isEmpty) {
-        return false;
-      }
-    }
-    return true;
   }
 
   void saveValues(BuildContext context) {
@@ -171,18 +163,7 @@ class MatchesName extends StatelessWidget implements SetupPage {
         }
       }
     }
-    Provider.of<SetupProvider>(context, listen: false).setMatchesName(_savedValues);
-  }
-
-  /// Return true if there are some duplicates
-  bool areNamesDuplicate() {
-    List<String> finalNameList = [];
-    _textFieldsList.forEach((textFieldWrapper) {
-      finalNameList.add(textFieldWrapper.textEditingController.text.trim());
-    });
-
-    var distinctNames = finalNameList.toSet().toList();
-    return distinctNames.length != finalNameList.length;
+    Provider.of<SetupProvider>(context, listen: false).setPlayersName(_savedValues);
   }
 
   @override
@@ -191,13 +172,35 @@ class MatchesName extends StatelessWidget implements SetupPage {
     return true;
   }
 
+  /// Return true if the list is valid, i.e. every player has a name
+  bool isPlayerNamesValid() {
+    for (int i = 0; i < _textFieldsList.length; i++) {
+      TextFieldWrapper textField = _textFieldsList[i];
+      if (textField.textEditingController.text.trim().isEmpty) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /// Return true if there are some duplicates
+  bool areNamesDuplicate() {
+    List<String> finalNameList = [];
+    for (var textFieldWrapper in _textFieldsList) {
+      finalNameList.add(textFieldWrapper.textEditingController.text.trim());
+    }
+
+    var distinctNames = finalNameList.toSet().toList();
+    return distinctNames.length != finalNameList.length;
+  }
+
   @override
   bool onNextPressed(BuildContext context) {
     if (areNamesDuplicate()) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.translate(context, 'match_name_duplicated',),
+            AppLocalizations.translate(context, 'player_name_duplicated',),
           ),
         ),
       );
@@ -206,13 +209,13 @@ class MatchesName extends StatelessWidget implements SetupPage {
 
     saveValues(context);
 
-    if (_savedValues.length == _textFieldsList.length && isMatchNamesValid()) {
+    if (_savedValues.length == _textFieldsList.length && isPlayerNamesValid()) {
       return true;
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.translate(context, 'matches_name_empty_fields_message',),
+            AppLocalizations.translate(context, 'player_name_empty_fields_message',),
           ),
         ),
       );

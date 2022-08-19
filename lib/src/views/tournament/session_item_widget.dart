@@ -22,16 +22,16 @@ import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/tournament/session_player_tile.dart';
 
 class SessionItemWidget extends StatelessWidget {
-  SessionItemWidget({
+  const SessionItemWidget({Key? key,
     required this.session,
-  });
+  }) : super(key: key);
 
   final UISession session;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -42,7 +42,7 @@ class SessionItemWidget extends StatelessWidget {
             ),
             child: Text(
               session.name,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 24,
               ),
             ),
@@ -50,7 +50,7 @@ class SessionItemWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: ListView.builder(
-              physics: ScrollPhysics(),
+              physics: const ScrollPhysics(),
               shrinkWrap: true,
               itemBuilder: (BuildContext context, int index) {
                 UIPlayer player = session.sessionPlayers[index];

@@ -17,7 +17,7 @@
 import 'package:flutter/material.dart';
 
 Widget renderCenterLoader() {
-  return Material(
+  return const Material(
     child: SafeArea(
       child: Center(
         child: CircularProgressIndicator(),

@@ -14,13 +14,14 @@ showEndTournamentDialog(
   BuildContext context,
   TournamentProvider provider,
   String? message,
+  bool isMounted,
 ) {
   showDialog(
     context: context,
     barrierDismissible: false, // user must tap button for close dialog!
     builder: (BuildContext innerContext) {
       return AlertDialog(
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
             Radius.circular(MarginsRaw.borderRadius),
           ),
@@ -28,7 +29,7 @@ showEndTournamentDialog(
         title: provider.activeTournament != null
             ? Text(provider.activeTournament!.name)
             : Container(),
-        content: Container(
+        content: SizedBox(
           height: 250,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +44,7 @@ showEndTournamentDialog(
                 padding: const EdgeInsets.only(top: MarginsRaw.regular),
                 child: Text(
                   message!,
-                  style: TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 18),
                 ),
               )
             ],
@@ -51,30 +52,43 @@ showEndTournamentDialog(
         ),
         actions: <Widget>[
           TextButton(
-            child:
-                Text(AppLocalizations.translate(context, 'generic_cancel',),),
+            child: Text(
+              AppLocalizations.translate(
+                context,
+                'generic_cancel',
+              ),
+            ),
             onPressed: () {
               Navigator.of(innerContext).pop();
             },
           ),
           TextButton(
             key: endTournamentKey,
-            child: Text(AppLocalizations.translate(context, 'generic_ok',),),
+            child: Text(
+              AppLocalizations.translate(
+                context,
+                'generic_ok',
+              ),
+            ),
             onPressed: () async {
               final tournament = provider.activeTournament;
               EndTournamentResult result = await provider.endTournament();
+              if (!isMounted) return;
               if (result == EndTournamentResult.success) {
+                // ignore: use_build_context_synchronously
                 Navigator.of(innerContext).pushAndRemoveUntil(
                     MaterialPageRoute(
                       builder: (context) => ChangeNotifierProvider(
                         create: (context) => LeaderboardProvider(tournament!),
-                        child: FinalScreen(),
+                        child: const FinalScreen(),
                       ),
                     ),
-                        (Route<dynamic> route) => false);
+                    (Route<dynamic> route) => false);
               } else {
+                // ignore: use_build_context_synchronously
                 Navigator.of(innerContext).pop();
-                showErrorDialog(innerContext);
+                // ignore: use_build_context_synchronously
+                showErrorDialog(innerContext, isMounted);
               }
             },
           )

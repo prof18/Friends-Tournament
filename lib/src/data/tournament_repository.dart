@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/data/database/dao/tournament_dao.dart';
 import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/model/app/ui_final_score.dart';
@@ -30,7 +31,7 @@ class TournamentRepository {
   // To get back it, simple call: MyClass myObj = new MyClass();
   /// -------
   static final TournamentRepository _singleton =
-      new TournamentRepository._internal();
+      TournamentRepository._internal();
 
   late LocalDataSource localDataSource;
 
@@ -140,10 +141,10 @@ class TournamentRepository {
 
     // update the scores of the player
     await Future.forEach(uiMatch.matchSessions, (UISession session) async {
-      print("Session: ${session.toString()}");
+      debugPrint("Session: ${session.toString()}");
       // loop through the players
       await Future.forEach(session.sessionPlayers, (UIPlayer player) async {
-        print("Player: ${player.toString()}");
+        debugPrint("Player: ${player.toString()}");
         final PlayerSession playerSession = PlayerSession(
           player.id,
           session.id,
@@ -166,8 +167,10 @@ class TournamentRepository {
   Future<TournamentPlayer?> getTournamentPlayer(
       String playerId, String tournamentId) async {
     final players = await localDataSource.getTournamentPlayers(tournamentId);
-    return players.firstWhere((element) => element.playerId == playerId,
-        orElse: null);
+    return players.cast<TournamentPlayer?>().firstWhere(
+          (element) => element!.playerId == playerId,
+          orElse: () => null,
+        );
   }
 
   Future<List<UIScore>> getScore(Tournament tournament) async {

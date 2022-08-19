@@ -24,7 +24,7 @@ import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/views/welcome_screen.dart';
 
-showErrorDialog(BuildContext context) {
+showErrorDialog(BuildContext context, bool isMounted) {
   final DatabaseProvider databaseProvider = DatabaseProviderImpl.get;
   final LocalDataSource localDataSource = LocalDataSource(databaseProvider);
   final repository = TournamentRepository(localDataSource);
@@ -34,13 +34,13 @@ showErrorDialog(BuildContext context) {
     barrierDismissible: false, // user must tap button for close dialog!
     builder: (BuildContext context) {
       return AlertDialog(
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
             Radius.circular(MarginsRaw.borderRadius),
           ),
         ),
         title: Text(AppLocalizations.translate(context, 'something_not_working_title',),),
-        content: Container(
+        content: SizedBox(
           height: 250,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,7 +55,7 @@ showErrorDialog(BuildContext context) {
                 padding: const EdgeInsets.only(top: MarginsRaw.regular),
                 child: Text(
                   AppLocalizations.translate(context, 'something_not_working_message',),
-                  style: TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 18),
                 ),
               )
             ],
@@ -68,9 +68,11 @@ showErrorDialog(BuildContext context) {
               ),
             onPressed: () async {
               await repository.finishAllTournament();
+              if (!isMounted) return;
+              // ignore: use_build_context_synchronously
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(
-                    builder: (context) => Welcome(),
+                    builder: (context) => const Welcome(),
                   ),
                   (Route<dynamic> route) => false);
             },

@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:friends_tournament/src/utils/error_reporting.dart';
 import 'package:friends_tournament/src/utils/service_locator.dart';
 
 class SetupProvider with ChangeNotifier {
@@ -62,8 +63,7 @@ class SetupProvider with ChangeNotifier {
       ///  - MatchesWithSameIdException
       ///  - TooMuchPlayersASTException -> do not start setup process from scratch
       ///  - AlreadyActiveTournamentException -> it should never happen! A setup process never starts if there is another ongoing tournament
-      // TODO: send error to crashalytics
-      // await reportError(error, stackTrace);
+      await reportError(error, stackTrace, "Error during tournament setup");
       notifyListeners();
       return false;
     }

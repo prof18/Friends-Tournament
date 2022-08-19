@@ -24,7 +24,7 @@ class CustomIcons {
 
   static const IconData podium = IconData(
       0xea70, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData flag_checkered = IconData(
+  static const IconData flagCheckered = IconData(
       0xf11e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 
 }

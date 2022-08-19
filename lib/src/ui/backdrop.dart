@@ -33,15 +33,15 @@ class Backdrop extends StatefulWidget {
   final AnimationController controller;
 
   @override
-  _BackdropState createState() => _BackdropState();
+  State<Backdrop> createState() => _BackdropState();
 
-  Backdrop(this.dropdownWidget, this.contentWidget, this.controller);
+  const Backdrop(this.dropdownWidget, this.contentWidget, this.controller, {Key? key}) : super(key: key);
 }
 
 class _BackdropState extends State<Backdrop>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  static const _PANEL_HEADER_HEIGHT = 32.0;
+  static const _panelHeaderHeight = 32.0;
 
   bool _panelExpanded = false;
 
@@ -71,11 +71,11 @@ class _BackdropState extends State<Backdrop>
 
   Animation<RelativeRect> _getPanelAnimation(BoxConstraints constraints) {
     final height = constraints.biggest.height;
-    final top = height - _PANEL_HEADER_HEIGHT;
-    final bottom = -_PANEL_HEADER_HEIGHT;
+    final top = height - _panelHeaderHeight;
+    const bottom = -_panelHeaderHeight;
     return RelativeRectTween(
             begin: RelativeRect.fromLTRB(0.0, top, 0.0, bottom),
-            end: RelativeRect.fromLTRB(0.0, 0.0, 0.0, 0.0))
+            end: const RelativeRect.fromLTRB(0.0, 0.0, 0.0, 0.0))
         .animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
   }
 
@@ -87,7 +87,7 @@ class _BackdropState extends State<Backdrop>
         elevation: 0.0,
         title: AnimatedOpacity(
           opacity: _panelExpanded ? 0.0 : 1.0,
-          duration: Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 200),
           child: Consumer<TournamentProvider>(
             builder: (context, provider, child) {
               return provider.currentMatch != null
@@ -113,7 +113,7 @@ class _BackdropState extends State<Backdrop>
           Visibility(
             visible: !_panelExpanded,
             child: IconButton(
-              icon: Icon(CustomIcons.podium),
+              icon: const Icon(CustomIcons.podium),
               key: leaderboardButtonKey,
               onPressed: () {
                 final tournament = Provider.of<TournamentProvider>(
@@ -123,7 +123,7 @@ class _BackdropState extends State<Backdrop>
 
                 if (tournament == null) {
                   // TODO: report error to firebase
-                  showErrorDialog(context);
+                  showErrorDialog(context, mounted);
                 }
 
                 Navigator.push(
@@ -131,7 +131,7 @@ class _BackdropState extends State<Backdrop>
                   MaterialPageRoute(
                     builder: (context) => ChangeNotifierProvider(
                       create: (context) => LeaderboardProvider(tournament!),
-                      child: LeaderboardScreen(isFromFinalScreen: false),
+                      child: const LeaderboardScreen(isFromFinalScreen: false),
                     ),
                   ),
                 );
@@ -142,12 +142,13 @@ class _BackdropState extends State<Backdrop>
           Visibility(
             visible: !_panelExpanded,
             child: IconButton(
-              icon: Icon(CustomIcons.flag_checkered),
+              icon: const Icon(CustomIcons.flagCheckered),
               onPressed: () {
                 showEndTournamentDialog(
                   context,
                   Provider.of<TournamentProvider>(context, listen: false),
                   AppLocalizations.translate(context, 'finish_tournament_message',),
+                  mounted,
                 );
               },
               tooltip: AppLocalizations.translate(context, 'finish_tournament_tooltip',),
@@ -168,10 +169,10 @@ class _BackdropState extends State<Backdrop>
       child: Stack(
         children: <Widget>[
           widget.dropdownWidget,
-          new PositionedTransition(
+          PositionedTransition(
             rect: animation,
-            child: new Material(
-                borderRadius: BorderRadius.only(
+            child: Material(
+                borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(16.0),
                     topRight: Radius.circular(16.0)),
                 elevation: 12.0,

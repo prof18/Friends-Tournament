@@ -47,7 +47,7 @@ class DialogLoader extends StatefulWidget {
   final String? text;
   final AnimationController? controller;
 
-  DialogLoader({this.text, required this.controller});
+  const DialogLoader({Key? key, this.text, required this.controller}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => DialogLoaderState();
@@ -82,7 +82,7 @@ class DialogLoaderState extends State<DialogLoader>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  CircularProgressIndicator(),
+                  const CircularProgressIndicator(),
                   Padding(
                     padding: const EdgeInsets.only(
                         top: 16.0, left: 16.0, right: 16.0),

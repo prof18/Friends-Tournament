@@ -16,19 +16,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:friends_tournament/src/data/database/database_provider.dart';
-import 'package:friends_tournament/src/data/database/database_provider_impl.dart';
-import 'package:friends_tournament/src/data/database/local_data_source.dart';
-import 'package:friends_tournament/src/data/tournament_repository.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/service_locator.dart';
 import 'package:friends_tournament/src/views/welcome_screen.dart';
 
 showErrorDialog(BuildContext context, bool isMounted) {
-  final DatabaseProvider databaseProvider = DatabaseProviderImpl.get;
-  final LocalDataSource localDataSource = LocalDataSource(databaseProvider);
-  final repository = TournamentRepository(localDataSource);
-
   showDialog(
     context: context,
     barrierDismissible: false, // user must tap button for close dialog!
@@ -67,7 +60,7 @@ showErrorDialog(BuildContext context, bool isMounted) {
                 AppLocalizations.translate(context, 'restart_from_scratch',),
               ),
             onPressed: () async {
-              await repository.finishAllTournament();
+              await tournamentRepository.finishAllTournament();
               if (!isMounted) return;
               // ignore: use_build_context_synchronously
               Navigator.of(context).pushAndRemoveUntil(

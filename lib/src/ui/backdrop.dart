@@ -15,11 +15,13 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:friends_tournament/src/data/errors.dart';
 import 'package:friends_tournament/src/provider/leaderboard_provider.dart';
 import 'package:friends_tournament/src/provider/tournament_provider.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/custom_icons_icons.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/error_reporting.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/tournament/end_tournament_dialog.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_page.dart';
@@ -35,7 +37,9 @@ class Backdrop extends StatefulWidget {
   @override
   State<Backdrop> createState() => _BackdropState();
 
-  const Backdrop(this.dropdownWidget, this.contentWidget, this.controller, {Key? key}) : super(key: key);
+  const Backdrop(this.dropdownWidget, this.contentWidget, this.controller,
+      {Key? key})
+      : super(key: key);
 }
 
 class _BackdropState extends State<Backdrop>
@@ -122,7 +126,11 @@ class _BackdropState extends State<Backdrop>
                 ).activeTournament;
 
                 if (tournament == null) {
-                  // TODO: report error to firebase
+                  reportError(
+                    ActiveTournamentNullException(),
+                    null,
+                    "Error while expanding the match backdrop",
+                  );
                   showErrorDialog(context, mounted);
                 }
 
@@ -136,7 +144,10 @@ class _BackdropState extends State<Backdrop>
                   ),
                 );
               },
-              tooltip: AppLocalizations.translate(context, 'show_leaderboard_tooltip',),
+              tooltip: AppLocalizations.translate(
+                context,
+                'show_leaderboard_tooltip',
+              ),
             ),
           ),
           Visibility(
@@ -147,11 +158,17 @@ class _BackdropState extends State<Backdrop>
                 showEndTournamentDialog(
                   context,
                   Provider.of<TournamentProvider>(context, listen: false),
-                  AppLocalizations.translate(context, 'finish_tournament_message',),
+                  AppLocalizations.translate(
+                    context,
+                    'finish_tournament_message',
+                  ),
                   mounted,
                 );
               },
-              tooltip: AppLocalizations.translate(context, 'finish_tournament_tooltip',),
+              tooltip: AppLocalizations.translate(
+                context,
+                'finish_tournament_tooltip',
+              ),
             ),
           ),
         ],

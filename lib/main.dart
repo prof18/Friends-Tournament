@@ -22,14 +22,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:friends_tournament/firebase_options.dart';
-import 'package:friends_tournament/src/data/database/database_provider.dart';
-import 'package:friends_tournament/src/data/database/database_provider_impl.dart';
-import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
-import 'package:friends_tournament/src/data/tournament_repository.dart';
 import 'package:friends_tournament/src/provider/leaderboard_provider.dart';
 import 'package:friends_tournament/src/provider/tournament_provider.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/service_locator.dart';
 import 'package:friends_tournament/src/views/tournament/final_screen.dart';
 import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
 import 'package:friends_tournament/src/views/welcome_screen.dart';
@@ -76,16 +73,11 @@ class _MyAppState extends State<MyApp> {
   }
 
   _loadData() async {
-    // TODO: make a provider here?
-    DatabaseProvider databaseProvider = DatabaseProviderImpl.get;
-    LocalDataSource localDataSource = LocalDataSource(databaseProvider);
-    final repository = TournamentRepository(localDataSource);
-
     var isActive = false;
     try {
-      isActive = await repository.isTournamentActive();
+      isActive = await tournamentRepository.isTournamentActive();
       if (!isActive) {
-        _lastTournament = await repository.getLastFinishedTournament();
+        _lastTournament = await tournamentRepository.getLastFinishedTournament();
       }
     } on Exception catch (_) {
       // do nothing, we assume that the tournament is not active

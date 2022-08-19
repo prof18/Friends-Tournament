@@ -16,9 +16,12 @@
 
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:friends_tournament/firebase_options.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
 import 'package:friends_tournament/src/data/database/database_provider_impl.dart';
 import 'package:friends_tournament/src/data/database/local_data_source.dart';
@@ -34,20 +37,19 @@ import 'package:friends_tournament/src/views/welcome_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-void main() {
-  // Run the whole app in a zone to capture all uncaught errors.
-  runZoned(
-    () => runApp(MyApp()),
-    onError: (Object error, StackTrace stackTrace) {
-      try {
-        reportError(error, stackTrace);
-        print('Error sent to sentry.io: $error');
-      } catch (e) {
-        print('Sending report to sentry.io failed: $e');
-        print('Original error: $error');
-      }
-    },
-  );
+void main() async {
+  runZonedGuarded<Future<void>>(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+
+    runApp(MyApp());
+  },
+          (error, stack,) =>
+          FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }
 
 class MyApp extends StatefulWidget {
@@ -72,16 +74,6 @@ class _MyAppState extends State<MyApp> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadData();
     });
-  }
-
-  @override
-  void dispose() {
-    // TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
-    //
-    // tournamentBloc.dispose();
-// TODO: is crashing on UI tests
-
-    super.dispose();
   }
 
   _loadData() async {

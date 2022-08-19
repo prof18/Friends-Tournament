@@ -72,3 +72,5 @@
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 /lib/src/dsn.dart
 /android/key.properties
+/lib/firebase_options.dart
+/android/app/google-services.json

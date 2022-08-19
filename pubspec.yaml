@@ -33,6 +33,8 @@ dependencies:
   provider: ^6.0.3
   cupertino_icons: ^1.0.5
   collection: ^1.16.0
+  firebase_crashlytics: ^2.8.8
+  firebase_core: ^1.21.0
 
 dev_dependencies:
   flutter_test:

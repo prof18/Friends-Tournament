@@ -36,7 +36,11 @@ class LeaderboardProvider with ChangeNotifier {
       _tournamentName = tournament.name;
       notifyListeners();
     } catch (error, stackTrace) {
-      await reportError(error, stackTrace);
+      await reportError(
+        error,
+        stackTrace,
+        "Error while computing the leaderboard",
+      );
       _showError = true;
       notifyListeners();
     }

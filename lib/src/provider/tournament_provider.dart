@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/widgets.dart';
+import 'package:friends_tournament/src/data/errors.dart';
 import 'package:friends_tournament/src/data/model/app/end_match_result.dart';
 import 'package:friends_tournament/src/data/model/app/end_tournament_result.dart';
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
@@ -37,13 +38,18 @@ class TournamentProvider with ChangeNotifier {
   /// required to show it to the user
   _fetchInitialData() async {
     try {
-      final tournament = await tournamentRepository.getCurrentActiveTournament();
+      final tournament =
+          await tournamentRepository.getCurrentActiveTournament();
       _activeTournament = tournament;
       if (tournament != null) {
         _fetchTournamentMatches(tournament);
       }
     } catch (error, stackTrace) {
-      await reportError(error, stackTrace);
+      await reportError(
+        error,
+        stackTrace,
+        "Error while fetching initial data",
+      );
       _showTournamentInitError = true;
       notifyListeners();
     }
@@ -52,7 +58,8 @@ class TournamentProvider with ChangeNotifier {
   /// Retrieves the UI objects of the current tournament
   _fetchTournamentMatches(Tournament tournament) async {
     try {
-      List<UIMatch> matchesList = await tournamentRepository.getTournamentMatches(tournament.id);
+      List<UIMatch> matchesList =
+          await tournamentRepository.getTournamentMatches(tournament.id);
       _tournamentMatches = matchesList;
 
       // If all the matches are not active, we set as first match the first one
@@ -64,7 +71,11 @@ class TournamentProvider with ChangeNotifier {
       _currentMatch = currentMatch;
       notifyListeners();
     } catch (error, stackTrace) {
-      await reportError(error, stackTrace);
+      await reportError(
+        error,
+        stackTrace,
+        "Error while fetching tournament matches",
+      );
       _showTournamentInitError = true;
       notifyListeners();
     }
@@ -91,8 +102,23 @@ class TournamentProvider with ChangeNotifier {
 
   Future<EndMatchStatus> endMatch() async {
     if (_currentMatch == null || _activeTournament == null) {
-      // TODO: send also a string
-      // await reportError(error, stackTrace);
+      late String errorReason;
+      late Exception exception;
+      if (_currentMatch == null && _activeTournament == null) {
+        errorReason = 'The current match and the active tournament is null';
+        exception = ActiveTournamentAndCurrentMatchNullException();
+      } else if (_currentMatch == null) {
+        errorReason = 'The current match is null';
+        exception = CurrentMatchNullException();
+      } else if (_activeTournament == null) {
+        exception = ActiveTournamentNullException();
+        errorReason = 'The active tournament is null';
+      }
+      await reportError(
+        exception,
+        null,
+        "Error during the end of a match. Reason: $errorReason",
+      );
       return EndMatchStatus.error;
     }
     try {
@@ -100,7 +126,8 @@ class TournamentProvider with ChangeNotifier {
       _currentMatch!.isActive = 0;
       _currentMatch!.isSelected = false;
 
-      await tournamentRepository.finishMatch(_currentMatch!, _activeTournament!);
+      await tournamentRepository.finishMatch(
+          _currentMatch!, _activeTournament!);
 
       // the current match is no active. Select another as active
       int currentMatchIndex = _tournamentMatches.indexOf(_currentMatch!);
@@ -120,22 +147,33 @@ class TournamentProvider with ChangeNotifier {
         return EndMatchStatus.next_match;
       }
     } catch (error, stackTrace) {
-      await reportError(error, stackTrace);
+      await reportError(
+        error,
+        stackTrace,
+        "Error while ending the match",
+      );
       return EndMatchStatus.error;
     }
   }
 
   Future<EndTournamentResult> endTournament() async {
     if (_activeTournament == null) {
-      // TODO: send also a string
-      // await reportError(error, stackTrace);
+      await reportError(
+        ActiveTournamentNullException(),
+        null,
+        "The active tournament is null when trying to end the tournament",
+      );
       return EndTournamentResult.error;
     }
     try {
       await tournamentRepository.finishTournament(_activeTournament!);
       return EndTournamentResult.success;
     } catch (error, stackTrace) {
-      await reportError(error, stackTrace);
+      await reportError(
+        error,
+        stackTrace,
+        "Error when ending the tournament",
+      );
       return EndTournamentResult.error;
     }
   }

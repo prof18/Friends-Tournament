@@ -94,20 +94,16 @@ class Welcome extends StatelessWidget {
                               children: [
                                 Text(
                                   "Friends",
-                                  style: GoogleFonts.nunito(
-                                    textStyle: const TextStyle(
-                                      fontSize: 42,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 42,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
                                   "Tournament",
-                                  style: GoogleFonts.nunito(
-                                    textStyle: const TextStyle(
-                                      fontSize: 42,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 42,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
@@ -137,8 +133,9 @@ class Welcome extends StatelessWidget {
                                 context,
                                 'friends_tournament_intro_message',
                               ),
-                              style: GoogleFonts.nunito(
-                                textStyle: const TextStyle(fontSize: 24),
+                              style: GoogleFonts.montserrat(
+                                textStyle:
+                                    Theme.of(context).textTheme.headline5,
                               ),
                             ),
                           ),
@@ -160,21 +157,27 @@ class Welcome extends StatelessWidget {
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            MarginsRaw.borderRadius),
-                                        side:
-                                            BorderSide(color: AppColors.blue)),
-                                    padding: Margins.regular,
-                                    primary: AppColors.blue,
-                                    textStyle:
-                                        const TextStyle(color: Colors.white)),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          MarginsRaw.borderRadius),
+                                      side: BorderSide(color: AppColors.blue)),
+                                  padding: Margins.regular,
+                                  primary: AppColors.blue,
+                                  textStyle: GoogleFonts.montserrat(
+                                    textStyle: Theme.of(context)
+                                        .textTheme
+                                        .button
+                                        ?.copyWith(color: Colors.white),
+                                  ),
+                                ),
                                 child: Text(
                                   AppLocalizations.translate(
                                     context,
                                     'start_tournament_btn',
                                   ),
-                                  style: const TextStyle(fontSize: 20),
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 20,
+                                  ),
                                 ),
                               )),
                         ],

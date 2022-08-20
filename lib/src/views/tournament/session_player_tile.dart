@@ -54,7 +54,7 @@ class SessionPlayerTile extends StatelessWidget {
                   top: MarginsRaw.regular, left: MarginsRaw.regular),
               child: Text(
                 player.name,
-                style: const TextStyle(fontSize: 16),
+                style: AppTextStyle.textStyle(fontSize: 16),
               ),
             ),
             Row(
@@ -68,11 +68,11 @@ class SessionPlayerTile extends StatelessWidget {
                       children: [
                         Text(
                           player.score.toString(),
-                          style: const TextStyle(fontSize: 32),
+                          style: AppTextStyle.textStyle(fontSize: 32),
                         ),
                         Text(
                           AppLocalizations.translate(context, 'score',),
-                          style: const TextStyle(fontSize: 12),
+                          style: AppTextStyle.textStyle(fontSize: 12),
                         )
                       ],
                     ),

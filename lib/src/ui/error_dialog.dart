@@ -32,7 +32,12 @@ showErrorDialog(BuildContext context, bool isMounted) {
             Radius.circular(MarginsRaw.borderRadius),
           ),
         ),
-        title: Text(AppLocalizations.translate(context, 'something_not_working_title',),),
+        title: Text(
+          AppLocalizations.translate(
+            context,
+            'something_not_working_title',
+          ),
+        ),
         content: SizedBox(
           height: 250,
           child: Column(
@@ -47,8 +52,11 @@ showErrorDialog(BuildContext context, bool isMounted) {
               Padding(
                 padding: const EdgeInsets.only(top: MarginsRaw.regular),
                 child: Text(
-                  AppLocalizations.translate(context, 'something_not_working_message',),
-                  style: const TextStyle(fontSize: 18),
+                  AppLocalizations.translate(
+                    context,
+                    'something_not_working_message',
+                  ),
+                  style: AppTextStyle.textStyle(fontSize: 18),
                 ),
               )
             ],
@@ -57,8 +65,11 @@ showErrorDialog(BuildContext context, bool isMounted) {
         actions: <Widget>[
           TextButton(
             child: Text(
-                AppLocalizations.translate(context, 'restart_from_scratch',),
+              AppLocalizations.translate(
+                context,
+                'restart_from_scratch',
               ),
+            ),
             onPressed: () async {
               await tournamentRepository.finishAllTournament();
               if (!isMounted) return;

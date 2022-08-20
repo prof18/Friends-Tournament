@@ -52,10 +52,7 @@ class PlayersAST extends StatelessWidget implements SetupPage {
                 ),
                 child: Text(
                   AppLocalizations.translate(context, 'number_of_players_ast_title',),
-                  style: const TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: AppTextStyle.onboardingTitleStyle,
                 ),
               ),
               Padding(

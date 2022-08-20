@@ -38,9 +38,7 @@ InputDecoration getTextFieldDecoration(String? hintText) {
         borderSide: BorderSide(color: Colors.transparent),
       ),
       filled: true,
-      hintStyle: TextStyle(
-        color: Colors.grey[500],
-      ),
+      hintStyle: AppTextStyle.textStyle(color: Colors.grey[500]),
       hintText: hintText,
       fillColor: Colors.white70);
 }

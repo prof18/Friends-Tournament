@@ -76,7 +76,10 @@ class PlayersName extends StatelessWidget implements SetupPage {
       for (int i = 0; i < playersNumber; i++) {
         TextFieldWrapper textFieldWrapper = TextFieldWrapper(
             TextEditingController(),
-            "${AppLocalizations.translate(context, 'player_label',)} ${i + 1}");
+            "${AppLocalizations.translate(
+              context,
+              'player_label',
+            )} ${i + 1}");
         if (playersName.containsKey(i)) {
           textFieldWrapper.value = playersName[i];
           textFieldWrapper.textEditingController.text = playersName[i]!;
@@ -104,11 +107,11 @@ class PlayersName extends StatelessWidget implements SetupPage {
             bottom: MarginsRaw.small,
           ),
           child: Text(
-            AppLocalizations.translate(context, 'players_name_title',),
-            style: const TextStyle(
-              fontSize: 36,
-              fontWeight: FontWeight.bold,
+            AppLocalizations.translate(
+              context,
+              'players_name_title',
             ),
+            style: AppTextStyle.onboardingTitleStyle,
           ),
         ),
         Padding(
@@ -163,7 +166,8 @@ class PlayersName extends StatelessWidget implements SetupPage {
         }
       }
     }
-    Provider.of<SetupProvider>(context, listen: false).setPlayersName(_savedValues);
+    Provider.of<SetupProvider>(context, listen: false)
+        .setPlayersName(_savedValues);
   }
 
   @override
@@ -200,7 +204,10 @@ class PlayersName extends StatelessWidget implements SetupPage {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.translate(context, 'player_name_duplicated',),
+            AppLocalizations.translate(
+              context,
+              'player_name_duplicated',
+            ),
           ),
         ),
       );
@@ -215,7 +222,10 @@ class PlayersName extends StatelessWidget implements SetupPage {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.translate(context, 'player_name_empty_fields_message',),
+            AppLocalizations.translate(
+              context,
+              'player_name_empty_fields_message',
+            ),
           ),
         ),
       );

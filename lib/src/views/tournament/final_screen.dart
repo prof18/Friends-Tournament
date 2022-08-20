@@ -88,7 +88,7 @@ class _FinalScreenState extends State<FinalScreen> {
                                   builder: (context, provider, child) {
                                 return Text(
                                   provider.tournamentName!,
-                                  style: const TextStyle(fontSize: 28),
+                                  style: AppTextStyle.textStyle(fontSize: 28),
                                 );
                               }),
                             ),
@@ -98,7 +98,8 @@ class _FinalScreenState extends State<FinalScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const SettingsScreen()),
+                                    builder: (context) =>
+                                        const SettingsScreen()),
                               );
                             },
                             child: const Icon(
@@ -151,7 +152,7 @@ class _FinalScreenState extends State<FinalScreen> {
                             context,
                             'winner_title',
                           ),
-                          style: const TextStyle(fontSize: 28),
+                          style: AppTextStyle.textStyle(fontSize: 28),
                         ),
                       ),
                     ),
@@ -170,8 +171,10 @@ class _FinalScreenState extends State<FinalScreen> {
                                         context,
                                         'winner_error_message',
                                       ),
-                                style: const TextStyle(
-                                    fontSize: 36, fontWeight: FontWeight.bold),
+                                style: AppTextStyle.textStyle(
+                                  fontSize: 36,
+                                  fontWeight: FontWeight.bold,
+                                ),
                                 key: winnerTextKey,
                               ),
                             ),
@@ -217,7 +220,7 @@ class _FinalScreenState extends State<FinalScreen> {
                                       side: BorderSide(color: AppColors.blue),
                                     ),
                                     primary: AppColors.blue,
-                                    textStyle: const TextStyle(
+                                    textStyle: AppTextStyle.textStyle(
                                       color: Colors.white,
                                     ),
                                     padding: Margins.regular,
@@ -227,7 +230,7 @@ class _FinalScreenState extends State<FinalScreen> {
                                       context,
                                       'leaderboard',
                                     ),
-                                    style: const TextStyle(fontSize: 16),
+                                    style: AppTextStyle.textStyle(fontSize: 16),
                                   ),
                                 ),
                               ),
@@ -254,7 +257,7 @@ class _FinalScreenState extends State<FinalScreen> {
                                     side: BorderSide(color: AppColors.blue),
                                   ),
                                   primary: AppColors.blue,
-                                  textStyle: const TextStyle(
+                                  textStyle: AppTextStyle.textStyle(
                                     color: Colors.white,
                                   ),
                                   padding: Margins.regular,
@@ -264,7 +267,7 @@ class _FinalScreenState extends State<FinalScreen> {
                                     context,
                                     'new_tournament_button',
                                   ),
-                                  style: const TextStyle(fontSize: 16),
+                                  style: AppTextStyle.textStyle(fontSize: 16),
                                 ),
                               ),
                             ),

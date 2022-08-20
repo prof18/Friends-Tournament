@@ -52,7 +52,7 @@ class SetupCounterWidget extends StatelessWidget {
                 padding: Margins.regular,
                 child: Text(
                   currentValue.toString(),
-                  style: const TextStyle(fontSize: 28),
+                  style: AppTextStyle.textStyle(fontSize: 28),
                 ),
               ),
             ),

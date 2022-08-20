@@ -44,7 +44,7 @@ showEndTournamentDialog(
                 padding: const EdgeInsets.only(top: MarginsRaw.regular),
                 child: Text(
                   message!,
-                  style: const TextStyle(fontSize: 18),
+                  style: AppTextStyle.textStyle(fontSize: 18),
                 ),
               )
             ],

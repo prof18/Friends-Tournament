@@ -16,6 +16,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/ui/utils.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Margins {
   static const small = EdgeInsets.all(8.0);
@@ -37,4 +38,23 @@ class MarginsRaw {
 
 class AppColors {
   static final blue = hexToColor("#1838F9");
+}
+
+class AppTextStyle {
+  static final onboardingTitleStyle = GoogleFonts.montserrat(
+    fontSize: 34,
+    fontWeight: FontWeight.bold,
+  );
+
+  static TextStyle textStyle({
+    double? fontSize,
+    Color? color,
+    FontWeight? fontWeight,
+  }) {
+    return GoogleFonts.montserrat(
+      fontSize: fontSize,
+      color: color,
+      fontWeight: fontWeight,
+    );
+  }
 }

@@ -92,7 +92,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                                 const EdgeInsets.only(top: MarginsRaw.regular),
                             child: Text(
                               AppLocalizations.translate(context, 'leaderboard',),
-                              style: const TextStyle(fontSize: 28),
+                              style: AppTextStyle.textStyle(fontSize: 28),
                             ),
                           ),
                         ],

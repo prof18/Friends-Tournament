@@ -97,8 +97,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
             alignment: AlignmentDirectional.bottomCenter,
             children: <Widget>[
               Padding(
-                padding:
-                const EdgeInsets.only(bottom: MarginsRaw.xlarge),
+                padding: const EdgeInsets.only(bottom: MarginsRaw.xlarge),
                 child: PageView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   controller: _pageController,
@@ -135,10 +134,13 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
                               top: MarginsRaw.medium,
                               right: MarginsRaw.medium),
                           child: Text(
-                            AppLocalizations.translate(context, 'generic_back',),
-                            style: const TextStyle(
+                            AppLocalizations.translate(
+                              context,
+                              'generic_back',
+                            ),
+                            style: AppTextStyle.textStyle(
+                              fontSize: 14,
                               fontWeight: FontWeight.w600,
-                              fontSize: 14.0,
                             ),
                           ),
                         ),
@@ -152,11 +154,9 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
                       customBorder: const CircleBorder(),
                       onTap: () {
                         final page = _allPages[_currentPageIndex];
-                        final canGoForward =
-                        page.onNextPressed(context);
+                        final canGoForward = page.onNextPressed(context);
                         if (canGoForward) {
-                          if (_currentPageIndex !=
-                              _allPages.length - 1) {
+                          if (_currentPageIndex != _allPages.length - 1) {
                             FocusScope.of(context).unfocus();
                             _pageController.animateToPage(
                                 _currentPageIndex += 1,
@@ -174,12 +174,15 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
                             top: MarginsRaw.medium,
                             left: MarginsRaw.medium),
                         child: Text(
-                          AppLocalizations.translate(context, _currentPageIndex == _allPages.length - 1
-                              ? "generic_done"
-                              : "generic_next",),
-                          style: const TextStyle(
+                          AppLocalizations.translate(
+                            context,
+                            _currentPageIndex == _allPages.length - 1
+                                ? "generic_done"
+                                : "generic_next",
+                          ),
+                          style: AppTextStyle.textStyle(
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            fontSize: 14.0,
                           ),
                         ),
                       ),
@@ -230,16 +233,25 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
             ),
           ),
           title: Text(
-            AppLocalizations.translate(context, 'tournament_building_title',),
+            AppLocalizations.translate(
+              context,
+              'tournament_building_title',
+            ),
           ),
           content: Text(
-            AppLocalizations.translate(context, 'tournament_building_message',),
+            AppLocalizations.translate(
+              context,
+              'tournament_building_message',
+            ),
           ),
           actions: <Widget>[
             TextButton(
               child: Text(
-                  AppLocalizations.translate(context, 'generic_cancel',),
-                  ),
+                AppLocalizations.translate(
+                  context,
+                  'generic_cancel',
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -247,7 +259,10 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
             TextButton(
               key: finishSetupProceedButtonKey,
               child: Text(
-                AppLocalizations.translate(context, 'tournament_building_go_button',),
+                AppLocalizations.translate(
+                  context,
+                  'tournament_building_go_button',
+                ),
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -266,7 +281,10 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
       barrierDismissible: false,
       builder: (_) => DialogLoader(
         controller: _controller,
-        text: AppLocalizations.translate(context, 'generating_tournament_message',),
+        text: AppLocalizations.translate(
+          context,
+          'generating_tournament_message',
+        ),
       ),
     );
 

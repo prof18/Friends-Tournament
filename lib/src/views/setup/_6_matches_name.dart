@@ -104,10 +104,7 @@ class MatchesName extends StatelessWidget implements SetupPage {
               right: MarginsRaw.regular),
           child: Text(
             AppLocalizations.translate(context, 'matches_name_title',),
-            style: const TextStyle(
-              fontSize: 36,
-              fontWeight: FontWeight.bold,
-            ),
+            style: AppTextStyle.onboardingTitleStyle,
           ),
         ),
         Padding(

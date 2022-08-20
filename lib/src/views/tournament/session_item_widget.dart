@@ -42,9 +42,7 @@ class SessionItemWidget extends StatelessWidget {
             ),
             child: Text(
               session.name,
-              style: const TextStyle(
-                fontSize: 24,
-              ),
+              style: AppTextStyle.textStyle(fontSize: 24),
             ),
           ),
           Padding(

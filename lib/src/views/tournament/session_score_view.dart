@@ -176,7 +176,7 @@ class _SessionScoreViewState extends State<SessionScoreView> {
                     AppLocalizations.translate(context, isEdit
                         ? "match_score_update_message"
                         : "match_score_save_message",),
-                    style: const TextStyle(fontSize: 18),
+                    style: AppTextStyle.textStyle(fontSize: 18),
                   ),
                 )
               ],

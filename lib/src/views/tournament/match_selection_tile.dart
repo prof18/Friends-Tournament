@@ -17,6 +17,7 @@
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/data/model/app/ui_match.dart';
 import 'package:friends_tournament/src/provider/tournament_provider.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +25,8 @@ class MatchSelectionTile extends StatelessWidget {
   final UIMatch match;
   final AnimationController? controller;
 
-  const MatchSelectionTile({Key? key, required this.match, this.controller}) : super(key: key);
+  const MatchSelectionTile({Key? key, required this.match, this.controller})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +60,7 @@ class MatchSelectionTile extends StatelessWidget {
                     : const EdgeInsets.all(0.0),
                 child: Text(
                   match.name,
-                  style: const TextStyle(
+                  style: AppTextStyle.textStyle(
                     fontSize: 24,
                     color: Colors.white,
                   ),

@@ -25,7 +25,10 @@ class SettingsTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: MarginsRaw.small, bottom: MarginsRaw.small,),
+      padding: const EdgeInsets.only(
+        top: MarginsRaw.small,
+        bottom: MarginsRaw.small,
+      ),
       child: Material(
         elevation: 6,
         borderRadius: BorderRadius.circular(
@@ -37,7 +40,7 @@ class SettingsTile extends StatelessWidget {
             padding: Margins.regular,
             child: Text(
               title!,
-              style: const TextStyle(fontSize: 16),
+              style: AppTextStyle.textStyle(fontSize: 16),
             ),
           ),
         ),

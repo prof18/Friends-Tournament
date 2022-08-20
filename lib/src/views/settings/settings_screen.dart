@@ -75,12 +75,12 @@ class SettingsScreen extends StatelessWidget {
                       width: 80,
                     ),
                   ),
-                  const Padding(
+                  Padding(
                     padding: Margins.regular,
                     child: Text(
                       "Friends Tournament",
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 32),
+                      style: AppTextStyle.textStyle(fontSize: 32),
                     ),
                   ),
                   Padding(
@@ -89,9 +89,12 @@ class SettingsScreen extends StatelessWidget {
                       right: MarginsRaw.regular,
                     ),
                     child: Text(
-                      AppLocalizations.translate(context, 'friends_tournament_claim',),
+                      AppLocalizations.translate(
+                        context,
+                        'friends_tournament_claim',
+                      ),
                       textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 18),
+                      style: AppTextStyle.textStyle(fontSize: 18),
                     ),
                   ),
                   const SizedBox(
@@ -102,7 +105,10 @@ class SettingsScreen extends StatelessWidget {
                       _openURL("https://github.com/prof18/Friends-Tournament/");
                     },
                     child: SettingsTile(
-                      AppLocalizations.translate(context, 'show_github',),
+                      AppLocalizations.translate(
+                        context,
+                        'show_github',
+                      ),
                     ),
                   ),
                   GestureDetector(
@@ -111,12 +117,17 @@ class SettingsScreen extends StatelessWidget {
                           "https://github.com/prof18/Friends-Tournament/blob/master/privacy_policy.md");
                     },
                     child: SettingsTile(
-                      AppLocalizations.translate(context, 'privacy_policy',),
+                      AppLocalizations.translate(
+                        context,
+                        'privacy_policy',
+                      ),
                     ),
                   ),
                   GestureDetector(
                     onTap: () {
                       LicenseRegistry.addLicense(() async* {
+                        final license = await rootBundle.loadString('google_fonts/OFL.txt');
+                        yield LicenseEntryWithLineBreaks(['google_fonts'], license);
                         yield const LicenseEntryWithLineBreaks(
                             <String>['freepik'], '''
                               <a href="https://it.freepik.com/foto-vettori-gratuito/design">Vectors and illustrations from freepik - freepik.com</a>''');
@@ -124,14 +135,7 @@ class SettingsScreen extends StatelessWidget {
 
                       Navigator.of(context).push(MaterialPageRoute<void>(
                         builder: (context) => Theme(
-                          data: Theme.of(context).copyWith(
-                              textTheme: Typography.material2018(
-                                platform: Theme.of(context).platform,
-                              ).black,
-                              scaffoldBackgroundColor: Colors.white,
-                              appBarTheme: const AppBarTheme(
-                                systemOverlayStyle: SystemUiOverlayStyle.light,
-                              )),
+                          data: Theme.of(context),
                           child: const LicensePage(
                             applicationName: "Friends Tournament",
                             applicationLegalese: "© 2019-2020 Marco Gomiero",
@@ -140,7 +144,10 @@ class SettingsScreen extends StatelessWidget {
                       ));
                     },
                     child: SettingsTile(
-                      AppLocalizations.translate(context, 'open_source_license',),
+                      AppLocalizations.translate(
+                        context,
+                        'open_source_license',
+                      ),
                     ),
                   ),
                   const SizedBox(
@@ -157,10 +164,16 @@ class SettingsScreen extends StatelessWidget {
                       builder: (context, snapshot) {
                         return Text(
                           snapshot.hasData
-                              ? "${AppLocalizations.translate(context, 'app_version',)}: ${snapshot.data}"
+                              ? "${AppLocalizations.translate(
+                                  context,
+                                  'app_version',
+                                )}: ${snapshot.data}"
                               : "",
                           textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 14, color: Colors.black38),
+                          style: AppTextStyle.textStyle(
+                            fontSize: 14,
+                            color: Colors.black38,
+                          ),
                         );
                       },
                     ),
@@ -170,13 +183,22 @@ class SettingsScreen extends StatelessWidget {
                         top: MarginsRaw.regular, bottom: MarginsRaw.small),
                     child: RichText(
                       text: TextSpan(
-                        style: const TextStyle(color: Colors.black38, fontSize: 16),
+                        style: AppTextStyle.textStyle(
+                          fontSize: 16,
+                          color: Colors.black38,
+                        ),
                         children: <TextSpan>[
                           TextSpan(
-                            text: AppLocalizations.translate(context, 'developed_by',),
+                            text: AppLocalizations.translate(
+                              context,
+                              'developed_by',
+                            ),
                           ),
                           TextSpan(
-                              style: TextStyle(color: AppColors.blue),
+                              style: AppTextStyle.textStyle(
+                                fontSize: 16,
+                                color: AppColors.blue,
+                              ),
                               text: 'Marco Gomiero',
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {

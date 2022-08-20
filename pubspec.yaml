@@ -43,9 +43,6 @@ dev_dependencies:
   integration_test:
     sdk: flutter
 
-  flutter_driver:
-    sdk: flutter
-
   sqflite_common_ffi: ^2.1.1+1
   synchronized: ^3.0.0+2
   flutter_lints: ^2.0.1
@@ -54,6 +51,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - google_fonts/
     - intro-art.svg
     - players_art.svg
     - player-ast-art.svg

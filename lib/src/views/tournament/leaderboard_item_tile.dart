@@ -52,9 +52,7 @@ class LeaderboardItemTile extends StatelessWidget {
               ),
               child: Text(
                 position.toString(),
-                style: const TextStyle(
-                  fontSize: 16,
-                ),
+                style: AppTextStyle.textStyle(fontSize: 16),
                 key: getKeyForLeaderboardPlayerPosition(uiPlayer.name),
               ),
             ),
@@ -62,9 +60,7 @@ class LeaderboardItemTile extends StatelessWidget {
               padding: Margins.regular,
               child: Text(
                 uiPlayer.name,
-                style: const TextStyle(
-                  fontSize: 24,
-                ),
+                style: AppTextStyle.textStyle(fontSize: 24),
               ),
             ),
             const Spacer(),
@@ -72,9 +68,7 @@ class LeaderboardItemTile extends StatelessWidget {
               padding: Margins.regular,
               child: Text(
                 uiPlayer.score.toString(),
-                style: const TextStyle(
-                  fontSize: 24,
-                ),
+                style: AppTextStyle.textStyle(fontSize: 24),
                 key: getKeyForLeaderboardPlayerScore(uiPlayer.name),
               ),
             ),

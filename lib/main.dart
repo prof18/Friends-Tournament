@@ -20,13 +20,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:friends_tournament/firebase_options.dart';
+import 'package:friends_tournament/src/data/model/app/first_screen_type.dart';
 import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/provider/leaderboard_provider.dart';
+import 'package:friends_tournament/src/provider/main_provider.dart';
 import 'package:friends_tournament/src/provider/tournament_provider.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
-import 'package:friends_tournament/src/utils/service_locator.dart';
 import 'package:friends_tournament/src/views/tournament/final_screen.dart';
 import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
 import 'package:friends_tournament/src/views/welcome_screen.dart';
@@ -43,139 +43,77 @@ void main() async {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
     runApp(const MyApp());
-  },
-          (error, stack,) =>
-          FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
+  }, (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+  });
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({
-    Key? key,
-  }) : super(key: key);
-
-  // This widget is the root of your application.
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  var _isLoading = true;
-  var _isActive = false;
-  Tournament? _lastTournament;
-
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadData();
-    });
-  }
-
-  _loadData() async {
-    var isActive = false;
-    try {
-      isActive = await tournamentRepository.isTournamentActive();
-      if (!isActive) {
-        _lastTournament = await tournamentRepository.getLastFinishedTournament();
-      }
-    } on Exception catch (_) {
-      // do nothing, we assume that the tournament is not active
-    }
-
-    await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoderBuilder, 'assets/intro-art.svg'),
-        null);
-    await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoderBuilder, 'assets/players_art.svg'),
-        null);
-    await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoderBuilder, 'assets/player-ast-art.svg'),
-        null);
-    await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoderBuilder, 'assets/matches-art.svg'),
-        null);
-
-    await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoderBuilder, 'assets/podium-art.svg'),
-        null);
-
-    await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoderBuilder, 'assets/error-art.svg'),
-        null);
-
-    await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoderBuilder, 'assets/finish-art.svg'),
-        null);
-
-    await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoderBuilder, 'assets/save-art.svg'),
-        null);
-
-    await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoderBuilder, 'assets/winner-art.svg'),
-        null);
-
-    setState(() {
-      _isActive = isActive;
-      _isLoading = false;
-    });
-  }
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Friends Tournament',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        textTheme: GoogleFonts.montserratTextTheme(
-          Theme.of(context).textTheme,
+    return ChangeNotifierProvider(
+      create: (context) => MainProvider(),
+      child: MaterialApp(
+        title: 'Friends Tournament',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          textTheme: GoogleFonts.montserratTextTheme(
+            Theme.of(context).textTheme,
+          ),
         ),
-      ),
 
-      supportedLocales: const [
-        Locale('en', ''),
-        Locale('it', ''),
-        Locale('pt', ''),
-        Locale('es', ''),
-        Locale('fr', ''),
-      ],
-      // These delegates make sure that the localization data for the proper language is loaded
-      localizationsDelegates: const [
-        // A class which loads the translations from JSON files
-        AppLocalizations.delegate,
-        // Built-in localization of basic text for Material widgets
-        GlobalMaterialLocalizations.delegate,
-        // Built-in localization for text direction LTR/RTL
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      // Returns a locale which will be used by the app
-      localeResolutionCallback: (locale, supportedLocales) {
-        // Check if the current device locale is supported
-        for (var supportedLocale in supportedLocales) {
-          if (supportedLocale.languageCode == locale!.languageCode) {
-            return supportedLocale;
+        supportedLocales: const [
+          Locale('en', ''),
+          Locale('it', ''),
+          Locale('pt', ''),
+          Locale('es', ''),
+          Locale('fr', ''),
+        ],
+        // These delegates make sure that the localization data for the proper language is loaded
+        localizationsDelegates: const [
+          // A class which loads the translations from JSON files
+          AppLocalizations.delegate,
+          // Built-in localization of basic text for Material widgets
+          GlobalMaterialLocalizations.delegate,
+          // Built-in localization for text direction LTR/RTL
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        // Returns a locale which will be used by the app
+        localeResolutionCallback: (locale, supportedLocales) {
+          // Check if the current device locale is supported
+          for (var supportedLocale in supportedLocales) {
+            if (supportedLocale.languageCode == locale!.languageCode) {
+              return supportedLocale;
+            }
           }
-        }
-        // If the locale of the device is not supported, use the first one
-        // from the list (English, in this case).
-        return supportedLocales.first;
-      },
-      home: _isLoading
-          ? buildLoader()
-          : _isActive
-              ? _buildTournamentScreen()
-              : _buildWelcomeScreen(),
+          // If the locale of the device is not supported, use the first one
+          // from the list (English, in this case).
+          return supportedLocales.first;
+        },
+        home: _buildHome(),
+      ),
     );
+  }
+
+  Widget _buildHome() {
+    return Consumer<MainProvider>(builder: (context, provider, child) {
+      final screen = provider.firstScreenType;
+      if (screen is LoadingScreen) {
+        return buildLoader();
+      } else if (screen is WelcomeScreen) {
+        return const Welcome();
+      } else if (screen is TournamentViewScreen) {
+        return _buildTournamentScreen();
+      } else if (screen is LastTournamentResultScreen) {
+        final tournament = screen.tournament;
+        return _buildFinalScreen(tournament);
+      } else {
+        // fallback, should never happen!
+        return const Welcome();
+      }
+    });
   }
 
   Widget buildLoader() {
@@ -188,21 +126,17 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Widget _buildWelcomeScreen() {
-    return _lastTournament != null ? _buildFinalScreen() : const Welcome();
-  }
-
-  Widget _buildFinalScreen() {
+  Widget _buildFinalScreen(Tournament lastTournament) {
     return ChangeNotifierProvider(
-      create: (context) => LeaderboardProvider(_lastTournament!),
+      create: (context) => LeaderboardProvider(lastTournament),
       child: const FinalScreen(),
     );
   }
 
   Widget _buildTournamentScreen() {
     return ChangeNotifierProvider(
-        create: (context) => TournamentProvider(),
-        child: const TournamentScreen(),
+      create: (context) => TournamentProvider(),
+      child: const TournamentScreen(),
     );
   }
 }

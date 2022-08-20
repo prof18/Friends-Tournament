@@ -20,12 +20,12 @@ import 'package:friends_tournament/src/provider/setup_provider.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/text_field_decoration.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/views/setup/setup_chip_separator.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:provider/provider.dart';
 
 class TournamentName extends StatelessWidget implements SetupPage {
-  final TextEditingController _tournamentController =
-      TextEditingController();
+  final TextEditingController _tournamentController = TextEditingController();
 
   TournamentName({Key? key}) : super(key: key);
 
@@ -41,58 +41,11 @@ class TournamentName extends StatelessWidget implements SetupPage {
               children: <Widget>[
                 Expanded(
                   flex: 6,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: MarginsRaw.regular),
-                    child: SvgPicture.asset(
-                      'assets/intro-art.svg',
-                    ),
-                  ),
+                  child: _buildImage(),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: MarginsRaw.regular,
-                    bottom: MarginsRaw.small,
-                  ),
-                  child: Text(
-                    AppLocalizations.translate(context, 'tournament_name_title',),
-                    style: AppTextStyle.onboardingTitleStyle,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: MarginsRaw.medium,
-                    bottom: MarginsRaw.medium,
-                  ),
-                  child: Container(
-                    alignment: Alignment.topLeft,
-                    decoration: BoxDecoration(
-                      color: AppColors.blue,
-                      borderRadius: BorderRadius.circular(
-                        MarginsRaw.borderRadius,
-                      ),
-                    ),
-                    height: 6,
-                    width: 60,
-                  ),
-                ),
-                Material(
-                  elevation: MarginsRaw.elevation,
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(MarginsRaw.borderRadius),
-                  ),
-                  child: TextField(
-                    controller: _tournamentController,
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.done,
-                    decoration: getTextFieldDecoration(
-                      AppLocalizations.translate(context, 'tournament_name_title',),
-                    ),
-                    onSubmitted: (_) {
-                      print(">>> submitted");
-                      onNextPressed(context);
-                    },
-                  ),
-                ),
+                _buildTitle(context),
+                const SetupChipSeparator(),
+                _buildTextField(context),
                 Expanded(
                   flex: 4,
                   child: Container(),
@@ -102,6 +55,43 @@ class TournamentName extends StatelessWidget implements SetupPage {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildImage() {
+    return Padding(
+      padding: const EdgeInsets.only(top: MarginsRaw.regular),
+      child: SvgPicture.asset('assets/intro-art.svg'),
+    );
+  }
+
+  Widget _buildTitle(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: MarginsRaw.regular,
+        bottom: MarginsRaw.small,
+      ),
+      child: Text(
+        AppLocalizations.translate(context, 'tournament_name_title'),
+        style: AppTextStyle.onboardingTitleStyle,
+      ),
+    );
+  }
+
+  Widget _buildTextField(BuildContext context) {
+    return Material(
+      elevation: MarginsRaw.elevation,
+      borderRadius: const BorderRadius.all(
+        Radius.circular(MarginsRaw.borderRadius),
+      ),
+      child: TextField(
+        controller: _tournamentController,
+        keyboardType: TextInputType.text,
+        textInputAction: TextInputAction.done,
+        decoration: getTextFieldDecoration(
+          AppLocalizations.translate(context, 'tournament_name_title'),
+        ),
+      ),
     );
   }
 
@@ -117,7 +107,10 @@ class TournamentName extends StatelessWidget implements SetupPage {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.translate(context, 'tournament_name_empty_fields_message',),
+            AppLocalizations.translate(
+              context,
+              'tournament_name_empty_fields_message',
+            ),
           ),
         ),
       );

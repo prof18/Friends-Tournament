@@ -16,7 +16,9 @@ const saveScoreOkKey = ValueKey('saveScoreOkButton');
 
 const endTournamentKey = ValueKey('endTournamentOkButton');
 
-const tournamentEndedLeaderboardButtonKey = ValueKey('tournamentEndLeaderboardButton');
+const tournamentEndedLeaderboardButtonKey = ValueKey(
+  'tournamentEndLeaderboardButton',
+);
 
 const winnerTextKey = ValueKey('winnerTextKey');
 

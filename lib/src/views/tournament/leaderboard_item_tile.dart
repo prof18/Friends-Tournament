@@ -39,41 +39,51 @@ class LeaderboardItemTile extends StatelessWidget {
       ),
       child: Material(
         elevation: MarginsRaw.elevation,
-        borderRadius: BorderRadius.circular(
-          8,
-        ),
+        borderRadius: BorderRadius.circular(8),
         child: Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                top: MarginsRaw.regular,
-                bottom: MarginsRaw.regular,
-                left: MarginsRaw.regular,
-              ),
-              child: Text(
-                position.toString(),
-                style: AppTextStyle.textStyle(fontSize: 16),
-                key: getKeyForLeaderboardPlayerPosition(uiPlayer.name),
-              ),
-            ),
-            Padding(
-              padding: Margins.regular,
-              child: Text(
-                uiPlayer.name,
-                style: AppTextStyle.textStyle(fontSize: 24),
-              ),
-            ),
+            _buildPlayerPosition(),
+            _buildPlayerName(),
             const Spacer(),
-            Padding(
-              padding: Margins.regular,
-              child: Text(
-                uiPlayer.score.toString(),
-                style: AppTextStyle.textStyle(fontSize: 24),
-                key: getKeyForLeaderboardPlayerScore(uiPlayer.name),
-              ),
-            ),
+            _buildPlayerScore(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildPlayerPosition() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: MarginsRaw.regular,
+        bottom: MarginsRaw.regular,
+        left: MarginsRaw.regular,
+      ),
+      child: Text(
+        position.toString(),
+        style: AppTextStyle.textStyle(fontSize: 16),
+        key: getKeyForLeaderboardPlayerPosition(uiPlayer.name),
+      ),
+    );
+  }
+
+  Widget _buildPlayerName() {
+    return Padding(
+      padding: Margins.regular,
+      child: Text(
+        uiPlayer.name,
+        style: AppTextStyle.textStyle(fontSize: 24),
+      ),
+    );
+  }
+
+  Widget _buildPlayerScore() {
+    return Padding(
+      padding: Margins.regular,
+      child: Text(
+        uiPlayer.score.toString(),
+        style: AppTextStyle.textStyle(fontSize: 24),
+        key: getKeyForLeaderboardPlayerScore(uiPlayer.name),
       ),
     );
   }

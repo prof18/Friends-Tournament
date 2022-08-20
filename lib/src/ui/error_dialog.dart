@@ -75,10 +75,9 @@ showErrorDialog(BuildContext context, bool isMounted) {
               if (!isMounted) return;
               // ignore: use_build_context_synchronously
               Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                    builder: (context) => const Welcome(),
-                  ),
-                  (Route<dynamic> route) => false);
+                MaterialPageRoute(builder: (context) => const Welcome()),
+                (Route<dynamic> route) => false,
+              );
             },
           )
         ],

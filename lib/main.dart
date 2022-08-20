@@ -26,6 +26,7 @@ import 'package:friends_tournament/src/data/model/db/tournament.dart';
 import 'package:friends_tournament/src/provider/leaderboard_provider.dart';
 import 'package:friends_tournament/src/provider/main_provider.dart';
 import 'package:friends_tournament/src/provider/tournament_provider.dart';
+import 'package:friends_tournament/src/ui/center_loader.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/utils/error_reporting.dart';
 import 'package:friends_tournament/src/views/tournament/final_screen.dart';
@@ -104,7 +105,7 @@ class MyApp extends StatelessWidget {
     return Consumer<MainProvider>(builder: (context, provider, child) {
       final screen = provider.firstScreenType;
       if (screen is LoadingScreen) {
-        return buildLoader();
+        return renderCenterLoader();
       } else if (screen is WelcomeScreen) {
         return const Welcome();
       } else if (screen is TournamentViewScreen) {
@@ -117,16 +118,6 @@ class MyApp extends StatelessWidget {
         return const Welcome();
       }
     });
-  }
-
-  Widget buildLoader() {
-    return const Material(
-      child: SafeArea(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
-      ),
-    );
   }
 
   Widget _buildFinalScreen(Tournament lastTournament) {

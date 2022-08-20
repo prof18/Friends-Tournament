@@ -78,9 +78,9 @@ class _BackdropState extends State<Backdrop>
     final top = height - _panelHeaderHeight;
     const bottom = -_panelHeaderHeight;
     return RelativeRectTween(
-            begin: RelativeRect.fromLTRB(0.0, top, 0.0, bottom),
-            end: const RelativeRect.fromLTRB(0.0, 0.0, 0.0, 0.0))
-        .animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
+      begin: RelativeRect.fromLTRB(0.0, top, 0.0, bottom),
+      end: const RelativeRect.fromLTRB(0.0, 0.0, 0.0, 0.0),
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
   }
 
   @override
@@ -89,92 +89,105 @@ class _BackdropState extends State<Backdrop>
       appBar: AppBar(
         backgroundColor: AppColors.blue,
         elevation: 0.0,
-        title: AnimatedOpacity(
-          opacity: _panelExpanded ? 0.0 : 1.0,
-          duration: const Duration(milliseconds: 200),
-          child: Consumer<TournamentProvider>(
-            builder: (context, provider, child) {
-              return provider.currentMatch != null
-                  ? Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text(provider.currentMatch!.name),
-                    )
-                  : Container();
-            },
-          ),
-        ),
-        leading: IconButton(
-          key: matchViewButtonKey,
-          onPressed: () {
-            _controller.fling(velocity: _isPanelVisible ? -1.0 : 1.0);
-          },
-          icon: AnimatedIcon(
-            icon: AnimatedIcons.close_menu,
-            progress: _controller.view,
-          ),
-        ),
+        title: _buildMatchNameTitle(),
+        leading: _buildMenuButton(),
         actions: <Widget>[
-          Visibility(
-            visible: !_panelExpanded,
-            child: IconButton(
-              icon: const Icon(CustomIcons.podium),
-              key: leaderboardButtonKey,
-              onPressed: () {
-                final tournament = Provider.of<TournamentProvider>(
-                  context,
-                  listen: false,
-                ).activeTournament;
-
-                if (tournament == null) {
-                  reportError(
-                    ActiveTournamentNullException(),
-                    null,
-                    "Error while expanding the match backdrop",
-                  );
-                  showErrorDialog(context, mounted);
-                }
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChangeNotifierProvider(
-                      create: (context) => LeaderboardProvider(tournament!),
-                      child: const LeaderboardScreen(isFromFinalScreen: false),
-                    ),
-                  ),
-                );
-              },
-              tooltip: AppLocalizations.translate(
-                context,
-                'show_leaderboard_tooltip',
-              ),
-            ),
-          ),
-          Visibility(
-            visible: !_panelExpanded,
-            child: IconButton(
-              icon: const Icon(CustomIcons.flagCheckered),
-              onPressed: () {
-                showEndTournamentDialog(
-                  context,
-                  Provider.of<TournamentProvider>(context, listen: false),
-                  AppLocalizations.translate(
-                    context,
-                    'finish_tournament_message',
-                  ),
-                  mounted,
-                );
-              },
-              tooltip: AppLocalizations.translate(
-                context,
-                'finish_tournament_tooltip',
-              ),
-            ),
-          ),
+          _buildShowLeaderboardButton(context),
+          _buildFinishTournamentButton(context),
         ],
       ),
       body: LayoutBuilder(
         builder: _buildStack,
+      ),
+    );
+  }
+
+  Widget _buildMatchNameTitle() {
+    return AnimatedOpacity(
+      opacity: _panelExpanded ? 0.0 : 1.0,
+      duration: const Duration(milliseconds: 200),
+      child: Consumer<TournamentProvider>(
+        builder: (context, provider, child) {
+          return provider.currentMatch != null
+              ? Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text(provider.currentMatch!.name),
+                )
+              : Container();
+        },
+      ),
+    );
+  }
+
+  Widget _buildMenuButton() {
+    return IconButton(
+      key: matchViewButtonKey,
+      onPressed: () {
+        _controller.fling(velocity: _isPanelVisible ? -1.0 : 1.0);
+      },
+      icon: AnimatedIcon(
+        icon: AnimatedIcons.close_menu,
+        progress: _controller.view,
+      ),
+    );
+  }
+
+  Widget _buildShowLeaderboardButton(BuildContext context) {
+    return Visibility(
+      visible: !_panelExpanded,
+      child: IconButton(
+        icon: const Icon(CustomIcons.podium),
+        key: leaderboardButtonKey,
+        onPressed: () {
+          final tournament = Provider.of<TournamentProvider>(
+            context,
+            listen: false,
+          ).activeTournament;
+
+          if (tournament == null) {
+            reportError(
+              ActiveTournamentNullException(),
+              null,
+              "Error while clicking to show the leaderboard",
+            );
+            showErrorDialog(context, mounted);
+          }
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChangeNotifierProvider(
+                create: (context) => LeaderboardProvider(tournament!),
+                child: const LeaderboardScreen(isFromFinalScreen: false),
+              ),
+            ),
+          );
+        },
+        tooltip: AppLocalizations.translate(
+          context,
+          'show_leaderboard_tooltip',
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFinishTournamentButton(BuildContext context) {
+    return Visibility(
+      visible: !_panelExpanded,
+      child: IconButton(
+        icon: const Icon(CustomIcons.flagCheckered),
+        onPressed: () {
+          showEndTournamentDialog(
+            context,
+            Provider.of<TournamentProvider>(context, listen: false),
+            AppLocalizations.translate(context, 'finish_tournament_message'),
+            mounted,
+          );
+        },
+        tooltip: AppLocalizations.translate(
+          context,
+          'finish_tournament_tooltip',
+        ),
       ),
     );
   }
@@ -189,11 +202,13 @@ class _BackdropState extends State<Backdrop>
           PositionedTransition(
             rect: animation,
             child: Material(
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(16.0),
-                    topRight: Radius.circular(16.0)),
-                elevation: 12.0,
-                child: widget.contentWidget),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16.0),
+                topRight: Radius.circular(16.0),
+              ),
+              elevation: 12.0,
+              child: widget.contentWidget,
+            ),
           )
         ],
       ),

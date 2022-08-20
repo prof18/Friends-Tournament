@@ -27,9 +27,10 @@ import 'package:friends_tournament/src/views/tournament/leaderboard_item_tile.da
 import 'package:provider/provider.dart';
 
 class LeaderboardScreen extends StatefulWidget {
-  final bool? isFromFinalScreen;
+  final bool isFromFinalScreen;
 
-  const LeaderboardScreen({Key? key, this.isFromFinalScreen}) : super(key: key);
+  const LeaderboardScreen({Key? key, required this.isFromFinalScreen})
+      : super(key: key);
 
   @override
   State<LeaderboardScreen> createState() => _LeaderboardScreenState();
@@ -43,7 +44,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        if (!widget.isFromFinalScreen!) {
+        if (!widget.isFromFinalScreen) {
           setState(() {
             statusBarColor = AppColors.blue;
             statusBarBrightness = Brightness.light;
@@ -65,88 +66,15 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(top: MarginsRaw.regular),
-                            child: SizedBox(
-                              width: 60,
-                              child: IconButton(
-                                key: leaderboardBackButtonKey,
-                                icon: const Icon(Icons.arrow_back_ios),
-                                onPressed: () {
-                                  if (!widget.isFromFinalScreen!) {
-                                    setState(() {
-                                      statusBarColor = AppColors.blue;
-                                      statusBarBrightness = Brightness.light;
-                                    });
-                                  }
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(top: MarginsRaw.regular),
-                            child: Text(
-                              AppLocalizations.translate(context, 'leaderboard',),
-                              style: AppTextStyle.textStyle(fontSize: 28),
-                            ),
-                          ),
-                        ],
-                      ),
+                      _buildNavigationBar(context),
                       Expanded(
                         flex: 4,
-                        child: Padding(
-                          padding: Margins.regular,
-                          child: SvgPicture.asset(
-                            'assets/podium-art.svg',
-                          ),
-                        ),
+                        child: _buildImage(),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: MarginsRaw.regular,
-                          left: MarginsRaw.regular,
-                          bottom: MarginsRaw.regular,
-                        ),
-                        child: Container(
-                          alignment: Alignment.topLeft,
-                          decoration: BoxDecoration(
-                            color: AppColors.blue,
-                            borderRadius: BorderRadius.circular(
-                              MarginsRaw.borderRadius,
-                            ),
-                          ),
-                          height: 6,
-                          width: 60,
-                        ),
-                      ),
+                      _buildChipSeparator(),
                       Expanded(
                         flex: 6,
-                        child: Padding(
-                          padding: Margins.small,
-                          child: Consumer<LeaderboardProvider>(
-                              builder: (context, provider, child) {
-                            return provider.leaderboardPlayers.isNotEmpty
-                                ? ListView.builder(
-                                    itemCount:
-                                        provider.leaderboardPlayers.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      UIPlayer uiPlayer =
-                                          provider.leaderboardPlayers[index];
-                                      return LeaderboardItemTile(
-                                        uiPlayer: uiPlayer,
-                                        position: index + 1,
-                                      );
-                                    },
-                                  )
-                                : _renderEmptyLeaderboard();
-                          }),
-                        ),
+                        child: _buildLeaderboard(),
                       )
                     ],
                   ),
@@ -159,9 +87,97 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
     );
   }
 
+  Widget _buildNavigationBar(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(
+            top: MarginsRaw.regular,
+          ),
+          child: SizedBox(
+            width: 60,
+            child: IconButton(
+              key: leaderboardBackButtonKey,
+              icon: const Icon(Icons.arrow_back_ios),
+              onPressed: () {
+                if (!widget.isFromFinalScreen) {
+                  setState(() {
+                    statusBarColor = AppColors.blue;
+                    statusBarBrightness = Brightness.light;
+                  });
+                }
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: MarginsRaw.regular),
+          child: Text(
+            AppLocalizations.translate(context, 'leaderboard'),
+            style: AppTextStyle.textStyle(fontSize: 28),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Padding _buildImage() {
+    return Padding(
+      padding: Margins.regular,
+      child: SvgPicture.asset('assets/podium-art.svg'),
+    );
+  }
+
+  Widget _buildChipSeparator() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: MarginsRaw.regular,
+        left: MarginsRaw.regular,
+        bottom: MarginsRaw.regular,
+      ),
+      child: Container(
+        alignment: Alignment.topLeft,
+        decoration: BoxDecoration(
+          color: AppColors.blue,
+          borderRadius: BorderRadius.circular(
+            MarginsRaw.borderRadius,
+          ),
+        ),
+        height: 6,
+        width: 60,
+      ),
+    );
+  }
+
+  Widget _buildLeaderboard() {
+    return Padding(
+      padding: Margins.small,
+      child: Consumer<LeaderboardProvider>(
+        builder: (context, provider, child) {
+          return provider.leaderboardPlayers.isNotEmpty
+              ? ListView.builder(
+                  itemCount: provider.leaderboardPlayers.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    UIPlayer uiPlayer = provider.leaderboardPlayers[index];
+                    return LeaderboardItemTile(
+                      uiPlayer: uiPlayer,
+                      position: index + 1,
+                    );
+                  },
+                )
+              : _renderEmptyLeaderboard();
+        },
+      ),
+    );
+  }
+
   Widget _renderEmptyLeaderboard() {
     return Center(
-      child: Text(AppLocalizations.translate(context, 'no_matches_started_yet_label',)),
+      child: Text(AppLocalizations.translate(
+        context,
+        'no_matches_started_yet_label',
+      )),
     );
   }
 }

@@ -44,10 +44,11 @@ import 'package:flutter/material.dart';
 ///   });
 ///
 class DialogLoader extends StatefulWidget {
-  final String? text;
-  final AnimationController? controller;
+  final String text;
+  final AnimationController controller;
 
-  const DialogLoader({Key? key, this.text, required this.controller}) : super(key: key);
+  const DialogLoader({Key? key, required this.text, required this.controller})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => DialogLoaderState();
@@ -60,9 +61,11 @@ class DialogLoaderState extends State<DialogLoader>
   @override
   void initState() {
     super.initState();
-    scaleAnimation =
-        CurvedAnimation(parent: widget.controller!, curve: Curves.elasticInOut);
-    widget.controller!.forward();
+    scaleAnimation = CurvedAnimation(
+      parent: widget.controller,
+      curve: Curves.elasticInOut,
+    );
+    widget.controller.forward();
   }
 
   @override
@@ -74,9 +77,11 @@ class DialogLoaderState extends State<DialogLoader>
           scale: scaleAnimation,
           child: Container(
             decoration: ShapeDecoration(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0))),
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+            ),
             child: Padding(
               padding: const EdgeInsets.all(30.0),
               child: Column(
@@ -85,8 +90,11 @@ class DialogLoaderState extends State<DialogLoader>
                   const CircularProgressIndicator(),
                   Padding(
                     padding: const EdgeInsets.only(
-                        top: 16.0, left: 16.0, right: 16.0),
-                    child: Text(widget.text!),
+                      top: 16.0,
+                      left: 16.0,
+                      right: 16.0,
+                    ),
+                    child: Text(widget.text),
                   )
                 ],
               ),

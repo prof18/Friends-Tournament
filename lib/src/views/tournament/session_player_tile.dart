@@ -49,67 +49,17 @@ class SessionPlayerTile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  top: MarginsRaw.regular, left: MarginsRaw.regular),
-              child: Text(
-                player.name,
-                style: AppTextStyle.textStyle(fontSize: 16),
-              ),
-            ),
+            _buildPlayerName(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: MarginsRaw.small),
-                  child: Padding(
-                    padding: Margins.regular,
-                    child: Column(
-                      children: [
-                        Text(
-                          player.score.toString(),
-                          style: AppTextStyle.textStyle(fontSize: 32),
-                        ),
-                        Text(
-                          AppLocalizations.translate(context, 'score',),
-                          style: AppTextStyle.textStyle(fontSize: 12),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+                _buildPlayerScore(context),
                 Padding(
                   padding: const EdgeInsets.only(right: MarginsRaw.small),
                   child: Row(
                     children: [
-                      Visibility(
-                        visible: player.score == 0 ? false : true,
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.only(right: MarginsRaw.small),
-                          child: GestureDetector(
-                            key: getKeyForScoreDecrease(player.name),
-                            onTap: () => _decrementScore(context),
-                            child: const Icon(
-                              Icons.remove,
-                              size: 36,
-                              color: Colors.black38,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: MarginsRaw.small),
-                        child: GestureDetector(
-                          key: getKeyForScoreIncrease(player.name),
-                          onTap: () => _incrementScore(context),
-                          child: const Icon(
-                            Icons.add,
-                            size: 36,
-                            color: Colors.black,
-                          ),
-                        ),
-                      )
+                      _buildDecrementScoreButton(context),
+                      _buildIncrementScoreButton(context)
                     ],
                   ),
                 )
@@ -121,32 +71,95 @@ class SessionPlayerTile extends StatelessWidget {
     );
   }
 
-  _incrementScore(BuildContext context) {
-    Provider.of<TournamentProvider>(
-      context,
-      listen: false,
-    ).setPlayerScore(
-      PlayerSession(
-        player.id,
-        session.id,
-        player.score + step,
+  Widget _buildPlayerName() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: MarginsRaw.regular,
+        left: MarginsRaw.regular,
+      ),
+      child: Text(
+        player.name,
+        style: AppTextStyle.textStyle(fontSize: 16),
       ),
     );
   }
 
-  _decrementScore(BuildContext context) {
-    int score = player.score;
-    if (score - step >= 0) {
-      Provider.of<TournamentProvider>(
-        context,
-        listen: false,
-      ).setPlayerScore(
-        PlayerSession(
-          player.id,
-          session.id,
-          player.score - step,
+  Widget _buildPlayerScore(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: MarginsRaw.small),
+      child: Padding(
+        padding: Margins.regular,
+        child: Column(
+          children: [
+            Text(
+              player.score.toString(),
+              style: AppTextStyle.textStyle(fontSize: 32),
+            ),
+            Text(
+              AppLocalizations.translate(context, 'score'),
+              style: AppTextStyle.textStyle(fontSize: 12),
+            )
+          ],
         ),
-      );
-    }
+      ),
+    );
+  }
+
+  Widget _buildDecrementScoreButton(BuildContext context) {
+    return Visibility(
+      visible: player.score == 0 ? false : true,
+      child: Padding(
+        padding: const EdgeInsets.only(right: MarginsRaw.small),
+        child: GestureDetector(
+          key: getKeyForScoreDecrease(player.name),
+          onTap: () {
+            int score = player.score;
+            if (score - step >= 0) {
+              Provider.of<TournamentProvider>(
+                context,
+                listen: false,
+              ).setPlayerScore(
+                PlayerSession(
+                  player.id,
+                  session.id,
+                  player.score - step,
+                ),
+              );
+            }
+          },
+          child: const Icon(
+            Icons.remove,
+            size: 36,
+            color: Colors.black38,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Padding _buildIncrementScoreButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: MarginsRaw.small),
+      child: GestureDetector(
+        key: getKeyForScoreIncrease(player.name),
+        onTap: () {
+          Provider.of<TournamentProvider>(
+            context,
+            listen: false,
+          ).setPlayerScore(
+            PlayerSession(
+              player.id,
+              session.id,
+              player.score + step,
+            ),
+          );
+        },
+        child: const Icon(
+          Icons.add,
+          size: 36,
+          color: Colors.black,
+        ),
+      ),
+    );
   }
 }

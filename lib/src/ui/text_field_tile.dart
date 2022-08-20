@@ -19,7 +19,7 @@ import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/text_field_decoration.dart';
 
-class TextFieldTile extends StatefulWidget {
+class TextFieldTile extends StatelessWidget {
   final TextFieldWrapper textFieldWrapper;
 
   const TextFieldTile({
@@ -27,13 +27,6 @@ class TextFieldTile extends StatefulWidget {
     required this.textFieldWrapper,
   }) : super(key: key);
 
-  @override
-  State<TextFieldTile> createState() {
-    return _TextFieldTileState();
-  }
-}
-
-class _TextFieldTileState extends State<TextFieldTile> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -44,9 +37,9 @@ class _TextFieldTileState extends State<TextFieldTile> {
           Radius.circular(MarginsRaw.borderRadius),
         ),
         child: TextField(
-          controller: widget.textFieldWrapper.textEditingController,
-          decoration: getTextFieldDecoration(widget.textFieldWrapper.label),
-          textInputAction: widget.textFieldWrapper.inputAction,
+          controller: textFieldWrapper.textEditingController,
+          decoration: getTextFieldDecoration(textFieldWrapper.label),
+          textInputAction: textFieldWrapper.inputAction,
         ),
       ),
     );

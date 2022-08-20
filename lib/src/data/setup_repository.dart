@@ -138,13 +138,14 @@ class SetupRepository {
     debugPrint("matches name -> $matchesName");
 
     _tournament = Tournament(
-        generateTournamentId(_tournamentName),
-        _tournamentName,
-        _playersNumber,
-        _playersAstNumber,
-        _matchesNumber,
-        1,
-        DateTime.now().millisecondsSinceEpoch);
+      generateTournamentId(_tournamentName),
+      _tournamentName,
+      _playersNumber,
+      _playersAstNumber,
+      _matchesNumber,
+      1,
+      DateTime.now().millisecondsSinceEpoch,
+    );
 
     _setupPlayers(playersName);
     _setupMatches(matchesName);

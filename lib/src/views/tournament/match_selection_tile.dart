@@ -23,10 +23,13 @@ import 'package:provider/provider.dart';
 
 class MatchSelectionTile extends StatelessWidget {
   final UIMatch match;
-  final AnimationController? controller;
+  final AnimationController controller;
 
-  const MatchSelectionTile({Key? key, required this.match, this.controller})
-      : super(key: key);
+  const MatchSelectionTile({
+    Key? key,
+    required this.match,
+    required this.controller,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,21 +45,26 @@ class MatchSelectionTile extends StatelessWidget {
                 context,
                 listen: false,
               ).setCurrentMatch(match);
-              controller!.fling(velocity: 1.0);
+              controller.fling(velocity: 1.0);
             },
             child: Container(
               decoration: match.isSelected
                   ? const BoxDecoration(
                       border: Border(
-                          bottom: BorderSide(
-                      color: Colors.white,
-                      width: 3.0,
-                    )))
+                        bottom: BorderSide(
+                          color: Colors.white,
+                          width: 3.0,
+                        ),
+                      ),
+                    )
                   : const BoxDecoration(),
               child: Padding(
                 padding: match.isSelected
                     ? const EdgeInsets.only(
-                        bottom: 8.0, left: 10.0, right: 10.0)
+                        bottom: 8.0,
+                        left: 10.0,
+                        right: 10.0,
+                      )
                     : const EdgeInsets.all(0.0),
                 child: Text(
                   match.name,

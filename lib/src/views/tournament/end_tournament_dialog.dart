@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 showEndTournamentDialog(
   BuildContext context,
   TournamentProvider provider,
-  String? message,
+  String message,
   bool isMounted,
 ) {
   showDialog(
@@ -22,9 +22,8 @@ showEndTournamentDialog(
     builder: (BuildContext innerContext) {
       return AlertDialog(
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(MarginsRaw.borderRadius),
-          ),
+          borderRadius:
+              BorderRadius.all(Radius.circular(MarginsRaw.borderRadius)),
         ),
         title: provider.activeTournament != null
             ? Text(provider.activeTournament!.name)
@@ -43,7 +42,7 @@ showEndTournamentDialog(
               Padding(
                 padding: const EdgeInsets.only(top: MarginsRaw.regular),
                 child: Text(
-                  message!,
+                  message,
                   style: AppTextStyle.textStyle(fontSize: 18),
                 ),
               )
@@ -52,24 +51,14 @@ showEndTournamentDialog(
         ),
         actions: <Widget>[
           TextButton(
-            child: Text(
-              AppLocalizations.translate(
-                context,
-                'generic_cancel',
-              ),
-            ),
+            child: Text(AppLocalizations.translate(context, 'generic_cancel')),
             onPressed: () {
               Navigator.of(innerContext).pop();
             },
           ),
           TextButton(
             key: endTournamentKey,
-            child: Text(
-              AppLocalizations.translate(
-                context,
-                'generic_ok',
-              ),
-            ),
+            child: Text(AppLocalizations.translate(context, 'generic_ok')),
             onPressed: () async {
               final tournament = provider.activeTournament;
               EndTournamentResult result = await provider.endTournament();

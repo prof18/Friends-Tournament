@@ -60,41 +60,48 @@ class SetupCounterWidget extends StatelessWidget {
               padding: const EdgeInsets.only(right: MarginsRaw.small),
               child: Row(
                 children: [
-                  Visibility(
-                    visible: currentValue == minValue ? false : true,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: MarginsRaw.small),
-                      child: GestureDetector(
-                        key: counterWidgetMinusButton,
-                        onTap: () => onDecrease!(currentValue! - 1),
-                        child: const Icon(
-                          Icons.remove,
-                          size: 36,
-                          color: Colors.black38,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible:
-                        maxValue != null ? currentValue! < maxValue! : true,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: MarginsRaw.small),
-                      child: GestureDetector(
-                        key: counterWidgetPlusButton,
-                        onTap: () => onIncrease!(currentValue! + 1),
-                        child: const Icon(
-                          Icons.add,
-                          size: 36,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  )
+                  _buildDecreaseButton(),
+                  _buildIncreaseButton(),
                 ],
               ),
             )
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildIncreaseButton() {
+    return Visibility(
+      visible: maxValue != null ? currentValue! < maxValue! : true,
+      child: Padding(
+        padding: const EdgeInsets.only(left: MarginsRaw.small),
+        child: GestureDetector(
+          key: counterWidgetPlusButton,
+          onTap: () => onIncrease!(currentValue! + 1),
+          child: const Icon(
+            Icons.add,
+            size: 36,
+            color: Colors.black,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDecreaseButton() {
+    return Visibility(
+      visible: currentValue == minValue ? false : true,
+      child: Padding(
+        padding: const EdgeInsets.only(right: MarginsRaw.small),
+        child: GestureDetector(
+          key: counterWidgetMinusButton,
+          onTap: () => onDecrease!(currentValue! - 1),
+          child: const Icon(
+            Icons.remove,
+            size: 36,
+            color: Colors.black38,
+          ),
         ),
       ),
     );

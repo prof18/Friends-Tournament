@@ -5,9 +5,8 @@ import 'package:friends_tournament/src/utils/service_locator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class MainProvider with ChangeNotifier {
-
   MainProvider() {
-   _computeData();
+    _computeData();
   }
 
   FirstScreenType _firstScreenType = FirstScreenType.loading();
@@ -40,45 +39,72 @@ class MainProvider with ChangeNotifier {
 
   _precacheSVG() async {
     await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoderBuilder, 'assets/intro-art.svg'),
-        null);
+      ExactAssetPicture(
+        SvgPicture.svgStringDecoderBuilder,
+        'assets/intro-art.svg',
+      ),
+      null,
+    );
     await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoderBuilder, 'assets/players_art.svg'),
-        null);
+      ExactAssetPicture(
+        SvgPicture.svgStringDecoderBuilder,
+        'assets/players_art.svg',
+      ),
+      null,
+    );
     await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoderBuilder, 'assets/player-ast-art.svg'),
-        null);
+      ExactAssetPicture(
+        SvgPicture.svgStringDecoderBuilder,
+        'assets/player-ast-art.svg',
+      ),
+      null,
+    );
     await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoderBuilder, 'assets/matches-art.svg'),
-        null);
+      ExactAssetPicture(
+        SvgPicture.svgStringDecoderBuilder,
+        'assets/matches-art.svg',
+      ),
+      null,
+    );
 
     await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoderBuilder, 'assets/podium-art.svg'),
-        null);
+      ExactAssetPicture(
+        SvgPicture.svgStringDecoderBuilder,
+        'assets/podium-art.svg',
+      ),
+      null,
+    );
 
     await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoderBuilder, 'assets/error-art.svg'),
-        null);
+      ExactAssetPicture(
+        SvgPicture.svgStringDecoderBuilder,
+        'assets/error-art.svg',
+      ),
+      null,
+    );
 
     await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoderBuilder, 'assets/finish-art.svg'),
-        null);
+      ExactAssetPicture(
+        SvgPicture.svgStringDecoderBuilder,
+        'assets/finish-art.svg',
+      ),
+      null,
+    );
 
     await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoderBuilder, 'assets/save-art.svg'),
-        null);
+      ExactAssetPicture(
+        SvgPicture.svgStringDecoderBuilder,
+        'assets/save-art.svg',
+      ),
+      null,
+    );
 
     await precachePicture(
-        ExactAssetPicture(
-            SvgPicture.svgStringDecoderBuilder, 'assets/winner-art.svg'),
-        null);
+      ExactAssetPicture(
+        SvgPicture.svgStringDecoderBuilder,
+        'assets/winner-art.svg',
+      ),
+      null,
+    );
   }
 }

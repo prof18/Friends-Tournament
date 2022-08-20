@@ -24,7 +24,8 @@ class SetupProvider with ChangeNotifier {
       UnmodifiableMapView(_playersName);
 
   Map<int, String> _matchesName = {};
-  UnmodifiableMapView<int, String> get matchesName => UnmodifiableMapView(_matchesName);
+  UnmodifiableMapView<int, String> get matchesName =>
+      UnmodifiableMapView(_matchesName);
 
   void setPlayersNumber(int value) {
     _playersNumber = value;
@@ -55,8 +56,14 @@ class SetupProvider with ChangeNotifier {
 
   Future<bool> setupTournament() async {
     try {
-      await setupRepository.setupTournament(_playersNumber, _playersAstNumber,
-          _matchesNumber, _tournamentName, _playersName, _matchesName);
+      await setupRepository.setupTournament(
+        _playersNumber,
+        _playersAstNumber,
+        _matchesNumber,
+        _tournamentName,
+        _playersName,
+        _matchesName,
+      );
       return true;
     } catch (error, stackTrace) {
       /// We know these exceptions:

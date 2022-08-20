@@ -72,215 +72,226 @@ class _FinalScreenState extends State<FinalScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 36,
-                          left: MarginsRaw.regular,
-                          right: MarginsRaw.regular),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  right: MarginsRaw.small),
-                              child: Consumer<LeaderboardProvider>(
-                                  builder: (context, provider, child) {
-                                return Text(
-                                  provider.tournamentName!,
-                                  style: AppTextStyle.textStyle(fontSize: 28),
-                                );
-                              }),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const SettingsScreen()),
-                              );
-                            },
-                            child: const Icon(
-                              Icons.settings,
-                              color: Colors.black38,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+                    _buildNavigationBar(context),
                     Expanded(
                       flex: 7,
-                      child: Padding(
-                        padding: Margins.regular,
-                        child: Align(
-                          alignment: FractionalOffset.center,
-                          child: SvgPicture.asset(
-                            'assets/winner-art.svg',
-                          ),
-                        ),
-                      ),
+                      child: _buildImage(),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: MarginsRaw.regular,
-                        left: MarginsRaw.regular,
-                        bottom: MarginsRaw.medium,
-                      ),
-                      child: Container(
-                        alignment: Alignment.topLeft,
-                        decoration: BoxDecoration(
-                          color: AppColors.blue,
-                          borderRadius: BorderRadius.circular(
-                            MarginsRaw.borderRadius,
-                          ),
-                        ),
-                        height: 6,
-                        width: 60,
-                      ),
-                    ),
-                    Align(
-                      alignment: FractionalOffset.topLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: MarginsRaw.regular,
-                            right: MarginsRaw.regular,
-                            bottom: MarginsRaw.regular),
-                        child: Text(
-                          AppLocalizations.translate(
-                            context,
-                            'winner_title',
-                          ),
-                          style: AppTextStyle.textStyle(fontSize: 28),
-                        ),
-                      ),
-                    ),
+                    _buildChipSeparator(),
+                    _buildWinnerTitle(context),
                     Expanded(
                       flex: 3,
-                      child: Consumer<LeaderboardProvider>(
-                        builder: (context, provider, child) {
-                          return Align(
-                            alignment: FractionalOffset.topLeft,
-                            child: Padding(
-                              padding: Margins.regular,
-                              child: Text(
-                                provider.leaderboardPlayers.isNotEmpty
-                                    ? "${provider.leaderboardPlayers.first.name} 🎉"
-                                    : AppLocalizations.translate(
-                                        context,
-                                        'winner_error_message',
-                                      ),
-                                style: AppTextStyle.textStyle(
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                key: winnerTextKey,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+                      child: _buildWinnerText(),
                     ),
-                    Align(
-                      alignment: FractionalOffset.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            top: MarginsRaw.regular,
-                            bottom: MarginsRaw.regular),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    right: MarginsRaw.regular),
-                                child: ElevatedButton(
-                                  key: tournamentEndedLeaderboardButtonKey,
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => ChangeNotifierProvider<
-                                            LeaderboardProvider>.value(
-                                          value:
-                                              Provider.of<LeaderboardProvider>(
-                                            context,
-                                            listen: false,
-                                          ),
-                                          child: const LeaderboardScreen(
-                                              isFromFinalScreen: true),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          MarginsRaw.borderRadius),
-                                      side: BorderSide(color: AppColors.blue),
-                                    ),
-                                    primary: AppColors.blue,
-                                    textStyle: AppTextStyle.textStyle(
-                                      color: Colors.white,
-                                    ),
-                                    padding: Margins.regular,
-                                  ),
-                                  child: Text(
-                                    AppLocalizations.translate(
-                                      context,
-                                      'leaderboard',
-                                    ),
-                                    style: AppTextStyle.textStyle(fontSize: 16),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) {
-                                        return ChangeNotifierProvider(
-                                          create: (context) => SetupProvider(),
-                                          child: const SetupPagesContainer(),
-                                        );
-                                      },
-                                    ),
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        MarginsRaw.borderRadius),
-                                    side: BorderSide(color: AppColors.blue),
-                                  ),
-                                  primary: AppColors.blue,
-                                  textStyle: AppTextStyle.textStyle(
-                                    color: Colors.white,
-                                  ),
-                                  padding: Margins.regular,
-                                ),
-                                child: Text(
-                                  AppLocalizations.translate(
-                                    context,
-                                    'new_tournament_button',
-                                  ),
-                                  style: AppTextStyle.textStyle(fontSize: 16),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    _buildButtonRow(context),
                   ],
                 ),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildNavigationBar(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 36,
+        left: MarginsRaw.regular,
+        right: MarginsRaw.regular,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(right: MarginsRaw.small),
+              child: Consumer<LeaderboardProvider>(
+                builder: (context, provider, child) {
+                  return Text(
+                    provider.tournamentName!,
+                    style: AppTextStyle.textStyle(fontSize: 28),
+                  );
+                },
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsScreen(),
+                ),
+              );
+            },
+            child: const Icon(
+              Icons.settings,
+              color: Colors.black38,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImage() {
+    return Padding(
+      padding: Margins.regular,
+      child: Align(
+        alignment: FractionalOffset.center,
+        child: SvgPicture.asset('assets/winner-art.svg'),
+      ),
+    );
+  }
+
+  Widget _buildChipSeparator() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: MarginsRaw.regular,
+        left: MarginsRaw.regular,
+        bottom: MarginsRaw.medium,
+      ),
+      child: Container(
+        alignment: Alignment.topLeft,
+        decoration: BoxDecoration(
+          color: AppColors.blue,
+          borderRadius: BorderRadius.circular(
+            MarginsRaw.borderRadius,
+          ),
+        ),
+        height: 6,
+        width: 60,
+      ),
+    );
+  }
+
+  Widget _buildWinnerTitle(BuildContext context) {
+    return Align(
+      alignment: FractionalOffset.topLeft,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          left: MarginsRaw.regular,
+          right: MarginsRaw.regular,
+          bottom: MarginsRaw.regular,
+        ),
+        child: Text(
+          AppLocalizations.translate(context, 'winner_title'),
+          style: AppTextStyle.textStyle(fontSize: 28),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWinnerText() {
+    return Consumer<LeaderboardProvider>(
+      builder: (context, provider, child) {
+        return Align(
+          alignment: FractionalOffset.topLeft,
+          child: Padding(
+            padding: Margins.regular,
+            child: Text(
+              provider.leaderboardPlayers.isNotEmpty
+                  ? "${provider.leaderboardPlayers.first.name} 🎉"
+                  : AppLocalizations.translate(context, 'winner_error_message'),
+              style: AppTextStyle.textStyle(
+                fontSize: 36,
+                fontWeight: FontWeight.bold,
+              ),
+              key: winnerTextKey,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildButtonRow(BuildContext context) {
+    return Align(
+      alignment: FractionalOffset.bottomCenter,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: MarginsRaw.regular,
+          bottom: MarginsRaw.regular,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(right: MarginsRaw.regular),
+                child: _buildLeaderboardButton(context),
+              ),
+            ),
+            Expanded(
+              child: _buildNewTournamentButton(context),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLeaderboardButton(BuildContext context) {
+    return ElevatedButton(
+      key: tournamentEndedLeaderboardButtonKey,
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ChangeNotifierProvider<LeaderboardProvider>.value(
+              value: Provider.of<LeaderboardProvider>(
+                context,
+                listen: false,
+              ),
+              child: const LeaderboardScreen(isFromFinalScreen: true),
+            ),
+          ),
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(MarginsRaw.borderRadius),
+          side: BorderSide(color: AppColors.blue),
+        ),
+        primary: AppColors.blue,
+        textStyle: AppTextStyle.textStyle(color: Colors.white),
+        padding: Margins.regular,
+      ),
+      child: Text(
+        AppLocalizations.translate(context, 'leaderboard'),
+        style: AppTextStyle.textStyle(fontSize: 16),
+      ),
+    );
+  }
+
+  Widget _buildNewTournamentButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return ChangeNotifierProvider(
+                create: (context) => SetupProvider(),
+                child: const SetupPagesContainer(),
+              );
+            },
+          ),
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(MarginsRaw.borderRadius),
+          side: BorderSide(color: AppColors.blue),
+        ),
+        primary: AppColors.blue,
+        textStyle: AppTextStyle.textStyle(color: Colors.white),
+        padding: Margins.regular,
+      ),
+      child: Text(
+        AppLocalizations.translate(context, 'new_tournament_button'),
+        style: AppTextStyle.textStyle(fontSize: 16),
       ),
     );
   }

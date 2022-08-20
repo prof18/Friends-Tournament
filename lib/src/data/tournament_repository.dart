@@ -66,8 +66,9 @@ class TournamentRepository {
   /// Retrieve the tournament data from the database and prepare the data for the UI
   Future<List<UIMatch>> getTournamentMatches(String tournamentID) async {
     // Query to get the matches
-    final List<Map> dbMatches =
-        await localDataSource.getTournamentMatches(tournamentID);
+    final List<Map> dbMatches = await localDataSource.getTournamentMatches(
+      tournamentID,
+    );
 
     // For each match, query to get the different sessions
     List<UIMatch> uiMatchList = <UIMatch>[];
@@ -78,8 +79,9 @@ class TournamentRepository {
       final int isActive = row['is_active'];
       final int matchOrder = row['match_order'];
 
-      final List<Map> dbMatchSessions =
-          await localDataSource.getMatchSessions(idMatch);
+      final List<Map> dbMatchSessions = await localDataSource.getMatchSessions(
+        idMatch,
+      );
 
       // For each session, get the players
       List<UISession> uiSessionList = <UISession>[];
@@ -89,8 +91,9 @@ class TournamentRepository {
         final sessionName = row['name'];
         final order = row['session_order'];
 
-        final List<Map> dbPlayers =
-            await localDataSource.getSessionPlayers(idSession);
+        final List<Map> dbPlayers = await localDataSource.getSessionPlayers(
+          idSession,
+        );
 
         // create the UIPlayerObject
         List<UIPlayer> uiPlayerList = <UIPlayer>[];
@@ -118,11 +121,12 @@ class TournamentRepository {
       });
 
       UIMatch uiMatch = UIMatch(
-          id: idMatch,
-          name: matchName,
-          isActive: isActive,
-          matchSessions: uiSessionList,
-          order: matchOrder);
+        id: idMatch,
+        name: matchName,
+        isActive: isActive,
+        matchSessions: uiSessionList,
+        order: matchOrder,
+      );
       uiMatchList.add(uiMatch);
     });
     return uiMatchList;
@@ -152,8 +156,10 @@ class TournamentRepository {
         );
         await localDataSource.updatePlayerSession(playerSession);
 
-        final tournamentPlayer =
-            await getTournamentPlayer(player.id, tournament.id);
+        final tournamentPlayer = await getTournamentPlayer(
+          player.id,
+          tournament.id,
+        );
         if (tournamentPlayer != null) {
           tournamentPlayer.finalScore += player.score;
           await localDataSource.updateTournamentPlayer(tournamentPlayer);
@@ -165,7 +171,9 @@ class TournamentRepository {
   }
 
   Future<TournamentPlayer?> getTournamentPlayer(
-      String playerId, String tournamentId) async {
+    String playerId,
+    String tournamentId,
+  ) async {
     final players = await localDataSource.getTournamentPlayers(tournamentId);
     return players.cast<TournamentPlayer?>().firstWhere(
           (element) => element!.playerId == playerId,

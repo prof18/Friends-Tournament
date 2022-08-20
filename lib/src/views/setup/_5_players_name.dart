@@ -24,6 +24,7 @@ import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';
+import 'package:friends_tournament/src/views/setup/setup_chip_separator.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:provider/provider.dart';
 
@@ -37,7 +38,7 @@ class PlayersName extends StatelessWidget implements SetupPage {
   Widget build(BuildContext context) {
     return Consumer<SetupProvider>(
       builder: (context, provider, child) {
-        return createBody(
+        return _createBody(
           provider.playersNumber,
           provider.playersName,
           context,
@@ -46,7 +47,7 @@ class PlayersName extends StatelessWidget implements SetupPage {
     );
   }
 
-  Widget createBody(
+  Widget _createBody(
     int playersNumber,
     UnmodifiableMapView<int, String> players,
     BuildContext context,
@@ -55,7 +56,7 @@ class PlayersName extends StatelessWidget implements SetupPage {
       children: <Widget>[
         Expanded(
           child: Container(
-            child: renderTextFields(
+            child: _renderContent(
               playersNumber,
               players,
               context,
@@ -66,7 +67,7 @@ class PlayersName extends StatelessWidget implements SetupPage {
     );
   }
 
-  Widget renderTextFields(
+  Widget _renderContent(
     int playersNumber,
     Map<int, String> playersName,
     BuildContext context,
@@ -79,12 +80,12 @@ class PlayersName extends StatelessWidget implements SetupPage {
           action = TextInputAction.done;
         }
         TextFieldWrapper textFieldWrapper = TextFieldWrapper(
-            TextEditingController(),
-            "${AppLocalizations.translate(
-              context,
-              'player_label',
-            )} ${i + 1}",
-            action,
+          TextEditingController(),
+          "${AppLocalizations.translate(
+            context,
+            'player_label',
+          )} ${i + 1}",
+          action,
         );
         if (playersName.containsKey(i)) {
           textFieldWrapper.value = playersName[i];
@@ -93,70 +94,63 @@ class PlayersName extends StatelessWidget implements SetupPage {
         _textFieldsList.add(textFieldWrapper);
       }
     }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Expanded(
           flex: 3,
-          child: Padding(
-            padding: Margins.regular,
-            child: SvgPicture.asset(
-              'assets/players_art.svg',
-            ),
-          ),
+          child: _buildImage(),
         ),
-        Padding(
-          padding: const EdgeInsets.only(
-            top: MarginsRaw.regular,
-            left: MarginsRaw.regular,
-            right: MarginsRaw.regular,
-            bottom: MarginsRaw.small,
-          ),
-          child: Text(
-            AppLocalizations.translate(
-              context,
-              'players_name_title',
-            ),
-            style: AppTextStyle.onboardingTitleStyle,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(
-            top: MarginsRaw.regular,
-            left: MarginsRaw.regular,
-            right: MarginsRaw.regular,
-          ),
-          child: Container(
-            alignment: Alignment.topLeft,
-            decoration: BoxDecoration(
-              color: AppColors.blue,
-              borderRadius: BorderRadius.circular(
-                MarginsRaw.borderRadius,
-              ),
-            ),
-            height: 6,
-            width: 60,
-          ),
-        ),
+        _buildTitle(context),
+        const SetupChipSeparator(),
         Expanded(
           flex: 7,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: MarginsRaw.regular,
-              bottom: MarginsRaw.regular,
-              left: MarginsRaw.small,
-              right: MarginsRaw.small,
-            ),
-            child: ListView.builder(
-                itemBuilder: (BuildContext context, int index) {
-                  return TextFieldTile(
-                      key: getKeyForPlayerNameTextField(index),
-                      textFieldWrapper: _textFieldsList[index]);
-                },
-                itemCount: _textFieldsList.length),
-          ),
+          child: _buildTextFields(),
         ),
       ],
+    );
+  }
+
+  Widget _buildImage() {
+    return Padding(
+      padding: Margins.regular,
+      child: SvgPicture.asset('assets/players_art.svg'),
+    );
+  }
+
+  Widget _buildTitle(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: MarginsRaw.regular,
+        left: MarginsRaw.regular,
+        right: MarginsRaw.regular,
+        bottom: MarginsRaw.small,
+      ),
+      child: Text(
+        AppLocalizations.translate(context, 'players_name_title'),
+        style: AppTextStyle.onboardingTitleStyle,
+      ),
+    );
+  }
+
+  Widget _buildTextFields() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: MarginsRaw.regular,
+        bottom: MarginsRaw.regular,
+        left: MarginsRaw.small,
+        right: MarginsRaw.small,
+      ),
+      child: ListView.builder(
+        itemBuilder: (BuildContext context, int index) {
+          return TextFieldTile(
+            key: getKeyForPlayerNameTextField(index),
+            textFieldWrapper: _textFieldsList[index],
+          );
+        },
+        itemCount: _textFieldsList.length,
+      ),
     );
   }
 
@@ -210,10 +204,7 @@ class PlayersName extends StatelessWidget implements SetupPage {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.translate(
-              context,
-              'player_name_duplicated',
-            ),
+            AppLocalizations.translate(context, 'player_name_duplicated'),
           ),
         ),
       );

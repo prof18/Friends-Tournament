@@ -127,7 +127,9 @@ class TournamentProvider with ChangeNotifier {
       _currentMatch!.isSelected = false;
 
       await tournamentRepository.finishMatch(
-          _currentMatch!, _activeTournament!);
+        _currentMatch!,
+        _activeTournament!,
+      );
 
       // the current match is no active. Select another as active
       int currentMatchIndex = _tournamentMatches.indexOf(_currentMatch!);

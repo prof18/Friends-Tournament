@@ -16,7 +16,11 @@
 
 import 'package:flutter/material.dart';
 
-void changeTextFieldFocus(BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
+void changeTextFieldFocus(
+  BuildContext context,
+  FocusNode currentFocus,
+  FocusNode nextFocus,
+) {
   currentFocus.unfocus();
   FocusScope.of(context).requestFocus(nextFocus);
 }
@@ -26,7 +30,5 @@ Color hexToColor(String code) {
 }
 
 BoxDecoration getWidgetBorder() {
-  return BoxDecoration(
-      border: Border.all(color: Colors.blueAccent, width: 5)
-  );
+  return BoxDecoration(border: Border.all(color: Colors.blueAccent, width: 5));
 }

@@ -60,7 +60,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
     MatchesName(),
   ];
 
-  AnimationController? _controller;
+  late AnimationController _controller;
 
   @override
   void initState() {
@@ -75,7 +75,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
   void dispose() {
     super.dispose();
     _pageController.dispose();
-    _controller!.dispose();
+    _controller.dispose();
   }
 
   _onPageChanged(int index) {
@@ -109,99 +109,9 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
               Stack(
                 alignment: AlignmentDirectional.topStart,
                 children: <Widget>[
-                  Visibility(
-                    visible: _currentPageIndex != 0,
-                    child: Align(
-                      alignment: Alignment.bottomLeft,
-                      child: InkWell(
-                        key: setupBackButtonKey,
-                        customBorder: const CircleBorder(),
-                        onTap: () {
-                          final page = _allPages[_currentPageIndex];
-                          final canGoBack = page.onBackPressed(context);
-                          if (canGoBack) {
-                            FocusScope.of(context).unfocus();
-                            _pageController.animateToPage(
-                                _currentPageIndex -= 1,
-                                duration: const Duration(milliseconds: 250),
-                                curve: Curves.ease);
-                          }
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: MarginsRaw.regular,
-                              bottom: MarginsRaw.medium,
-                              top: MarginsRaw.medium,
-                              right: MarginsRaw.medium),
-                          child: Text(
-                            AppLocalizations.translate(
-                              context,
-                              'generic_back',
-                            ),
-                            style: AppTextStyle.textStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: InkWell(
-                      key: setupNextButtonKey,
-                      customBorder: const CircleBorder(),
-                      onTap: () {
-                        final page = _allPages[_currentPageIndex];
-                        final canGoForward = page.onNextPressed(context);
-                        if (canGoForward) {
-                          if (_currentPageIndex != _allPages.length - 1) {
-                            FocusScope.of(context).unfocus();
-                            _pageController.animateToPage(
-                                _currentPageIndex += 1,
-                                duration: const Duration(milliseconds: 250),
-                                curve: Curves.ease);
-                          } else {
-                            _showAlertDialog();
-                          }
-                        }
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            right: MarginsRaw.regular,
-                            bottom: MarginsRaw.medium,
-                            top: MarginsRaw.medium,
-                            left: MarginsRaw.medium),
-                        child: Text(
-                          AppLocalizations.translate(
-                            context,
-                            _currentPageIndex == _allPages.length - 1
-                                ? "generic_done"
-                                : "generic_next",
-                          ),
-                          style: AppTextStyle.textStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    alignment: AlignmentDirectional.bottomCenter,
-                    margin: const EdgeInsets.only(bottom: MarginsRaw.medium),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        for (int i = 0; i < _allPages.length; i++)
-                          if (i == _currentPageIndex)
-                            const SlideDots(true)
-                          else
-                            const SlideDots(false)
-                      ],
-                    ),
-                  ),
+                  _buildBackButton(context),
+                  _buildNextButton(context),
+                  _buildPageDotSelector(),
                 ],
               )
             ],
@@ -211,21 +121,110 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
     );
   }
 
-  void randomFunc() {
-
-  }
-
-  Widget buildLoader() {
-    return const Material(
-      child: SafeArea(
-        child: Center(
-          child: CircularProgressIndicator(),
+  Visibility _buildBackButton(BuildContext context) {
+    return Visibility(
+      visible: _currentPageIndex != 0,
+      child: Align(
+        alignment: Alignment.bottomLeft,
+        child: InkWell(
+          key: setupBackButtonKey,
+          customBorder: const CircleBorder(),
+          onTap: () {
+            final page = _allPages[_currentPageIndex];
+            final canGoBack = page.onBackPressed(context);
+            if (canGoBack) {
+              FocusScope.of(context).unfocus();
+              _pageController.animateToPage(
+                _currentPageIndex -= 1,
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.ease,
+              );
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: MarginsRaw.regular,
+              bottom: MarginsRaw.medium,
+              top: MarginsRaw.medium,
+              right: MarginsRaw.medium,
+            ),
+            child: Text(
+              AppLocalizations.translate(context, 'generic_back'),
+              style: AppTextStyle.textStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
         ),
       ),
     );
   }
 
-  _showAlertDialog() {
+  Widget _buildNextButton(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: InkWell(
+        key: setupNextButtonKey,
+        customBorder: const CircleBorder(),
+        onTap: () {
+          final page = _allPages[_currentPageIndex];
+          final canGoForward = page.onNextPressed(context);
+          if (canGoForward) {
+            if (_currentPageIndex != _allPages.length - 1) {
+              FocusScope.of(context).unfocus();
+              _pageController.animateToPage(
+                _currentPageIndex += 1,
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.ease,
+              );
+            } else {
+              _showGenerateTournamentDialog();
+            }
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(
+            right: MarginsRaw.regular,
+            bottom: MarginsRaw.medium,
+            top: MarginsRaw.medium,
+            left: MarginsRaw.medium,
+          ),
+          child: Text(
+            AppLocalizations.translate(
+              context,
+              _currentPageIndex == _allPages.length - 1
+                  ? "generic_done"
+                  : "generic_next",
+            ),
+            style: AppTextStyle.textStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPageDotSelector() {
+    return Container(
+      alignment: AlignmentDirectional.bottomCenter,
+      margin: const EdgeInsets.only(bottom: MarginsRaw.medium),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          for (int i = 0; i < _allPages.length; i++)
+            if (i == _currentPageIndex)
+              const SlideDots(true)
+            else
+              const SlideDots(false)
+        ],
+      ),
+    );
+  }
+
+  _showGenerateTournamentDialog() {
     showDialog(
       context: context,
       barrierDismissible: false, // user must tap button for close dialog!
@@ -296,7 +295,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
         .setupTournament();
 
     if (result) {
-      _controller!.reverse().then(
+      _controller.reverse().then(
         (_) {
           Navigator.pop(context);
           Navigator.of(context).pushAndRemoveUntil(

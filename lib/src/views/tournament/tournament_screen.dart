@@ -72,9 +72,7 @@ class _TournamentScreenState extends State<TournamentScreen>
       } else if (newMatchName != matchName) {
         matchName = newMatchName;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Match \"$matchName\" selected."),
-          ),
+          SnackBar(content: Text("Match \"$matchName\" selected.")),
         );
       }
     });

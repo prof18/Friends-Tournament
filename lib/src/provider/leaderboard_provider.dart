@@ -24,12 +24,16 @@ class LeaderboardProvider with ChangeNotifier {
 
   void _computeLeaderboard(Tournament tournament) async {
     try {
-      final List<UIScore> scores =
-          await tournamentRepository.getScore(tournament);
+      final List<UIScore> scores = await tournamentRepository.getScore(
+        tournament,
+      );
 
       List<UIPlayer> players = scores
           .map((uiScore) => UIPlayer(
-              id: uiScore.id, name: uiScore.name, score: uiScore.score))
+                id: uiScore.id,
+                name: uiScore.name,
+                score: uiScore.score,
+              ))
           .toList();
 
       _leaderboardPlayers = players;

@@ -23,8 +23,13 @@ class CustomIcons {
   static const dynamic _kFontPkg = null;
 
   static const IconData podium = IconData(
-      0xea70, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+    0xea70,
+    fontFamily: _kFontFam,
+    fontPackage: _kFontPkg,
+  );
   static const IconData flagCheckered = IconData(
-      0xf11e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-
+    0xf11e,
+    fontFamily: _kFontFam,
+    fontPackage: _kFontPkg,
+  );
 }

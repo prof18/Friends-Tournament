@@ -74,12 +74,18 @@ class PlayersName extends StatelessWidget implements SetupPage {
     if (_textFieldsList.length != playersNumber) {
       _textFieldsList.clear();
       for (int i = 0; i < playersNumber; i++) {
+        var action = TextInputAction.next;
+        if (i == playersNumber - 1) {
+          action = TextInputAction.done;
+        }
         TextFieldWrapper textFieldWrapper = TextFieldWrapper(
             TextEditingController(),
             "${AppLocalizations.translate(
               context,
               'player_label',
-            )} ${i + 1}");
+            )} ${i + 1}",
+            action,
+        );
         if (playersName.containsKey(i)) {
           textFieldWrapper.value = playersName[i];
           textFieldWrapper.textEditingController.text = playersName[i]!;

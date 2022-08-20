@@ -83,10 +83,14 @@ class TournamentName extends StatelessWidget implements SetupPage {
                   child: TextField(
                     controller: _tournamentController,
                     keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
+                    textInputAction: TextInputAction.done,
                     decoration: getTextFieldDecoration(
                       AppLocalizations.translate(context, 'tournament_name_title',),
                     ),
+                    onSubmitted: (_) {
+                      print(">>> submitted");
+                      onNextPressed(context);
+                    },
                   ),
                 ),
                 Expanded(

@@ -74,9 +74,15 @@ class MatchesName extends StatelessWidget implements SetupPage {
     if (_textFieldsList.length != matchesNumber) {
       _textFieldsList.clear();
       for (int i = 0; i < matchesNumber; i++) {
+        var action = TextInputAction.next;
+        if (i == matchesNumber - 1) {
+          action = TextInputAction.done;
+        }
         TextFieldWrapper textFieldWrapper = TextFieldWrapper(
-            TextEditingController(),
-            "${AppLocalizations.translate(context, 'match_label',)} ${i + 1}");
+          TextEditingController(),
+          "${AppLocalizations.translate(context, 'match_label')} ${i + 1}",
+          action,
+        );
         if (matchesName.containsKey(i)) {
           textFieldWrapper.value = matchesName[i];
           textFieldWrapper.textEditingController.text = matchesName[i]!;
@@ -103,7 +109,10 @@ class MatchesName extends StatelessWidget implements SetupPage {
               left: MarginsRaw.regular,
               right: MarginsRaw.regular),
           child: Text(
-            AppLocalizations.translate(context, 'matches_name_title',),
+            AppLocalizations.translate(
+              context,
+              'matches_name_title',
+            ),
             style: AppTextStyle.onboardingTitleStyle,
           ),
         ),
@@ -170,7 +179,8 @@ class MatchesName extends StatelessWidget implements SetupPage {
         }
       }
     }
-    Provider.of<SetupProvider>(context, listen: false).setMatchesName(_savedValues);
+    Provider.of<SetupProvider>(context, listen: false)
+        .setMatchesName(_savedValues);
   }
 
   /// Return true if there are some duplicates
@@ -196,7 +206,10 @@ class MatchesName extends StatelessWidget implements SetupPage {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.translate(context, 'match_name_duplicated',),
+            AppLocalizations.translate(
+              context,
+              'match_name_duplicated',
+            ),
           ),
         ),
       );
@@ -211,7 +224,10 @@ class MatchesName extends StatelessWidget implements SetupPage {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.translate(context, 'matches_name_empty_fields_message',),
+            AppLocalizations.translate(
+              context,
+              'matches_name_empty_fields_message',
+            ),
           ),
         ),
       );

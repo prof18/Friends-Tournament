@@ -25,7 +25,7 @@ class TextFieldTile extends StatefulWidget {
   const TextFieldTile({
     Key? key,
     required this.textFieldWrapper,
-  })  : super(key: key);
+  }) : super(key: key);
 
   @override
   State<TextFieldTile> createState() {
@@ -46,6 +46,7 @@ class _TextFieldTileState extends State<TextFieldTile> {
         child: TextField(
           controller: widget.textFieldWrapper.textEditingController,
           decoration: getTextFieldDecoration(widget.textFieldWrapper.label),
+          textInputAction: widget.textFieldWrapper.inputAction,
         ),
       ),
     );

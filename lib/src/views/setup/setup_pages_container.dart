@@ -211,6 +211,10 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
     );
   }
 
+  void randomFunc() {
+
+  }
+
   Widget buildLoader() {
     return const Material(
       child: SafeArea(

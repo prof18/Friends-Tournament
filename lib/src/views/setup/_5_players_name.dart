@@ -24,7 +24,7 @@ import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';
-import 'package:friends_tournament/src/views/setup/setup_chip_separator.dart';
+import 'package:friends_tournament/src/ui/chip_separator.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:provider/provider.dart';
 
@@ -103,7 +103,7 @@ class PlayersName extends StatelessWidget implements SetupPage {
           child: _buildImage(),
         ),
         _buildTitle(context),
-        const SetupChipSeparator(),
+        _buildChipSeparator(),
         Expanded(
           flex: 7,
           child: _buildTextFields(),
@@ -131,6 +131,17 @@ class PlayersName extends StatelessWidget implements SetupPage {
         AppLocalizations.translate(context, 'players_name_title'),
         style: AppTextStyle.onboardingTitleStyle,
       ),
+    );
+  }
+
+  Widget _buildChipSeparator() {
+    return const Padding(
+      padding: EdgeInsets.only(
+        top: MarginsRaw.regular,
+        left: MarginsRaw.regular,
+        right: MarginsRaw.regular,
+      ),
+      child: const ChipSeparator(),
     );
   }
 

@@ -21,6 +21,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/provider/leaderboard_provider.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
+import 'package:friends_tournament/src/ui/chip_separator.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_item_tile.dart';
@@ -130,23 +131,13 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   }
 
   Widget _buildChipSeparator() {
-    return Padding(
-      padding: const EdgeInsets.only(
+    return const Padding(
+      padding: EdgeInsets.only(
         top: MarginsRaw.regular,
         left: MarginsRaw.regular,
         bottom: MarginsRaw.regular,
       ),
-      child: Container(
-        alignment: Alignment.topLeft,
-        decoration: BoxDecoration(
-          color: AppColors.blue,
-          borderRadius: BorderRadius.circular(
-            MarginsRaw.borderRadius,
-          ),
-        ),
-        height: 6,
-        width: 60,
-      ),
+      child: ChipSeparator(),
     );
   }
 

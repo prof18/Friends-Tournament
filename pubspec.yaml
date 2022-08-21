@@ -11,8 +11,8 @@ description: A new Flutter application.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-# e.g. 3.4.1 --> 34001
-version: 1.0.4+10004
+# e.g. 1.0.4 --> 10004
+version: 2.0.0+20000
 
 environment:
   sdk: '>=2.17.0 <3.0.0'

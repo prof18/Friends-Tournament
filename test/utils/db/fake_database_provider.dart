@@ -36,7 +36,6 @@ class FakeDatabaseProvider implements DatabaseProvider {
   FakeDatabaseProvider._internal();
 
   Future _init() async {
-//    Sqflite.devSetDebugModeOn(true);
 
     var factory = databaseFactoryFfi;
     _db = await factory.openDatabase(

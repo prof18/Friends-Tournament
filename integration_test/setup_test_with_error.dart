@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:friends_tournament/main.dart' as app;
+import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:integration_test/integration_test.dart';
-
-import 'utils/test_utils.dart';
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -11,15 +11,20 @@ void main() {
 
   group('Setup Tests error path', () {
     testWidgets(
-        'Setting up a tournament with 3 players and 2 ast is not possible',
-        (WidgetTester tester) async {
-      await startAppAndSetTournamentName(tester, tournamentName);
+        'Setting up a tournament with empty name is not possible',
+            (WidgetTester tester) async {
+          app.main();
+          await tester.pumpAndSettle();
 
-      await setNumberOfPlayers(3, tester);
+          // Welcome page
+          await tester.tap(find.byType(ElevatedButton));
+          await tester.pumpAndSettle();
 
-      await setupNumberOfPlayerAtSameTime(2, tester);
+          // Tournament Name
+          await tester.tap(find.byKey(setupNextButtonKey));
+          await tester.pumpAndSettle();
 
-      expect(find.byType(SnackBar), findsOneWidget);
-    });
+          expect(find.byType(SnackBar), findsOneWidget);
+        });
   });
 }

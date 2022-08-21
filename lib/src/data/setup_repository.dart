@@ -74,12 +74,13 @@ class SetupRepository {
   late String _tournamentName;
 
   Future setupTournament(
-      int playersNumber,
-      int playersAstNumber,
-      int matchesNumber,
-      String tournamentName,
-      Map<int, String> playersName,
-      Map<int, String> matchesName) async {
+    int playersNumber,
+    int playersAstNumber,
+    int matchesNumber,
+    String tournamentName,
+    Map<int, String> playersName,
+    Map<int, String> matchesName,
+  ) async {
     createTournament(
       playersNumber,
       playersAstNumber,
@@ -214,7 +215,7 @@ class SetupRepository {
     for (var match in matches) {
       // number of sessions for the same match
       int sessionsNumber = (_playersNumber / _playersAstNumber).ceil();
-      var currentSessionPlayers = <String>[];
+      var playersForSession = List.from(players);
       for (int i = 0; i < sessionsNumber; i++) {
         var sessionName = "Round ${i + 1}";
         var sessionId = generateSessionId(match.id, sessionName);
@@ -222,23 +223,21 @@ class SetupRepository {
         sessions.add(session);
         var matchSession = MatchSession(match.id, sessionId);
         matchSessionList.add(matchSession);
-        for (int j = 0; j < _playersAstNumber; j++) {
-          while (true) {
-            int playerIndex = _random.nextInt(_playersNumber);
-            final playerCandidate = players[playerIndex];
-            if (currentSessionPlayers.contains(playerCandidate.id)) {
-              continue;
-            } else {
-              currentSessionPlayers.add(playerCandidate.id);
-              var playerSession = PlayerSession(
-                playerCandidate.id,
-                sessionId,
-                0,
-              );
-              playerSessionList.add(playerSession);
-              break;
-            }
-          }
+
+        final limit = min(_playersAstNumber, playersForSession.length);
+        for (int j = 0; j < limit; j++) {
+          int playerIndex = _random.nextInt(playersForSession.length);
+          final playerCandidate = playersForSession[playerIndex];
+          debugPrint(
+            "Adding Player: ${playerCandidate.name} to session: $sessionName",
+          );
+          playersForSession.removeAt(playerIndex);
+          var playerSession = PlayerSession(
+            playerCandidate.id,
+            sessionId,
+            0,
+          );
+          playerSessionList.add(playerSession);
         }
       }
     }

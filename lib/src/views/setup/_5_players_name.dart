@@ -141,7 +141,7 @@ class PlayersName extends StatelessWidget implements SetupPage {
         left: MarginsRaw.regular,
         right: MarginsRaw.regular,
       ),
-      child: const ChipSeparator(),
+      child: ChipSeparator(),
     );
   }
 

@@ -110,21 +110,6 @@ class PlayersAST extends StatelessWidget implements SetupPage {
 
   @override
   bool onNextPressed(BuildContext context) {
-    final provider = Provider.of<SetupProvider>(context, listen: false);
-    if (provider.playersNumber - provider.playersAstNumber == 1) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            AppLocalizations.translate(
-              context,
-              'match_with_one_player',
-            ),
-          ),
-        ),
-      );
-      return false;
-    }
-
     return true;
   }
 }

@@ -8,7 +8,7 @@ void main() {
 
   binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
 
-  group('Setup Test Happy path', () {
+  group('Setup Test', () {
     testWidgets('Happy path with 4 players, 2 ast and 2 matches',
         (WidgetTester tester) async {
       // Start app

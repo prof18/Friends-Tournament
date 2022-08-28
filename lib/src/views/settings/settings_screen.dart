@@ -144,7 +144,7 @@ class SettingsScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         _openURL(
-          "https://github.com/prof18/Friends-Tournament/blob/develop/privacy_policy/privacy_policy_aug22.md",
+          "https://www.prof18.com/friends-tournament/pp/privacy-policy-aug22/",
         );
       },
       child: SettingsTile(

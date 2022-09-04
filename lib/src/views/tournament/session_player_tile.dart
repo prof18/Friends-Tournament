@@ -15,15 +15,16 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
-import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
 import 'package:friends_tournament/src/data/model/app/ui_session.dart';
 import 'package:friends_tournament/src/data/model/db/player_session.dart';
+import 'package:friends_tournament/src/provider/tournament_provider.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/widget_keys.dart';
+import 'package:provider/provider.dart';
 
-class SessionPlayerTile extends StatefulWidget {
+class SessionPlayerTile extends StatelessWidget {
   final UIPlayer player;
   final int step;
   final UISession session;
@@ -31,19 +32,15 @@ class SessionPlayerTile extends StatefulWidget {
   final double buttonSize = 20;
   final double iconSize = 16;
 
-  SessionPlayerTile({this.player, this.session, this.step = 1});
-
-  @override
-  _SessionPlayerTileState createState() => _SessionPlayerTileState();
-}
-
-class _SessionPlayerTileState extends State<SessionPlayerTile> {
-  TournamentBloc tournamentBloc;
+  const SessionPlayerTile({
+    Key? key,
+    required this.player,
+    required this.session,
+    this.step = 1,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    tournamentBloc = TournamentBlocProvider.of(context);
-
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 16.0),
       child: Material(
@@ -52,65 +49,17 @@ class _SessionPlayerTileState extends State<SessionPlayerTile> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  top: MarginsRaw.regular, left: MarginsRaw.regular),
-              child: Text(
-                widget.player.name,
-                style: TextStyle(fontSize: 16),
-              ),
-            ),
+            _buildPlayerName(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: MarginsRaw.small),
-                  child: Padding(
-                    padding: Margins.regular,
-                    child: Column(
-                      children: [
-                        Text(
-                          widget.player.score.toString(),
-                          style: TextStyle(fontSize: 32),
-                        ),
-                        Text(
-                          AppLocalizations.of(context).translate('score'),
-                          style: TextStyle(fontSize: 12),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+                _buildPlayerScore(context),
                 Padding(
                   padding: const EdgeInsets.only(right: MarginsRaw.small),
                   child: Row(
                     children: [
-                      Visibility(
-                        visible: widget.player.score == 0 ? false : true,
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.only(right: MarginsRaw.small),
-                          child: GestureDetector(
-                            onTap: _decrementScore,
-                            child: Icon(
-                              Icons.remove,
-                              size: 36,
-                              color: Colors.black38,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: MarginsRaw.small),
-                        child: GestureDetector(
-                          onTap: () => _incrementScore(),
-                          child: Icon(
-                            Icons.add,
-                            size: 36,
-                            color: Colors.black,
-                          ),
-                        ),
-                      )
+                      _buildDecrementScoreButton(context),
+                      _buildIncrementScoreButton(context)
                     ],
                   ),
                 )
@@ -122,20 +71,95 @@ class _SessionPlayerTileState extends State<SessionPlayerTile> {
     );
   }
 
-  _incrementScore() {
-    tournamentBloc.setPlayerScore.add(
-      PlayerSession(widget.player.id, widget.session.id,
-          widget.player.score + widget.step),
+  Widget _buildPlayerName() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: MarginsRaw.regular,
+        left: MarginsRaw.regular,
+      ),
+      child: Text(
+        player.name,
+        style: AppTextStyle.textStyle(fontSize: 16),
+      ),
     );
   }
 
-  _decrementScore() {
-    int score = widget.player.score;
-    if (score - widget.step >= 0) {
-      tournamentBloc.setPlayerScore.add(
-        PlayerSession(widget.player.id, widget.session.id,
-            widget.player.score - widget.step),
-      );
-    }
+  Widget _buildPlayerScore(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: MarginsRaw.small),
+      child: Padding(
+        padding: Margins.regular,
+        child: Column(
+          children: [
+            Text(
+              player.score.toString(),
+              style: AppTextStyle.textStyle(fontSize: 32),
+            ),
+            Text(
+              AppLocalizations.translate(context, 'score'),
+              style: AppTextStyle.textStyle(fontSize: 12),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDecrementScoreButton(BuildContext context) {
+    return Visibility(
+      visible: player.score == 0 ? false : true,
+      child: Padding(
+        padding: const EdgeInsets.only(right: MarginsRaw.small),
+        child: GestureDetector(
+          key: getKeyForScoreDecrease(player.name),
+          onTap: () {
+            int score = player.score;
+            if (score - step >= 0) {
+              Provider.of<TournamentProvider>(
+                context,
+                listen: false,
+              ).setPlayerScore(
+                PlayerSession(
+                  player.id,
+                  session.id,
+                  player.score - step,
+                ),
+              );
+            }
+          },
+          child: const Icon(
+            Icons.remove,
+            size: 36,
+            color: Colors.black38,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Padding _buildIncrementScoreButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: MarginsRaw.small),
+      child: GestureDetector(
+        key: getKeyForScoreIncrease(player.name),
+        onTap: () {
+          Provider.of<TournamentProvider>(
+            context,
+            listen: false,
+          ).setPlayerScore(
+            PlayerSession(
+              player.id,
+              session.id,
+              player.score + step,
+            ),
+          );
+        },
+        child: const Icon(
+          Icons.add,
+          size: 36,
+          color: Colors.black,
+        ),
+      ),
+    );
   }
 }

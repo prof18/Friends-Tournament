@@ -20,7 +20,6 @@ import 'package:friends_tournament/src/data/database/dao/player_session_dao.dart
 import 'package:friends_tournament/src/data/database/dao/tournament_dao.dart';
 import 'package:friends_tournament/src/data/database/dao/tournament_player_dao.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
-import 'package:friends_tournament/src/data/database/database_provider_impl.dart';
 import 'package:friends_tournament/src/data/database/db_queries.dart';
 import 'package:friends_tournament/src/data/model/db/match.dart' as tournament;
 import 'package:friends_tournament/src/data/model/db/player_session.dart';
@@ -30,23 +29,12 @@ import 'package:friends_tournament/src/utils/utils.dart';
 import 'package:sqflite/sqflite.dart';
 
 class LocalDataSource {
-  // Implement singleton
-  // To get back it, simple call: MyClass myObj = new MyClass();
-  /// -------
-  static final LocalDataSource _singleton = new LocalDataSource._internal();
 
-  DatabaseProvider databaseProvider;
+  LocalDataSource(this.databaseProvider);
 
-  LocalDataSource._internal();
+  late DatabaseProvider databaseProvider;
 
-  factory LocalDataSource(DatabaseProvider databaseProvider) {
-    _singleton.databaseProvider = databaseProvider;
-    return _singleton;
-  }
-
-  /// -------
-
-  Batch _batch;
+  Batch? _batch;
 
   Future insert(dynamic object, Dao dao) async {
     final db = await databaseProvider.db();
@@ -62,7 +50,7 @@ class LocalDataSource {
   Future<dynamic> getItems(Dao dao) async {
     final db = await databaseProvider.db();
     List<dynamic> results = await db.query(dao.tableName);
-    return dao.fromList(results);
+    return dao.fromList(results as List<Map<String, dynamic>>);
   }
 
   Future createBatch() async {
@@ -71,27 +59,33 @@ class LocalDataSource {
   }
 
   void insertToBatch(dynamic object, Dao dao) {
-    _batch.insert(dao.tableName, dao.toMap(object));
+    _batch?.insert(dao.tableName, dao.toMap(object));
   }
 
   void insertIgnoreToBatch(dynamic object, Dao dao) {
-    _batch.insert(dao.tableName, dao.toMap(object),
-        conflictAlgorithm: ConflictAlgorithm.ignore);
+    _batch?.insert(
+      dao.tableName,
+      dao.toMap(object),
+      conflictAlgorithm: ConflictAlgorithm.ignore,
+    );
   }
 
   Future flushBatch() async {
-    await _batch.commit();
+    await _batch?.commit();
     _batch = null;
   }
 
   /// Return the active tournament
   /// There should be always one active match. If not, it returns the first one.
-  Future<Tournament> getActiveTournament(Dao dao) async {
+  Future<Tournament?> getActiveTournament(Dao dao) async {
     final db = await databaseProvider.db();
-    List<Map> maps =
-        await db.query(dao.tableName, where: 'is_active = ?', whereArgs: [1]);
-    if (maps.length > 0) {
-      return dao.fromMap(maps.first);
+    List<Map> maps = await db.query(
+      dao.tableName,
+      where: 'is_active = ?',
+      whereArgs: [1],
+    );
+    if (maps.isNotEmpty) {
+      return dao.fromMap(maps.first as Map<String, dynamic>);
     }
     return null;
   }
@@ -101,19 +95,25 @@ class LocalDataSource {
     TournamentDao dao = TournamentDao();
     final db = await databaseProvider.db();
     List<Map> maps = await db.query(dao.tableName);
-    if (maps.length > 0) {
-      return dao.fromList(maps);
+    if (maps.isNotEmpty) {
+      return dao.fromList(maps as List<Map<String, dynamic>>);
     }
     return [];
   }
 
   /// Return all the tournaments saved in the db
-  Future<Tournament> getLastTournament() async {
+  Future<Tournament?> getLastTournament() async {
     final db = await databaseProvider.db();
     final dao = TournamentDao();
-    List<Map> maps = await db.query(dao.tableName,
-        where: 'is_active = ?', whereArgs: [0], orderBy: "date DESC");
-    List<Tournament> tournaments = dao.fromList(maps);
+    List<Map> maps = await db.query(
+      dao.tableName,
+      where: 'is_active = ?',
+      whereArgs: [0],
+      orderBy: "date DESC",
+    );
+    List<Tournament> tournaments = dao.fromList(
+      maps as List<Map<String, dynamic>>,
+    );
 
     if (tournaments.isNotEmpty) {
       return tournaments.first;
@@ -125,24 +125,27 @@ class LocalDataSource {
   /// Returns all the matches of the tournament provided as input
   Future<List<Map>> getTournamentMatches(String tournamentId) async {
     final db = await databaseProvider.db();
-    List<Map> result = await db
-        .rawQuery(format(allMatchesForActiveTournamentQuery, tournamentId));
+    List<Map> result = await db.rawQuery(
+      format(allMatchesForActiveTournamentQuery, tournamentId),
+    );
     return result;
   }
 
   /// Returns all the session for a specific match
   Future<List<Map>> getMatchSessions(String matchId) async {
     final db = await databaseProvider.db();
-    List<Map> result =
-        await db.rawQuery(format(getMatchSessionsQuery, matchId));
+    List<Map> result = await db.rawQuery(
+      format(getMatchSessionsQuery, matchId),
+    );
     return result;
   }
 
   /// Returns all the players for a specific session
   Future<List<Map>> getSessionPlayers(String sessionId) async {
     final db = await databaseProvider.db();
-    List<Map> results =
-        await db.rawQuery(format(getSessionPlayersQuery, sessionId));
+    List<Map> results = await db.rawQuery(
+      format(getSessionPlayersQuery, sessionId),
+    );
     return results;
   }
 
@@ -152,7 +155,7 @@ class LocalDataSource {
     await db.update(
       dao.tableName,
       dao.toMap(match),
-      where: dao.columnId + " = ?",
+      where: "${dao.columnId} = ?",
       whereArgs: [match.id],
     );
     return;
@@ -164,7 +167,7 @@ class LocalDataSource {
     await db.update(
       dao.tableName,
       dao.toMap(playerSession),
-      where: dao.columnSessionId + " = ? AND " + dao.columnPlayerId + " = ?",
+      where: "${dao.columnSessionId} = ? AND ${dao.columnPlayerId} = ?",
       whereArgs: [playerSession.sessionId, playerSession.playerId],
     );
     return;
@@ -176,18 +179,22 @@ class LocalDataSource {
     await db.update(
       dao.tableName,
       dao.toMap(tournamentPlayer),
-      where: dao.columnIdTournament + " = ? AND " + dao.columnIdPlayer + " = ?",
+      where: "${dao.columnIdTournament} = ? AND ${dao.columnIdPlayer} = ?",
       whereArgs: [tournamentPlayer.tournamentId, tournamentPlayer.playerId],
     );
   }
 
   Future<List<TournamentPlayer>> getTournamentPlayers(
-      String tournamentId) async {
+    String tournamentId,
+  ) async {
     final db = await databaseProvider.db();
     final TournamentPlayerDao dao = TournamentPlayerDao();
-    List<Map> results = await db.query(dao.tableName,
-        where: 'id_tournament = ?', whereArgs: [tournamentId]);
-    return dao.fromList(results);
+    List<Map> results = await db.query(
+      dao.tableName,
+      where: 'id_tournament = ?',
+      whereArgs: [tournamentId],
+    );
+    return dao.fromList(results as List<Map<String, dynamic>>);
   }
 
   Future<void> updateTournament(Tournament tournament) async {
@@ -196,15 +203,16 @@ class LocalDataSource {
     await db.update(
       dao.tableName,
       dao.toMap(tournament),
-      where: dao.columnId + " = ?",
+      where: "${dao.columnId} = ?",
       whereArgs: [tournament.id],
     );
   }
 
-  Future<List<Map>> getTournamentScore(String tournamentId) async {
+  Future<List<Map>> getTournamentScore(String? tournamentId) async {
     final db = await databaseProvider.db();
-    List<Map> results =
-        await db.rawQuery(format(getTournamentScoreQuery, tournamentId));
+    List<Map> results = await db.rawQuery(
+      format(getTournamentScoreQuery, tournamentId),
+    );
     return results;
   }
 }

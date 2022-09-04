@@ -35,9 +35,9 @@ class TournamentPlayerDao implements Dao<TournamentPlayer> {
 
   @override
   List<TournamentPlayer> fromList(List<Map<String, dynamic>> query) {
-    var tournamentPlayerList = List<TournamentPlayer>();
+    var tournamentPlayerList = <TournamentPlayer>[];
     for (Map map in query) {
-      tournamentPlayerList.add(fromMap(map));
+      tournamentPlayerList.add(fromMap(map as Map<String, dynamic>));
     }
     return tournamentPlayerList;
   }

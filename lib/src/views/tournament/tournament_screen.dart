@@ -16,27 +16,28 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
-import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
-import 'package:friends_tournament/src/data/model/app/ui_match.dart';
+import 'package:friends_tournament/src/provider/tournament_provider.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/backdrop.dart';
 import 'package:friends_tournament/src/ui/center_loader.dart';
 import 'package:friends_tournament/src/ui/error_dialog.dart';
+import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/tournament/match_selection_tile.dart';
 import 'package:friends_tournament/src/views/tournament/session_score_view.dart';
-import 'package:friends_tournament/src/style/app_style.dart';
+import 'package:provider/provider.dart';
 
 class TournamentScreen extends StatefulWidget {
-  TournamentScreen();
+  const TournamentScreen({Key? key}) : super(key: key);
 
   @override
-  _TournamentScreenState createState() => _TournamentScreenState();
+  State<TournamentScreen> createState() => _TournamentScreenState();
 }
 
 class _TournamentScreenState extends State<TournamentScreen>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  TournamentBloc _tournamentBloc;
+  late AnimationController _controller;
+
+  String? matchName;
 
   @override
   void initState() {
@@ -47,20 +48,33 @@ class _TournamentScreenState extends State<TournamentScreen>
       value: 1.0,
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
+    final tournamentProvider = Provider.of<TournamentProvider>(
+      context,
+      listen: false,
+    );
 
-      tournamentBloc.currentMatchName.listen((matchName) {
+    matchName = tournamentProvider.currentMatch != null
+        ? tournamentProvider.currentMatch!.name
+        : null;
+
+    tournamentProvider.addListener(() {
+      if (tournamentProvider.showTournamentInitError) {
+        showErrorDialog(context, mounted);
+        tournamentProvider.resetErrorTrigger();
+      }
+
+      final newMatchName = tournamentProvider.currentMatch != null
+          ? tournamentProvider.currentMatch!.name
+          : null;
+
+      if (matchName == null) {
+        matchName = newMatchName;
+      } else if (newMatchName != matchName) {
+        matchName = newMatchName;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Match \"$matchName\" selected."),
-          ),
+          SnackBar(content: Text("Match \"$matchName\" selected.")),
         );
-      });
-
-      tournamentBloc.getErrorChecker.listen((event) {
-        showErrorDialog(context);
-      });
+      }
     });
   }
 
@@ -72,8 +86,6 @@ class _TournamentScreenState extends State<TournamentScreen>
 
   @override
   Widget build(BuildContext context) {
-    _tournamentBloc = TournamentBlocProvider.of(context);
-
     return Scaffold(
       body: AnnotatedRegion(
         value: SystemUiOverlayStyle(
@@ -96,18 +108,18 @@ class _TournamentScreenState extends State<TournamentScreen>
   }
 
   Widget _buildDropdownWidget() {
-    return StreamBuilder<List<UIMatch>>(
-      stream: _tournamentBloc.tournamentMatches,
-      builder: (context, snapshot) {
-        return snapshot.hasData
+    return Consumer<TournamentProvider>(
+      builder: (context, provider, child) {
+        return provider.tournamentMatches.isNotEmpty
             ? ListView.builder(
                 itemBuilder: (BuildContext context, int index) {
                   return MatchSelectionTile(
-                    match: snapshot.data[index],
+                    key: getKeyForMatchSelector(index),
+                    match: provider.tournamentMatches[index],
                     controller: _controller,
                   );
                 },
-                itemCount: snapshot.data.length,
+                itemCount: provider.tournamentMatches.length,
               )
             : renderCenterLoader();
       },
@@ -115,12 +127,11 @@ class _TournamentScreenState extends State<TournamentScreen>
   }
 
   Widget _buildContentWidget() {
-    return StreamBuilder<UIMatch>(
-      stream: _tournamentBloc.currentMatch,
-      builder: (context, snapshot) {
-        return snapshot.hasData
+    return Consumer<TournamentProvider>(
+      builder: (context, provider, child) {
+        return provider.currentMatch != null
             ? SessionScoreView(
-                sessions: snapshot.data.matchSessions,
+                sessions: provider.currentMatch!.matchSessions,
                 controller: _controller,
               )
             : renderCenterLoader();

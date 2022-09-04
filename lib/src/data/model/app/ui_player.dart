@@ -22,5 +22,5 @@ import 'package:friends_tournament/src/data/model/db/player.dart';
 class UIPlayer extends Player {
   int score;
 
-  UIPlayer({id, name, this.score}) : super(id, name);
+  UIPlayer({id, name, required this.score}) : super(id, name);
 }

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/data/database/dao/tournament_dao.dart';
 import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/model/app/ui_final_score.dart';
@@ -30,9 +31,9 @@ class TournamentRepository {
   // To get back it, simple call: MyClass myObj = new MyClass();
   /// -------
   static final TournamentRepository _singleton =
-      new TournamentRepository._internal();
+      TournamentRepository._internal();
 
-  LocalDataSource localDataSource;
+  late LocalDataSource localDataSource;
 
   factory TournamentRepository(LocalDataSource localDataSource) {
     _singleton.localDataSource = localDataSource;
@@ -52,11 +53,11 @@ class TournamentRepository {
     return false;
   }
 
-  Future<Tournament> getLastFinishedTournament() async {
+  Future<Tournament?> getLastFinishedTournament() async {
     return localDataSource.getLastTournament();
   }
 
-  Future<Tournament> getCurrentActiveTournament() async {
+  Future<Tournament?> getCurrentActiveTournament() async {
     final dao = TournamentDao();
     final tournament = await localDataSource.getActiveTournament(dao);
     return tournament;
@@ -65,36 +66,39 @@ class TournamentRepository {
   /// Retrieve the tournament data from the database and prepare the data for the UI
   Future<List<UIMatch>> getTournamentMatches(String tournamentID) async {
     // Query to get the matches
-    final List<Map> dbMatches =
-        await localDataSource.getTournamentMatches(tournamentID);
+    final List<Map> dbMatches = await localDataSource.getTournamentMatches(
+      tournamentID,
+    );
 
     // For each match, query to get the different sessions
-    List<UIMatch> uiMatchList = List<UIMatch>();
+    List<UIMatch> uiMatchList = <UIMatch>[];
 
-    await Future.forEach(dbMatches.toList(), (row) async {
+    await Future.forEach(dbMatches.toList(), (dynamic row) async {
       final String idMatch = row['id_match'];
       final String matchName = row['name'];
       final int isActive = row['is_active'];
       final int matchOrder = row['match_order'];
 
-      final List<Map> dbMatchSessions =
-          await localDataSource.getMatchSessions(idMatch);
+      final List<Map> dbMatchSessions = await localDataSource.getMatchSessions(
+        idMatch,
+      );
 
       // For each session, get the players
-      List<UISession> uiSessionList = List<UISession>();
+      List<UISession> uiSessionList = <UISession>[];
 
-      await Future.forEach(dbMatchSessions.toList(), (row) async {
+      await Future.forEach(dbMatchSessions.toList(), (dynamic row) async {
         final idSession = row['id_session'];
         final sessionName = row['name'];
         final order = row['session_order'];
 
-        final List<Map> dbPlayers =
-            await localDataSource.getSessionPlayers(idSession);
+        final List<Map> dbPlayers = await localDataSource.getSessionPlayers(
+          idSession,
+        );
 
         // create the UIPlayerObject
-        List<UIPlayer> uiPlayerList = List<UIPlayer>();
+        List<UIPlayer> uiPlayerList = <UIPlayer>[];
 
-        await Future.forEach(dbPlayers.toList(), (row) async {
+        await Future.forEach(dbPlayers.toList(), (dynamic row) async {
           final idPlayer = row['player_id'];
           final playerName = row['player_name'];
           final playerScore = row['player_score'];
@@ -117,11 +121,12 @@ class TournamentRepository {
       });
 
       UIMatch uiMatch = UIMatch(
-          id: idMatch,
-          name: matchName,
-          isActive: isActive,
-          matchSessions: uiSessionList,
-          order: matchOrder);
+        id: idMatch,
+        name: matchName,
+        isActive: isActive,
+        matchSessions: uiSessionList,
+        order: matchOrder,
+      );
       uiMatchList.add(uiMatch);
     });
     return uiMatchList;
@@ -139,16 +144,22 @@ class TournamentRepository {
     await localDataSource.updateMatch(match);
 
     // update the scores of the player
-    await Future.forEach(uiMatch.matchSessions, (session) async {
-      print("Session: ${session.toString()}");
+    await Future.forEach(uiMatch.matchSessions, (UISession session) async {
+      debugPrint("Session: ${session.toString()}");
       // loop through the players
-      await Future.forEach(session.sessionPlayers, (player) async {
-        print("Player: ${player.toString()}");
-        final PlayerSession playerSession =
-            PlayerSession(player.id, session.id, player.score);
+      await Future.forEach(session.sessionPlayers, (UIPlayer player) async {
+        debugPrint("Player: ${player.toString()}");
+        final PlayerSession playerSession = PlayerSession(
+          player.id,
+          session.id,
+          player.score,
+        );
         await localDataSource.updatePlayerSession(playerSession);
 
-        final tournamentPlayer = await getTournamentPlayer(player.id, tournament.id);
+        final tournamentPlayer = await getTournamentPlayer(
+          player.id,
+          tournament.id,
+        );
         if (tournamentPlayer != null) {
           tournamentPlayer.finalScore += player.score;
           await localDataSource.updateTournamentPlayer(tournamentPlayer);
@@ -159,17 +170,22 @@ class TournamentRepository {
     return;
   }
 
-
-  Future<TournamentPlayer> getTournamentPlayer(String playerId, String tournamentId) async{
+  Future<TournamentPlayer?> getTournamentPlayer(
+    String playerId,
+    String tournamentId,
+  ) async {
     final players = await localDataSource.getTournamentPlayers(tournamentId);
-    return players.firstWhere((element) => element.playerId == playerId, orElse: null);
+    return players.cast<TournamentPlayer?>().firstWhere(
+          (element) => element!.playerId == playerId,
+          orElse: () => null,
+        );
   }
 
-
   Future<List<UIScore>> getScore(Tournament tournament) async {
-    final List<Map> results = await localDataSource.getTournamentScore(tournament.id);
-    final List<UIScore> finalScores = List<UIScore>();
-    await Future.forEach(results, (row) async {
+    final List<Map> results =
+        await localDataSource.getTournamentScore(tournament.id);
+    final List<UIScore> finalScores = <UIScore>[];
+    await Future.forEach(results, (dynamic row) async {
       final idPlayer = row['id_player'];
       final finalScore = row['final_score'];
       final playerName = row['name'];
@@ -199,7 +215,7 @@ class TournamentRepository {
   /// Used to fix eventual errors
   Future<void> finishAllTournament() async {
     List<Tournament> allTournaments = await localDataSource.getAllTournaments();
-    Future.forEach(allTournaments, (tournament) async {
+    Future.forEach(allTournaments, (dynamic tournament) async {
       tournament.isActive = 0;
       await localDataSource.updateTournament(tournament);
     });

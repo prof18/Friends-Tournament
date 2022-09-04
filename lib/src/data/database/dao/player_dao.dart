@@ -33,9 +33,9 @@ class PlayerDao implements Dao<Player> {
 
   @override
   List<Player> fromList(List<Map<String, dynamic>> query) {
-    var players = List<Player>();
+    var players = <Player>[];
     for (Map map in query) {
-      players.add(fromMap(map));
+      players.add(fromMap(map as Map<String, dynamic>));
     }
     return players;
   }

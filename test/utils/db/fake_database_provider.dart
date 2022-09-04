@@ -24,20 +24,18 @@ import 'package:friends_tournament/src/data/database/dao/tournament_match_dao.da
 import 'package:friends_tournament/src/data/database/dao/tournament_player_dao.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class FakeDatabaseProvider implements DatabaseProvider {
   static final _instance = FakeDatabaseProvider._internal();
   static FakeDatabaseProvider get = _instance;
   bool isInitialized = false;
-  Database _db;
+  Database? _db;
 
   // private constructor
   FakeDatabaseProvider._internal();
 
   Future _init() async {
-//    Sqflite.devSetDebugModeOn(true);
 
     var factory = databaseFactoryFfi;
     _db = await factory.openDatabase(
@@ -61,13 +59,13 @@ class FakeDatabaseProvider implements DatabaseProvider {
   @override
   Future<Database> db() async {
     if (_db == null) await _init();
-    return _db;
+    return _db!;
   }
 
   @override
-  Future<void> closeDb() {
+  Future<void> closeDb() async {
     if (_db != null) {
-      _db.close();
+      _db!.close();
     }
   }
 }

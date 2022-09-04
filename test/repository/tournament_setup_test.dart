@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import 'dart:collection';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:friends_tournament/src/data/database/database_provider.dart';
 import 'package:friends_tournament/src/data/database/database_provider_impl.dart';
@@ -149,20 +147,20 @@ void main() {
     test(
         "MatchSession: for each match, there should be two session, with two different ids",
         () {
-      setupRepository.matches.forEach((match) {
+      for (var match in setupRepository.matches) {
         final List<MatchSession> matchSessionList = setupRepository
             .matchSessionList
             .where((matchSession) => matchSession.matchId == match.id)
             .toList();
         expect(matchSessionList[0].sessionId,
             isNot(equals(matchSessionList[1].sessionId)));
-      });
+      }
     });
 
     test(
         "Player Session: for each session there should be two players with different ids",
         () {
-      setupRepository.sessions.forEach((session) {
+      for (var session in setupRepository.sessions) {
         final List<PlayerSession> playerSessionList = setupRepository
             .playerSessionList
             .where((playerSession) => playerSession.sessionId == session.id)
@@ -170,34 +168,34 @@ void main() {
 
         expect(playerSessionList[0].playerId,
             isNot(equals(playerSessionList[1].playerId)));
-      });
+      }
     });
 
     test("in a match all players have to play", () {
 
-      setupRepository.matches.forEach((match) {
+      for (var match in setupRepository.matches) {
 
-        var uniques = new LinkedHashMap<String, void>();
+        var uniques = <String?, void>{};
 
         final List<MatchSession> matchSessionList = setupRepository
             .matchSessionList
             .where((matchSession) => matchSession.matchId == match.id)
             .toList();
 
-        matchSessionList.forEach((matchSession) {
+        for (var matchSession in matchSessionList) {
 
           final List<PlayerSession> playerSessionList = setupRepository
               .playerSessionList
               .where((playerSession) => playerSession.sessionId == matchSession.sessionId)
               .toList();
 
-          playerSessionList.forEach((playerSession) {
+          for (var playerSession in playerSessionList) {
             uniques[playerSession.playerId] = null;
-          });
+          }
 
-        });
+        }
         expect(uniques.length, TestTournament.playersNumber);
-      });
+      }
     });
   });
 }

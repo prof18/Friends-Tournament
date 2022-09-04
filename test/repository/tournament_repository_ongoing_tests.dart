@@ -19,7 +19,6 @@ import 'package:friends_tournament/src/data/database/database_provider.dart';
 import 'package:friends_tournament/src/data/database/local_data_source.dart';
 import 'package:friends_tournament/src/data/model/app/ui_final_score.dart';
 import 'package:friends_tournament/src/data/tournament_repository.dart';
-import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import '../utils/db/ongoing_database_provider.dart';
@@ -40,15 +39,15 @@ void main() {
 
     test('Number of scores is equal to number of players', () async {
       final currentTournament = await tournamentRepository.getCurrentActiveTournament();
-      final scores = await tournamentRepository.getScore(currentTournament);
+      final scores = await tournamentRepository.getScore(currentTournament!);
       expect(scores.length, TestTournament.playersNumber);
     });
 
     test('list of scores is correct', () async {
       final currentTournament = await tournamentRepository.getCurrentActiveTournament();
-      final scores = await tournamentRepository.getScore(currentTournament);
+      final scores = await tournamentRepository.getScore(currentTournament!);
 
-      List<UIScore> uiScores = List<UIScore>();
+      List<UIScore> uiScores = <UIScore>[];
       uiScores.add(UIScore(score: 5, id: "761153207", name: "Player 1"));
       uiScores.add(UIScore(score: 3, id: "183402969", name: "Player 3"));
       uiScores.add(UIScore(score: 1, id: "479405346", name: "Player 2"));

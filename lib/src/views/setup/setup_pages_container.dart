@@ -15,31 +15,32 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
-import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
-import 'package:friends_tournament/src/bloc/setup_bloc.dart';
+import 'package:friends_tournament/src/provider/setup_provider.dart';
+import 'package:friends_tournament/src/provider/tournament_provider.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/dialog_loader.dart';
 import 'package:friends_tournament/src/ui/error_dialog.dart';
 import 'package:friends_tournament/src/ui/slide_dots.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
-import 'package:friends_tournament/src/views/setup/1_tournament_name.dart';
-import 'package:friends_tournament/src/views/setup/2_player_number.dart';
-import 'package:friends_tournament/src/views/setup/3_player_ast_number.dart';
-import 'package:friends_tournament/src/views/setup/5_players_name.dart';
-import 'package:friends_tournament/src/views/setup/6_matches_name.dart';
+import 'package:friends_tournament/src/utils/widget_keys.dart';
+import 'package:friends_tournament/src/views/setup/_1_tournament_name.dart';
+import 'package:friends_tournament/src/views/setup/_2_player_number.dart';
+import 'package:friends_tournament/src/views/setup/_3_player_ast_number.dart';
+import 'package:friends_tournament/src/views/setup/_5_players_name.dart';
+import 'package:friends_tournament/src/views/setup/_6_matches_name.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
+import 'package:provider/provider.dart';
 
-import '4_matches_number.dart';
+import '_4_matches_number.dart';
 
 /// Adapted from https://github.com/CODEHOMIE/Flutter-Onboarding-UI-Concept/blob/master/lib/ui_view/slider_layout_view.dart
 class SetupPagesContainer extends StatefulWidget {
+  const SetupPagesContainer({Key? key}) : super(key: key);
+
   @override
-  _SetupPagesContainerState createState() => _SetupPagesContainerState();
+  State<SetupPagesContainer> createState() => _SetupPagesContainerState();
 }
 
 class _SetupPagesContainerState extends State<SetupPagesContainer>
@@ -50,36 +51,24 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
   final TextEditingController tournamentTextController =
       TextEditingController();
 
-  List<SetupPage> _allPages;
+  final List<SetupPage> _allPages = [
+    TournamentName(),
+    const PlayersNumber(),
+    const PlayersAST(),
+    const MatchesNumber(),
+    PlayersName(),
+    MatchesName(),
+  ];
 
-  SetupBloc _setupBloc;
-
-  AnimationController _controller;
+  late AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 450));
-
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      _setupBloc = SetupBlocProvider.of(context);
-
-      _setupBloc.getErrorChecker.listen((event) {
-        showErrorDialog(context);
-      });
-
-      setState(() {
-        _allPages = <SetupPage>[
-          TournamentName(_setupBloc),
-          PlayersNumber(_setupBloc),
-          PlayersAST(_setupBloc),
-          MatchesNumber(_setupBloc),
-          PlayersName(_setupBloc),
-          MatchesName(_setupBloc)
-        ];
-      });
-    });
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 450),
+    );
   }
 
   @override
@@ -97,175 +86,189 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
 
   @override
   Widget build(BuildContext context) {
-    return _allPages == null
-        ? buildLoader()
-        : AnnotatedRegion(
-            value: SystemUiOverlayStyle(
-              statusBarColor: Colors.transparent,
-              statusBarIconBrightness: Brightness.dark,
-            ),
-            child: Scaffold(
-              body: SafeArea(
-                child: Container(
-                  child: Stack(
-                    alignment: AlignmentDirectional.bottomCenter,
-                    children: <Widget>[
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(bottom: MarginsRaw.xlarge),
-                        child: PageView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          controller: _pageController,
-                          onPageChanged: _onPageChanged,
-                          itemCount: _allPages.length,
-                          itemBuilder: (ctx, i) => _allPages[i],
-                        ),
-                      ),
-                      Stack(
-                        alignment: AlignmentDirectional.topStart,
-                        children: <Widget>[
-                          Visibility(
-                            visible: _currentPageIndex != 0,
-                            child: Align(
-                              alignment: Alignment.bottomLeft,
-                              child: InkWell(
-                                customBorder: CircleBorder(),
-                                onTap: () {
-                                  final page = _allPages[_currentPageIndex];
-                                  final canGoBack = page.onBackPressed();
-                                  if (canGoBack) {
-                                    FocusScope.of(context).unfocus();
-                                    _pageController.animateToPage(
-                                        _currentPageIndex -= 1,
-                                        duration: Duration(milliseconds: 250),
-                                        curve: Curves.ease);
-                                  }
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                      left: MarginsRaw.regular,
-                                      bottom: MarginsRaw.medium,
-                                      top: MarginsRaw.medium,
-                                      right: MarginsRaw.medium),
-                                  child: Text(
-                                    AppLocalizations.of(context)
-                                        .translate('generic_back'),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14.0,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: InkWell(
-                              customBorder: CircleBorder(),
-                              onTap: () {
-                                final page = _allPages[_currentPageIndex];
-                                final canGoForward =
-                                    page.onNextPressed(context);
-                                if (canGoForward) {
-                                  if (_currentPageIndex !=
-                                      _allPages.length - 1) {
-                                    FocusScope.of(context).unfocus();
-                                    _pageController.animateToPage(
-                                        _currentPageIndex += 1,
-                                        duration: Duration(milliseconds: 250),
-                                        curve: Curves.ease);
-                                  } else {
-                                    _showAlertDialog();
-                                  }
-                                }
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                    right: MarginsRaw.regular,
-                                    bottom: MarginsRaw.medium,
-                                    top: MarginsRaw.medium,
-                                    left: MarginsRaw.medium),
-                                child: Text(
-                                  AppLocalizations.of(context).translate(
-                                      _currentPageIndex == _allPages.length - 1
-                                          ? "generic_done"
-                                          : "generic_next"),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14.0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            alignment: AlignmentDirectional.bottomCenter,
-                            margin: EdgeInsets.only(bottom: MarginsRaw.medium),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                for (int i = 0; i < _allPages.length; i++)
-                                  if (i == _currentPageIndex)
-                                    SlideDots(true)
-                                  else
-                                    SlideDots(false)
-                              ],
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
+    return AnnotatedRegion(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+      ),
+      child: Scaffold(
+        body: SafeArea(
+          child: Stack(
+            alignment: AlignmentDirectional.bottomCenter,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(bottom: MarginsRaw.xlarge),
+                child: PageView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  controller: _pageController,
+                  onPageChanged: _onPageChanged,
+                  itemCount: _allPages.length,
+                  itemBuilder: (ctx, i) => _allPages[i],
                 ),
               ),
-            ),
-          );
-  }
-
-  Widget buildLoader() {
-    return Material(
-      child: SafeArea(
-        child: Center(
-          child: CircularProgressIndicator(),
+              Stack(
+                alignment: AlignmentDirectional.topStart,
+                children: <Widget>[
+                  _buildBackButton(context),
+                  _buildNextButton(context),
+                  _buildPageDotSelector(),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
   }
 
-  _showAlertDialog() {
+  Visibility _buildBackButton(BuildContext context) {
+    return Visibility(
+      visible: _currentPageIndex != 0,
+      child: Align(
+        alignment: Alignment.bottomLeft,
+        child: InkWell(
+          key: setupBackButtonKey,
+          customBorder: const CircleBorder(),
+          onTap: () {
+            final page = _allPages[_currentPageIndex];
+            final canGoBack = page.onBackPressed(context);
+            if (canGoBack) {
+              FocusScope.of(context).unfocus();
+              _pageController.animateToPage(
+                _currentPageIndex -= 1,
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.ease,
+              );
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: MarginsRaw.regular,
+              bottom: MarginsRaw.medium,
+              top: MarginsRaw.medium,
+              right: MarginsRaw.medium,
+            ),
+            child: Text(
+              AppLocalizations.translate(context, 'generic_back'),
+              style: AppTextStyle.textStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNextButton(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: InkWell(
+        key: setupNextButtonKey,
+        customBorder: const CircleBorder(),
+        onTap: () {
+          final page = _allPages[_currentPageIndex];
+          final canGoForward = page.onNextPressed(context);
+          if (canGoForward) {
+            if (_currentPageIndex != _allPages.length - 1) {
+              FocusScope.of(context).unfocus();
+              _pageController.animateToPage(
+                _currentPageIndex += 1,
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.ease,
+              );
+            } else {
+              _showGenerateTournamentDialog();
+            }
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(
+            right: MarginsRaw.regular,
+            bottom: MarginsRaw.medium,
+            top: MarginsRaw.medium,
+            left: MarginsRaw.medium,
+          ),
+          child: Text(
+            AppLocalizations.translate(
+              context,
+              _currentPageIndex == _allPages.length - 1
+                  ? "generic_done"
+                  : "generic_next",
+            ),
+            style: AppTextStyle.textStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPageDotSelector() {
+    return Container(
+      alignment: AlignmentDirectional.bottomCenter,
+      margin: const EdgeInsets.only(bottom: MarginsRaw.medium),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          for (int i = 0; i < _allPages.length; i++)
+            if (i == _currentPageIndex)
+              const SlideDots(true)
+            else
+              const SlideDots(false)
+        ],
+      ),
+    );
+  }
+
+  _showGenerateTournamentDialog() {
     showDialog(
       context: context,
       barrierDismissible: false, // user must tap button for close dialog!
       builder: (BuildContext context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(MarginsRaw.borderRadius),
             ),
           ),
           title: Text(
-            AppLocalizations.of(context).translate('tournament_building_title'),
+            AppLocalizations.translate(
+              context,
+              'tournament_building_title',
+            ),
           ),
           content: Text(
-            AppLocalizations.of(context)
-                .translate('tournament_building_message'),
+            AppLocalizations.translate(
+              context,
+              'tournament_building_message',
+            ),
           ),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
-                  AppLocalizations.of(context).translate('generic_cancel')),
-              onPressed: () {
-                Navigator.of(context)?.pop();
-              },
-            ),
-            FlatButton(
-              child: Text(
-                AppLocalizations.of(context)
-                    .translate('tournament_building_go_button'),
+                AppLocalizations.translate(
+                  context,
+                  'generic_cancel',
+                ),
               ),
               onPressed: () {
-                Navigator.of(context)?.pop();
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              key: finishSetupProceedButtonKey,
+              child: Text(
+                AppLocalizations.translate(
+                  context,
+                  'tournament_building_go_button',
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
                 _showLoaderAndStartProcess();
               },
             )
@@ -281,26 +284,33 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
       barrierDismissible: false,
       builder: (_) => DialogLoader(
         controller: _controller,
-        text: AppLocalizations.of(context)
-            .translate('generating_tournament_message'),
+        text: AppLocalizations.translate(
+          context,
+          'generating_tournament_message',
+        ),
       ),
     );
 
-    final result = await _setupBloc.setupTournament();
+    final result = await Provider.of<SetupProvider>(context, listen: false)
+        .setupTournament();
 
     if (result) {
       _controller.reverse().then(
         (_) {
           Navigator.pop(context);
-          Navigator.of(context)?.pushAndRemoveUntil(
+          Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
-                builder: (context) => TournamentBlocProvider(
-                  child: TournamentScreen(),
+                builder: (context) => ChangeNotifierProvider(
+                  create: (context) => TournamentProvider(),
+                  child: const TournamentScreen(),
                 ),
               ),
               (Route<dynamic> route) => false);
         },
       );
+    } else {
+      if (!mounted) return;
+      showErrorDialog(context, mounted);
     }
   }
 }

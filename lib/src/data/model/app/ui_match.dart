@@ -29,17 +29,17 @@ class UIMatch extends tournament.Match {
   bool hasAlreadyScore() {
     bool hasScore = false;
 
-    matchSessions.forEach((matchSession) {
+    for (var matchSession in matchSessions) {
       final playersWithScore = matchSession.sessionPlayers.where((element) => element.score != 0).toList();
       if (playersWithScore.isNotEmpty) {
         hasScore = true;
       }
-    });
+    }
 
     return hasScore;
   }
 
-  UIMatch({this.matchSessions, id, name, isActive, order})
+  UIMatch({required this.matchSessions, id, name, isActive, order})
       : super(id, name, isActive, order);
 
   tournament.Match getParent() {

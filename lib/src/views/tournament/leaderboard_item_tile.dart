@@ -15,16 +15,19 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
-import 'package:friends_tournament/src/ui/utils.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
+import 'package:friends_tournament/src/utils/widget_keys.dart';
 
 class LeaderboardItemTile extends StatelessWidget {
   final UIPlayer uiPlayer;
   final int position;
 
-  LeaderboardItemTile({@required this.uiPlayer, @required this.position});
+  const LeaderboardItemTile({
+    Key? key,
+    required this.uiPlayer,
+    required this.position,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,45 +39,51 @@ class LeaderboardItemTile extends StatelessWidget {
       ),
       child: Material(
         elevation: MarginsRaw.elevation,
-        borderRadius: BorderRadius.circular(
-          8,
-        ),
+        borderRadius: BorderRadius.circular(8),
         child: Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                top: MarginsRaw.regular,
-                bottom: MarginsRaw.regular,
-                left: MarginsRaw.regular,
-              ),
-              child: Text(
-                position.toString(),
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-            ),
-            Padding(
-              padding: Margins.regular,
-              child: Text(
-                uiPlayer.name,
-                style: TextStyle(
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            Spacer(),
-            Padding(
-              padding: Margins.regular,
-              child: Text(
-                uiPlayer.score.toString(),
-                style: TextStyle(
-                  fontSize: 24,
-                ),
-              ),
-            ),
+            _buildPlayerPosition(),
+            _buildPlayerName(),
+            const Spacer(),
+            _buildPlayerScore(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildPlayerPosition() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: MarginsRaw.regular,
+        bottom: MarginsRaw.regular,
+        left: MarginsRaw.regular,
+      ),
+      child: Text(
+        position.toString(),
+        style: AppTextStyle.textStyle(fontSize: 16),
+        key: getKeyForLeaderboardPlayerPosition(uiPlayer.name),
+      ),
+    );
+  }
+
+  Widget _buildPlayerName() {
+    return Padding(
+      padding: Margins.regular,
+      child: Text(
+        uiPlayer.name,
+        style: AppTextStyle.textStyle(fontSize: 24),
+      ),
+    );
+  }
+
+  Widget _buildPlayerScore() {
+    return Padding(
+      padding: Margins.regular,
+      child: Text(
+        uiPlayer.score.toString(),
+        style: AppTextStyle.textStyle(fontSize: 24),
+        key: getKeyForLeaderboardPlayerScore(uiPlayer.name),
       ),
     );
   }

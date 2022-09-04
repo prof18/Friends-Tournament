@@ -21,13 +21,13 @@ String generateTournamentId(String tournamentName) {
 }
 
 /// Generate a match id from the hash code of "$tournamentId-$idName"
-String generateMatchId(String tournamentId, String matchName) {
+String generateMatchId(String? tournamentId, String matchName) {
   var idName = _generateGenericId(matchName);
   return "$tournamentId-$idName".hashCode.toString();
 }
 
 /// Generate a Session id from the hashCode of "$matchId-$idName"
-String generateSessionId(String matchId, String sessionName) {
+String generateSessionId(String? matchId, String sessionName) {
   var idName = _generateGenericId(sessionName);
   return "$matchId-$idName".hashCode.toString();
 }

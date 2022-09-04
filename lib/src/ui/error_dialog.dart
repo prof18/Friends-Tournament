@@ -14,37 +14,31 @@
  * limitations under the License.
  */
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
-import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
-import 'package:friends_tournament/src/data/database/database_provider.dart';
-import 'package:friends_tournament/src/data/database/database_provider_impl.dart';
-import 'package:friends_tournament/src/data/database/local_data_source.dart';
-import 'package:friends_tournament/src/data/tournament_repository.dart';
-import 'package:friends_tournament/src/utils/app_localizations.dart';
-import 'package:friends_tournament/src/views/welcome_screen.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
+import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/service_locator.dart';
+import 'package:friends_tournament/src/views/welcome_screen.dart';
 
-showErrorDialog(BuildContext context) {
-  final DatabaseProvider databaseProvider = DatabaseProviderImpl.get;
-  final LocalDataSource localDataSource = LocalDataSource(databaseProvider);
-  final repository = TournamentRepository(localDataSource);
-
+showErrorDialog(BuildContext context, bool isMounted) {
   showDialog(
     context: context,
     barrierDismissible: false, // user must tap button for close dialog!
     builder: (BuildContext context) {
       return AlertDialog(
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
             Radius.circular(MarginsRaw.borderRadius),
           ),
         ),
-        title: Text(AppLocalizations.of(context)
-            .translate('something_not_working_title')),
-        content: Container(
+        title: Text(
+          AppLocalizations.translate(
+            context,
+            'something_not_working_title',
+          ),
+        ),
+        content: SizedBox(
           height: 250,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,29 +52,32 @@ showErrorDialog(BuildContext context) {
               Padding(
                 padding: const EdgeInsets.only(top: MarginsRaw.regular),
                 child: Text(
-                  AppLocalizations.of(context)
-                      .translate('something_not_working_message'),
-                  style: TextStyle(fontSize: 18),
+                  AppLocalizations.translate(
+                    context,
+                    'something_not_working_message',
+                  ),
+                  style: AppTextStyle.textStyle(fontSize: 18),
                 ),
               )
             ],
           ),
         ),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             child: Text(
-                AppLocalizations.of(context).translate('restart_from_scratch')),
+              AppLocalizations.translate(
+                context,
+                'restart_from_scratch',
+              ),
+            ),
             onPressed: () async {
-              await repository.finishAllTournament();
-              Navigator.of(context)?.pushAndRemoveUntil(
-                  MaterialPageRoute(
-                    builder: (context) => SetupBlocProvider(
-                      child: TournamentBlocProvider(
-                        child: Welcome(),
-                      ),
-                    ),
-                  ),
-                  (Route<dynamic> route) => false);
+              await tournamentRepository.finishAllTournament();
+              if (!isMounted) return;
+              // ignore: use_build_context_synchronously
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const Welcome()),
+                (Route<dynamic> route) => false,
+              );
             },
           )
         ],

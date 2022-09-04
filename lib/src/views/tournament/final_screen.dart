@@ -15,29 +15,25 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:friends_tournament/src/bloc/providers/setup_bloc_provider.dart';
-import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
-import 'package:friends_tournament/src/bloc/setup_bloc.dart';
-import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
-import 'package:friends_tournament/src/data/model/app/ui_player.dart';
-import 'package:friends_tournament/src/data/model/db/tournament.dart';
+import 'package:friends_tournament/src/provider/leaderboard_provider.dart';
+import 'package:friends_tournament/src/provider/setup_provider.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
+import 'package:friends_tournament/src/ui/chip_separator.dart';
 import 'package:friends_tournament/src/ui/error_dialog.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/settings/settings_screen.dart';
 import 'package:friends_tournament/src/views/setup/setup_pages_container.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_page.dart';
-import 'package:friends_tournament/src/style/app_style.dart';
+import 'package:provider/provider.dart';
 
 class FinalScreen extends StatefulWidget {
-  final Tournament tournament;
-
-  FinalScreen(this.tournament);
+  const FinalScreen({Key? key}) : super(key: key);
 
   @override
-  _FinalScreenState createState() => _FinalScreenState();
+  State<FinalScreen> createState() => _FinalScreenState();
 }
 
 class _FinalScreenState extends State<FinalScreen> {
@@ -45,25 +41,27 @@ class _FinalScreenState extends State<FinalScreen> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
-      tournamentBloc.computeLeaderboard(widget.tournament);
+    final leaderboardProvider = Provider.of<LeaderboardProvider>(
+      context,
+      listen: false,
+    );
 
-      tournamentBloc.getErrorChecker.listen((event) {
-        showErrorDialog(context);
-      });
-    });
+    void errorListener() {
+      if (leaderboardProvider.showError) {
+        showErrorDialog(context, mounted);
+        leaderboardProvider.resetErrorFlag();
+      }
+    }
+
+    leaderboardProvider.addListener(errorListener);
   }
 
   @override
   Widget build(BuildContext context) {
-    TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
-    SetupBloc setupBloc = SetupBlocProvider.of(context);
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: AnnotatedRegion(
-        value: SystemUiOverlayStyle(
+        value: const SystemUiOverlayStyle(
           statusBarColor: Colors.white,
           statusBarIconBrightness: Brightness.dark,
         ),
@@ -75,174 +73,18 @@ class _FinalScreenState extends State<FinalScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 36, left: MarginsRaw.regular, right: MarginsRaw.regular),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: MarginsRaw.small),
-                              child: Text(
-                            widget.tournament.name,
-                                style: TextStyle(fontSize: 28),
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SettingsScreen()),
-                              );
-                            },
-                            child: Icon(
-                              Icons.settings,
-                              color: Colors.black38,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+                    _buildNavigationBar(context),
                     Expanded(
                       flex: 7,
-                      child: Padding(
-                        padding: Margins.regular,
-                        child: Align(
-                          alignment: FractionalOffset.center,
-                          child: SvgPicture.asset(
-                            'assets/winner-art.svg',
-                          ),
-                        ),
-                      ),
+                      child: _buildImage(),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: MarginsRaw.regular,
-                        left: MarginsRaw.regular,
-                        bottom: MarginsRaw.medium,
-                      ),
-                      child: Container(
-                        alignment: Alignment.topLeft,
-                        decoration: BoxDecoration(
-                          color: AppColors.blue,
-                          borderRadius: BorderRadius.circular(
-                            MarginsRaw.borderRadius,
-                          ),
-                        ),
-                        height: 6,
-                        width: 60,
-                      ),
-                    ),
-                    Align(
-                      alignment: FractionalOffset.topLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: MarginsRaw.regular,
-                            right: MarginsRaw.regular,
-                            bottom: MarginsRaw.regular),
-                        child: Text(
-                          AppLocalizations.of(context)
-                              .translate('winner_title'),
-                          style: TextStyle(fontSize: 28),
-                        ),
-                      ),
-                    ),
+                    _buildChipSeparator(),
+                    _buildWinnerTitle(context),
                     Expanded(
                       flex: 3,
-                      child: StreamBuilder<List<UIPlayer>>(
-                          stream: tournamentBloc.leaderboardPlayers,
-                          builder: (context, snapshot) {
-                            return Align(
-                              alignment: FractionalOffset.topLeft,
-                              child: Padding(
-                                padding: Margins.regular,
-                                child: Text(
-                                  snapshot.hasData
-                                      ? "${snapshot.data.first.name} 🎉"
-                                      : AppLocalizations.of(context)
-                                          .translate('winner_error_message'),
-                                  style: TextStyle(
-                                      fontSize: 36,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            );
-                          }),
+                      child: _buildWinnerText(),
                     ),
-                    Align(
-                      alignment: FractionalOffset.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            top: MarginsRaw.regular,
-                            bottom: MarginsRaw.regular),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    right: MarginsRaw.regular),
-                                child: RaisedButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => LeaderboardScreen(
-                                            tournament: widget.tournament,
-                                            isFromFinalScreen: true),
-                                      ),
-                                    );
-                                  },
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        MarginsRaw.borderRadius),
-                                    side: BorderSide(color: AppColors.blue),
-                                  ),
-                                  color: AppColors.blue,
-                                  textColor: Colors.white,
-                                  padding: Margins.regular,
-                                  child: Text(
-                                    AppLocalizations.of(context)
-                                        .translate('leaderboard'),
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: RaisedButton(
-                                onPressed: () {
-                                  setupBloc.clearAll();
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => SetupBlocProvider(
-                                        child: SetupPagesContainer(),
-                                      ),
-                                    ),
-                                  );
-                                },
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      MarginsRaw.borderRadius),
-                                  side: BorderSide(color: AppColors.blue),
-                                ),
-                                color: AppColors.blue,
-                                textColor: Colors.white,
-                                padding: Margins.regular,
-                                child: Text(
-                                  AppLocalizations.of(context)
-                                      .translate('new_tournament_button'),
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    _buildButtonRow(context),
                   ],
                 ),
               ),
@@ -253,10 +95,195 @@ class _FinalScreenState extends State<FinalScreen> {
     );
   }
 
-  Widget _renderEmptyLeaderboard() {
-    return Center(
-      child: Text(AppLocalizations.of(context)
-          .translate('something_goes_wrong_message')),
+  Widget _buildNavigationBar(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 36,
+        left: MarginsRaw.regular,
+        right: MarginsRaw.regular,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(right: MarginsRaw.small),
+              child: Consumer<LeaderboardProvider>(
+                builder: (context, provider, child) {
+                  return Text(
+                    provider.tournamentName!,
+                    style: AppTextStyle.textStyle(fontSize: 28),
+                  );
+                },
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsScreen(),
+                ),
+              );
+            },
+            child: const Icon(
+              Icons.settings,
+              color: Colors.black38,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImage() {
+    return Padding(
+      padding: Margins.regular,
+      child: Align(
+        alignment: FractionalOffset.center,
+        child: SvgPicture.asset('assets/winner-art.svg'),
+      ),
+    );
+  }
+
+  Widget _buildChipSeparator() {
+    return const Padding(
+      padding: EdgeInsets.only(
+        top: MarginsRaw.regular,
+        left: MarginsRaw.regular,
+        bottom: MarginsRaw.medium,
+      ),
+      child: ChipSeparator(),
+    );
+  }
+
+  Widget _buildWinnerTitle(BuildContext context) {
+    return Align(
+      alignment: FractionalOffset.topLeft,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          left: MarginsRaw.regular,
+          right: MarginsRaw.regular,
+          bottom: MarginsRaw.regular,
+        ),
+        child: Text(
+          AppLocalizations.translate(context, 'winner_title'),
+          style: AppTextStyle.textStyle(fontSize: 28),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWinnerText() {
+    return Consumer<LeaderboardProvider>(
+      builder: (context, provider, child) {
+        return Align(
+          alignment: FractionalOffset.topLeft,
+          child: Padding(
+            padding: Margins.regular,
+            child: Text(
+              provider.leaderboardPlayers.isNotEmpty
+                  ? "${provider.leaderboardPlayers.first.name} 🎉"
+                  : AppLocalizations.translate(context, 'winner_error_message'),
+              style: AppTextStyle.textStyle(
+                fontSize: 36,
+                fontWeight: FontWeight.bold,
+              ),
+              key: winnerTextKey,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildButtonRow(BuildContext context) {
+    return Align(
+      alignment: FractionalOffset.bottomCenter,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: MarginsRaw.regular,
+          bottom: MarginsRaw.regular,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(right: MarginsRaw.regular),
+                child: _buildLeaderboardButton(context),
+              ),
+            ),
+            Expanded(
+              child: _buildNewTournamentButton(context),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLeaderboardButton(BuildContext context) {
+    return ElevatedButton(
+      key: tournamentEndedLeaderboardButtonKey,
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ChangeNotifierProvider<LeaderboardProvider>.value(
+              value: Provider.of<LeaderboardProvider>(
+                context,
+                listen: false,
+              ),
+              child: const LeaderboardScreen(isFromFinalScreen: true),
+            ),
+          ),
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(MarginsRaw.borderRadius),
+          side: BorderSide(color: AppColors.blue),
+        ),
+        primary: AppColors.blue,
+        textStyle: AppTextStyle.textStyle(color: Colors.white),
+        padding: Margins.regular,
+      ),
+      child: Text(
+        AppLocalizations.translate(context, 'leaderboard'),
+        style: AppTextStyle.textStyle(fontSize: 16),
+      ),
+    );
+  }
+
+  Widget _buildNewTournamentButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return ChangeNotifierProvider(
+                create: (context) => SetupProvider(),
+                child: const SetupPagesContainer(),
+              );
+            },
+          ),
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(MarginsRaw.borderRadius),
+          side: BorderSide(color: AppColors.blue),
+        ),
+        primary: AppColors.blue,
+        textStyle: AppTextStyle.textStyle(color: Colors.white),
+        padding: Margins.regular,
+      ),
+      child: Text(
+        AppLocalizations.translate(context, 'new_tournament_button'),
+        style: AppTextStyle.textStyle(fontSize: 16),
+      ),
     );
   }
 }

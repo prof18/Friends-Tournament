@@ -17,30 +17,29 @@
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 
-InputDecoration getTextFieldDecoration(String hintText) {
+InputDecoration getTextFieldDecoration(String? hintText) {
   return InputDecoration(
-      enabledBorder: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(MarginsRaw.borderRadius),
-        ),
-        borderSide: BorderSide(color: Colors.transparent),
+    enabledBorder: const OutlineInputBorder(
+      borderRadius: BorderRadius.all(
+        Radius.circular(MarginsRaw.borderRadius),
       ),
-      border: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(MarginsRaw.borderRadius),
-        ),
-        borderSide: BorderSide(color: Colors.transparent),
+      borderSide: BorderSide(color: Colors.transparent),
+    ),
+    border: const OutlineInputBorder(
+      borderRadius: BorderRadius.all(
+        Radius.circular(MarginsRaw.borderRadius),
       ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(MarginsRaw.borderRadius),
-        ),
-        borderSide: BorderSide(color: Colors.transparent),
+      borderSide: BorderSide(color: Colors.transparent),
+    ),
+    focusedBorder: const OutlineInputBorder(
+      borderRadius: BorderRadius.all(
+        Radius.circular(MarginsRaw.borderRadius),
       ),
-      filled: true,
-      hintStyle: TextStyle(
-        color: Colors.grey[500],
-      ),
-      hintText: hintText,
-      fillColor: Colors.white70);
+      borderSide: BorderSide(color: Colors.transparent),
+    ),
+    filled: true,
+    hintStyle: AppTextStyle.textStyle(color: Colors.grey[500]),
+    hintText: hintText,
+    fillColor: Colors.white70,
+  );
 }

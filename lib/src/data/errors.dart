@@ -19,3 +19,9 @@ class MatchesWithSameIdException implements Exception {}
 class AlreadyActiveTournamentException implements Exception {}
 
 class TooMuchPlayersASTException implements Exception {}
+
+class ActiveTournamentNullException implements Exception {}
+
+class CurrentMatchNullException implements Exception {}
+
+class ActiveTournamentAndCurrentMatchNullException implements Exception {}

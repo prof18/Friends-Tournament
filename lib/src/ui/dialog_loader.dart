@@ -47,7 +47,8 @@ class DialogLoader extends StatefulWidget {
   final String text;
   final AnimationController controller;
 
-  DialogLoader({this.text, @required this.controller});
+  const DialogLoader({Key? key, required this.text, required this.controller})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => DialogLoaderState();
@@ -55,13 +56,15 @@ class DialogLoader extends StatefulWidget {
 
 class DialogLoaderState extends State<DialogLoader>
     with SingleTickerProviderStateMixin {
-  Animation<double> scaleAnimation;
+  late Animation<double> scaleAnimation;
 
   @override
   void initState() {
     super.initState();
-    scaleAnimation =
-        CurvedAnimation(parent: widget.controller, curve: Curves.elasticInOut);
+    scaleAnimation = CurvedAnimation(
+      parent: widget.controller,
+      curve: Curves.elasticInOut,
+    );
     widget.controller.forward();
   }
 
@@ -74,18 +77,23 @@ class DialogLoaderState extends State<DialogLoader>
           scale: scaleAnimation,
           child: Container(
             decoration: ShapeDecoration(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0))),
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+            ),
             child: Padding(
               padding: const EdgeInsets.all(30.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  CircularProgressIndicator(),
+                  const CircularProgressIndicator(),
                   Padding(
                     padding: const EdgeInsets.only(
-                        top: 16.0, left: 16.0, right: 16.0),
+                      top: 16.0,
+                      left: 16.0,
+                      right: 16.0,
+                    ),
                     child: Text(widget.text),
                   )
                 ],

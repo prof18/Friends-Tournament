@@ -16,39 +16,30 @@
 
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
-import 'package:friends_tournament/src/ui/text_field_decoration.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
+import 'package:friends_tournament/src/ui/text_field_decoration.dart';
 
-class TextFieldTile extends StatefulWidget {
+class TextFieldTile extends StatelessWidget {
   final TextFieldWrapper textFieldWrapper;
 
   const TextFieldTile({
-    Key key,
-    @required this.textFieldWrapper,
-  })  : assert(textFieldWrapper != null),
-        super(key: key);
+    Key? key,
+    required this.textFieldWrapper,
+  }) : super(key: key);
 
-  @override
-  State<TextFieldTile> createState() {
-    return _TextFieldTileState();
-  }
-}
-
-class _TextFieldTileState extends State<TextFieldTile> {
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: Margins.small,
-      child: Container(
-        child: Material(
-          elevation: MarginsRaw.elevation,
-          borderRadius: BorderRadius.all(
-            Radius.circular(MarginsRaw.borderRadius),
-          ),
-          child: TextField(
-            controller: widget.textFieldWrapper.textEditingController,
-            decoration: getTextFieldDecoration(widget.textFieldWrapper.label),
-          ),
+      child: Material(
+        elevation: MarginsRaw.elevation,
+        borderRadius: const BorderRadius.all(
+          Radius.circular(MarginsRaw.borderRadius),
+        ),
+        child: TextField(
+          controller: textFieldWrapper.textEditingController,
+          decoration: getTextFieldDecoration(textFieldWrapper.label),
+          textInputAction: textFieldWrapper.inputAction,
         ),
       ),
     );

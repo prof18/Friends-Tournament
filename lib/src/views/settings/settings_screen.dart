@@ -25,15 +25,15 @@ import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({Key? key}) : super(key: key);
+
   static Future<String> getAppVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     return packageInfo.version;
   }
 
   static void _openURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    }
+    await launchUrl(Uri.parse(url));
   }
 
   @override
@@ -42,7 +42,7 @@ class SettingsScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: AnnotatedRegion(
-          value: SystemUiOverlayStyle(
+          value: const SystemUiOverlayStyle(
             statusBarColor: Colors.white,
             statusBarIconBrightness: Brightness.dark,
           ),
@@ -68,131 +68,189 @@ class SettingsScreen extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(16.0),
-                    child: Image.asset(
-                      'assets/app-icon.png',
-                      width: 80,
-                    ),
-                  ),
-                  Padding(
-                    padding: Margins.regular,
-                    child: Text(
-                      "Friends Tournament",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 32),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: MarginsRaw.regular,
-                      right: MarginsRaw.regular,
-                    ),
-                    child: Text(
-                      AppLocalizations.of(context)
-                          .translate('friends_tournament_claim'),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ),
-                  SizedBox(
+                  _buildAppIcon(),
+                  _buildAppTitle(),
+                  _buildAppDescription(context),
+                  const SizedBox(
                     height: MarginsRaw.medium,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      _openURL("https://github.com/prof18/Friends-Tournament/");
-                    },
-                    child: SettingsTile(
-                      AppLocalizations.of(context).translate('show_github'),
-                    ),
+                  _buildGithubTile(context),
+                  _buildPrivacyPolicyTile(context),
+                  _buildLicensesTile(
+                    context,
+                    () => {_navigateToLicenseScreen(context)},
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      _openURL(
-                          "https://github.com/prof18/Friends-Tournament/blob/master/privacy_policy.md");
-                    },
-                    child: SettingsTile(
-                      AppLocalizations.of(context).translate('privacy_policy'),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      LicenseRegistry.addLicense(() async* {
-                        yield LicenseEntryWithLineBreaks(
-                            <String>['freepik'], '''
-                              <a href="https://it.freepik.com/foto-vettori-gratuito/design">Vectors and illustrations from freepik - freepik.com</a>''');
-                      });
-
-                      Navigator.of(context)?.push(MaterialPageRoute<void>(
-                        builder: (context) => Theme(
-                          data: Theme.of(context).copyWith(
-                              textTheme: Typography.material2018(
-                                platform: Theme.of(context).platform,
-                              ).black,
-                              scaffoldBackgroundColor: Colors.white,
-                              appBarTheme: AppBarTheme(
-                                brightness: Brightness.light,
-                              )),
-                          child: LicensePage(
-                            applicationName: "Friends Tournament",
-                            applicationLegalese: "© 2019-2020 Marco Gomiero",
-                          ),
-                        ),
-                      ));
-                    },
-                    child: SettingsTile(
-                      AppLocalizations.of(context)
-                          .translate('open_source_license'),
-                    ),
-                  ),
-                  SizedBox(
+                  const SizedBox(
                     height: MarginsRaw.medium,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: MarginsRaw.small,
-                      left: MarginsRaw.regular,
-                      right: MarginsRaw.regular,
-                    ),
-                    child: FutureBuilder<String>(
-                      future: getAppVersion(),
-                      builder: (context, snapshot) {
-                        return Text(
-                          snapshot.hasData
-                              ? "${AppLocalizations.of(context).translate('app_version')}: ${snapshot.data}"
-                              : "",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 14, color: Colors.black38),
-                        );
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        top: MarginsRaw.regular, bottom: MarginsRaw.small),
-                    child: RichText(
-                      text: TextSpan(
-                        style: TextStyle(color: Colors.black38, fontSize: 16),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: AppLocalizations.of(context)
-                                .translate('developed_by'),
-                          ),
-                          TextSpan(
-                              style: TextStyle(color: AppColors.blue),
-                              text: 'Marco Gomiero',
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  _openURL("https://www.marcogomiero.com");
-                                }),
-                        ],
-                      ),
-                    ),
-                  ),
+                  _buildAppVersionLabel(),
+                  _buildAuthorLabel(context),
                 ],
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAppIcon() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16.0),
+      child: Image.asset(
+        'assets/app-icon.png',
+        width: 80,
+      ),
+    );
+  }
+
+  Padding _buildAppTitle() {
+    return Padding(
+      padding: Margins.regular,
+      child: Text(
+        "Friends Tournament",
+        textAlign: TextAlign.center,
+        style: AppTextStyle.textStyle(fontSize: 32),
+      ),
+    );
+  }
+
+  Widget _buildAppDescription(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: MarginsRaw.regular,
+        right: MarginsRaw.regular,
+      ),
+      child: Text(
+        AppLocalizations.translate(context, 'friends_tournament_claim'),
+        textAlign: TextAlign.center,
+        style: AppTextStyle.textStyle(fontSize: 18),
+      ),
+    );
+  }
+
+  Widget _buildGithubTile(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        _openURL("https://github.com/prof18/Friends-Tournament/");
+      },
+      child: SettingsTile(
+        AppLocalizations.translate(context, 'show_github'),
+      ),
+    );
+  }
+
+  Widget _buildPrivacyPolicyTile(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        _openURL(
+          "https://www.prof18.com/friends-tournament/pp/privacy-policy-aug22/",
+        );
+      },
+      child: SettingsTile(
+        AppLocalizations.translate(context, 'privacy_policy'),
+      ),
+    );
+  }
+
+  Widget _buildLicensesTile(BuildContext context, Function() onTap) {
+    return GestureDetector(
+      onTap: () {
+        onTap();
+      },
+      child: SettingsTile(
+        AppLocalizations.translate(
+          context,
+          'open_source_license',
+        ),
+      ),
+    );
+  }
+
+  Future<void> _navigateToLicenseScreen(BuildContext context) async {
+    LicenseRegistry.addLicense(() async* {
+      final license = await rootBundle.loadString(
+        'google_fonts/OFL.txt',
+      );
+      yield LicenseEntryWithLineBreaks(
+        ['google_fonts'],
+        license,
+      );
+      yield const LicenseEntryWithLineBreaks(
+        <String>['freepik'],
+        '''<a href="https://it.freepik.com/foto-vettori-gratuito/design">Vectors and illustrations from freepik - freepik.com</a>''',
+      );
+    });
+
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) => Theme(
+          data: Theme.of(context),
+          child: const LicensePage(
+            applicationName: "Friends Tournament",
+            applicationLegalese: "© 2019-2020 Marco Gomiero",
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAppVersionLabel() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: MarginsRaw.small,
+        left: MarginsRaw.regular,
+        right: MarginsRaw.regular,
+      ),
+      child: FutureBuilder<String>(
+        future: getAppVersion(),
+        builder: (context, snapshot) {
+          return Text(
+            snapshot.hasData
+                ? "${AppLocalizations.translate(context, 'app_version')}: ${snapshot.data}"
+                : "",
+            textAlign: TextAlign.center,
+            style: AppTextStyle.textStyle(
+              fontSize: 14,
+              color: Colors.black38,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildAuthorLabel(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: MarginsRaw.regular,
+        bottom: MarginsRaw.small,
+      ),
+      child: RichText(
+        text: TextSpan(
+          style: AppTextStyle.textStyle(
+            fontSize: 16,
+            color: Colors.black38,
+          ),
+          children: <TextSpan>[
+            TextSpan(
+              text: AppLocalizations.translate(
+                context,
+                'developed_by',
+              ),
+            ),
+            TextSpan(
+              style: AppTextStyle.textStyle(
+                fontSize: 16,
+                color: AppColors.blue,
+              ),
+              text: 'Marco Gomiero',
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  _openURL("https://www.marcogomiero.com");
+                },
+            ),
+          ],
         ),
       ),
     );

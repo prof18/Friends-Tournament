@@ -33,9 +33,9 @@ class TournamentMatchDao implements Dao<TournamentMatch> {
 
   @override
   List<TournamentMatch> fromList(List<Map<String, dynamic>> query) {
-    var tournamentMatchList = List<TournamentMatch>();
+    var tournamentMatchList = <TournamentMatch>[];
     for (Map map in query) {
-      tournamentMatchList.add(fromMap(map));
+      tournamentMatchList.add(fromMap(map as Map<String, dynamic>));
     }
     return tournamentMatchList;
   }

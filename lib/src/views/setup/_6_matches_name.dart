@@ -18,42 +18,48 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:friends_tournament/src/bloc/setup_bloc.dart';
 import 'package:friends_tournament/src/data/model/text_field_wrapper.dart';
+import 'package:friends_tournament/src/provider/setup_provider.dart';
+import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/widget_keys.dart';
+import 'package:friends_tournament/src/ui/chip_separator.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
-import 'package:friends_tournament/src/style/app_style.dart';
+import 'package:provider/provider.dart';
 
 class MatchesName extends StatelessWidget implements SetupPage {
-  final List<TextFieldWrapper> _textFieldsList = new List<TextFieldWrapper>();
-  final Map<int, String> _savedValues = new HashMap();
-  final SetupBloc _setupBloc;
+  final List<TextFieldWrapper> _textFieldsList = <TextFieldWrapper>[];
+  final Map<int, String> _savedValues = HashMap();
 
-  MatchesName(this._setupBloc);
+  MatchesName({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      initialData: 0,
-      stream: _setupBloc.getMatchesNumber,
-      builder: (context, snapshot) {
-        return createBody(snapshot.data);
+    return Consumer<SetupProvider>(
+      builder: (context, provider, child) {
+        return _createBody(
+          provider.matchesNumber,
+          provider.matchesName,
+          context,
+        );
       },
     );
   }
 
-  Widget createBody(int matchesNumber) {
+  Widget _createBody(
+    int matchesNumber,
+    UnmodifiableMapView<int, String> matches,
+    BuildContext context,
+  ) {
     return Column(
       children: <Widget>[
         Expanded(
           child: Container(
-            child: StreamBuilder(
-              initialData: new Map<int, String>(),
-              stream: _setupBloc.getMatchesName,
-              builder: (context, snapshot) {
-                return renderTextFields(matchesNumber, snapshot.data, context);
-              },
+            child: _renderContent(
+              matchesNumber,
+              matches,
+              context,
             ),
           ),
         ),
@@ -61,17 +67,26 @@ class MatchesName extends StatelessWidget implements SetupPage {
     );
   }
 
-  Widget renderTextFields(
-      int matchesNumber, Map<int, String> matchesName, BuildContext context) {
+  Widget _renderContent(
+    int matchesNumber,
+    Map<int, String> matchesName,
+    BuildContext context,
+  ) {
     if (_textFieldsList.length != matchesNumber) {
       _textFieldsList.clear();
       for (int i = 0; i < matchesNumber; i++) {
+        var action = TextInputAction.next;
+        if (i == matchesNumber - 1) {
+          action = TextInputAction.done;
+        }
         TextFieldWrapper textFieldWrapper = TextFieldWrapper(
-            TextEditingController(),
-            "${AppLocalizations.of(context).translate('match_label')} ${i + 1}");
+          TextEditingController(),
+          "${AppLocalizations.translate(context, 'match_label')} ${i + 1}",
+          action,
+        );
         if (matchesName.containsKey(i)) {
           textFieldWrapper.value = matchesName[i];
-          textFieldWrapper.textEditingController.text = matchesName[i];
+          textFieldWrapper.textEditingController.text = matchesName[i]!;
         }
         _textFieldsList.add(textFieldWrapper);
       }
@@ -81,62 +96,67 @@ class MatchesName extends StatelessWidget implements SetupPage {
       children: <Widget>[
         Expanded(
           flex: 3,
-          child: Padding(
-            padding: Margins.regular,
-            child: SvgPicture.asset(
-              'assets/matches-art.svg',
-            ),
-          ),
+          child: _buildImage(),
         ),
-        Padding(
-          padding: const EdgeInsets.only(
-              top: MarginsRaw.regular,
-              bottom: MarginsRaw.small,
-              left: MarginsRaw.regular,
-              right: MarginsRaw.regular),
-          child: Text(
-            AppLocalizations.of(context).translate('matches_name_title'),
-            style: TextStyle(
-              fontSize: 36,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(
-              top: MarginsRaw.regular,
-              left: MarginsRaw.regular,
-              right: MarginsRaw.regular),
-          child: Container(
-            alignment: Alignment.topLeft,
-            decoration: BoxDecoration(
-              color: AppColors.blue,
-              borderRadius: BorderRadius.circular(
-                MarginsRaw.borderRadius,
-              ),
-            ),
-            height: 6,
-            width: 60,
-          ),
-        ),
+        _buildTitle(context),
+        _buildChipSeparator(),
         Expanded(
           flex: 7,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: MarginsRaw.regular,
-              bottom: MarginsRaw.regular,
-              left: MarginsRaw.small,
-              right: MarginsRaw.small,
-            ),
-            child: ListView.builder(
-              itemBuilder: (BuildContext context, int index) {
-                return TextFieldTile(textFieldWrapper: _textFieldsList[index]);
-              },
-              itemCount: _textFieldsList.length,
-            ),
-          ),
+          child: _buildTextFields(),
         )
       ],
+    );
+  }
+
+  Widget _buildImage() {
+    return Padding(
+      padding: Margins.regular,
+      child: SvgPicture.asset('assets/matches-art.svg'),
+    );
+  }
+
+  Widget _buildTitle(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: MarginsRaw.regular,
+        bottom: MarginsRaw.small,
+        left: MarginsRaw.regular,
+        right: MarginsRaw.regular,
+      ),
+      child: Text(
+        AppLocalizations.translate(context, 'matches_name_title'),
+        style: AppTextStyle.onboardingTitleStyle,
+      ),
+    );
+  }
+
+  Widget _buildChipSeparator() {
+    return const Padding(
+      padding: EdgeInsets.only(
+          top: MarginsRaw.regular,
+          left: MarginsRaw.regular,
+          right: MarginsRaw.regular),
+      child: ChipSeparator(),
+    );
+  }
+
+  Widget _buildTextFields() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: MarginsRaw.regular,
+        bottom: MarginsRaw.regular,
+        left: MarginsRaw.small,
+        right: MarginsRaw.small,
+      ),
+      child: ListView.builder(
+        itemBuilder: (BuildContext context, int index) {
+          return TextFieldTile(
+            key: getKeyForMatchNameTextField(index),
+            textFieldWrapper: _textFieldsList[index],
+          );
+        },
+        itemCount: _textFieldsList.length,
+      ),
     );
   }
 
@@ -151,7 +171,7 @@ class MatchesName extends StatelessWidget implements SetupPage {
     return true;
   }
 
-  void saveValues() {
+  void saveValues(BuildContext context) {
     for (int i = 0; i < _textFieldsList.length; i++) {
       TextFieldWrapper textField = _textFieldsList[i];
       if (textField.textEditingController.text.isNotEmpty) {
@@ -163,23 +183,24 @@ class MatchesName extends StatelessWidget implements SetupPage {
         }
       }
     }
-    _setupBloc.setMatchesName.add(_savedValues);
+    Provider.of<SetupProvider>(context, listen: false)
+        .setMatchesName(_savedValues);
   }
 
   /// Return true if there are some duplicates
   bool areNamesDuplicate() {
     List<String> finalNameList = [];
-    _textFieldsList.forEach((textFieldWrapper) {
+    for (var textFieldWrapper in _textFieldsList) {
       finalNameList.add(textFieldWrapper.textEditingController.text.trim());
-    });
+    }
 
     var distinctNames = finalNameList.toSet().toList();
     return distinctNames.length != finalNameList.length;
   }
 
   @override
-  bool onBackPressed() {
-    saveValues();
+  bool onBackPressed(BuildContext context) {
+    saveValues(context);
     return true;
   }
 
@@ -189,14 +210,14 @@ class MatchesName extends StatelessWidget implements SetupPage {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.of(context).translate('match_name_duplicated'),
+            AppLocalizations.translate(context, 'match_name_duplicated'),
           ),
         ),
       );
       return false;
     }
 
-    saveValues();
+    saveValues(context);
 
     if (_savedValues.length == _textFieldsList.length && isMatchNamesValid()) {
       return true;
@@ -204,8 +225,10 @@ class MatchesName extends StatelessWidget implements SetupPage {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.of(context)
-                .translate('matches_name_empty_fields_message'),
+            AppLocalizations.translate(
+              context,
+              'matches_name_empty_fields_message',
+            ),
           ),
         ),
       );

@@ -35,9 +35,9 @@ class PlayerSessionDao implements Dao<PlayerSession> {
 
   @override
   List<PlayerSession> fromList(List<Map<String, dynamic>> query) {
-    var playerSessionList = List<PlayerSession>();
+    var playerSessionList = <PlayerSession>[];
     for (Map map in query) {
-      playerSessionList.add(fromMap(map));
+      playerSessionList.add(fromMap(map as Map<String, dynamic>));
     }
     return playerSessionList;
   }

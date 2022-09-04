@@ -37,9 +37,9 @@ class MatchDao implements Dao<Match> {
 
   @override
   List<Match> fromList(List<Map<String, dynamic>> query) {
-    var matches = List<Match>();
+    var matches = <Match>[];
     for (Map map in query) {
-      matches.add(fromMap(map));
+      matches.add(fromMap(map as Map<String, dynamic>));
     }
     return matches;
   }

@@ -15,27 +15,26 @@
  */
 
 /// Adapted from https://github.com/flutter/flutter/blob/master/examples/flutter_gallery/lib/demo/shrine/shopping_cart.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:friends_tournament/src/bloc/providers/tournament_bloc_provider.dart';
-import 'package:friends_tournament/src/bloc/tournament_bloc.dart';
 import 'package:friends_tournament/src/data/model/app/ui_player.dart';
-import 'package:friends_tournament/src/data/model/db/tournament.dart';
-import 'package:friends_tournament/src/ui/error_dialog.dart';
-import 'package:friends_tournament/src/utils/app_localizations.dart';
-import 'package:friends_tournament/src/views/tournament/leaderboard_item_tile.dart';
+import 'package:friends_tournament/src/provider/leaderboard_provider.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
+import 'package:friends_tournament/src/ui/chip_separator.dart';
+import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/widget_keys.dart';
+import 'package:friends_tournament/src/views/tournament/leaderboard_item_tile.dart';
+import 'package:provider/provider.dart';
 
 class LeaderboardScreen extends StatefulWidget {
-  final Tournament tournament;
   final bool isFromFinalScreen;
 
-  LeaderboardScreen({this.tournament, this.isFromFinalScreen});
+  const LeaderboardScreen({Key? key, required this.isFromFinalScreen})
+      : super(key: key);
 
   @override
-  _LeaderboardScreenState createState() => _LeaderboardScreenState();
+  State<LeaderboardScreen> createState() => _LeaderboardScreenState();
 }
 
 class _LeaderboardScreenState extends State<LeaderboardScreen> {
@@ -43,23 +42,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   var statusBarBrightness = Brightness.dark;
 
   @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
-      tournamentBloc.computeLeaderboard(widget.tournament);
-
-      tournamentBloc.getErrorChecker.listen((event) {
-        showErrorDialog(context);
-      });
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    TournamentBloc tournamentBloc = TournamentBlocProvider.of(context);
-
     return WillPopScope(
       onWillPop: () {
         if (!widget.isFromFinalScreen) {
@@ -84,90 +67,15 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(top: MarginsRaw.regular),
-                            child: SizedBox(
-                              width: 60,
-                              child: IconButton(
-                                icon: const Icon(Icons.arrow_back_ios),
-                                onPressed: () {
-                                  if (!widget.isFromFinalScreen) {
-                                    setState(() {
-                                      statusBarColor = AppColors.blue;
-                                      statusBarBrightness = Brightness.light;
-                                    });
-                                  }
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(top: MarginsRaw.regular),
-                            child: Text(
-                              AppLocalizations.of(context)
-                                  .translate('leaderboard'),
-                              style: TextStyle(fontSize: 28),
-                            ),
-                          ),
-                        ],
-                      ),
+                      _buildNavigationBar(context),
                       Expanded(
                         flex: 4,
-                        child: Padding(
-                          padding: Margins.regular,
-                          child: SvgPicture.asset(
-                            'assets/podium-art.svg',
-                          ),
-                        ),
+                        child: _buildImage(),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: MarginsRaw.regular,
-                          left: MarginsRaw.regular,
-                          bottom: MarginsRaw.regular,
-                        ),
-                        child: Container(
-                          alignment: Alignment.topLeft,
-                          decoration: BoxDecoration(
-                            color: AppColors.blue,
-                            borderRadius: BorderRadius.circular(
-                              MarginsRaw.borderRadius,
-                            ),
-                          ),
-                          height: 6,
-                          width: 60,
-                        ),
-                      ),
+                      _buildChipSeparator(),
                       Expanded(
                         flex: 6,
-                        child: Padding(
-                          padding: Margins.small,
-                          child: StreamBuilder<List<UIPlayer>>(
-                            initialData: [],
-                            stream: tournamentBloc.leaderboardPlayers,
-                            builder: (context, snapshot) {
-                              return snapshot.data.isNotEmpty
-                                  ? ListView.builder(
-                                      itemCount: snapshot.data.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        UIPlayer uiPlayer =
-                                            snapshot.data[index];
-                                        return LeaderboardItemTile(
-                                          uiPlayer: uiPlayer,
-                                          position: index + 1,
-                                        );
-                                      },
-                                    )
-                                  : _renderEmptyLeaderboard();
-                            },
-                          ),
-                        ),
+                        child: _buildLeaderboard(),
                       )
                     ],
                   ),
@@ -180,10 +88,87 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
     );
   }
 
+  Widget _buildNavigationBar(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(
+            top: MarginsRaw.regular,
+          ),
+          child: SizedBox(
+            width: 60,
+            child: IconButton(
+              key: leaderboardBackButtonKey,
+              icon: const Icon(Icons.arrow_back_ios),
+              onPressed: () {
+                if (!widget.isFromFinalScreen) {
+                  setState(() {
+                    statusBarColor = AppColors.blue;
+                    statusBarBrightness = Brightness.light;
+                  });
+                }
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: MarginsRaw.regular),
+          child: Text(
+            AppLocalizations.translate(context, 'leaderboard'),
+            style: AppTextStyle.textStyle(fontSize: 28),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Padding _buildImage() {
+    return Padding(
+      padding: Margins.regular,
+      child: SvgPicture.asset('assets/podium-art.svg'),
+    );
+  }
+
+  Widget _buildChipSeparator() {
+    return const Padding(
+      padding: EdgeInsets.only(
+        top: MarginsRaw.regular,
+        left: MarginsRaw.regular,
+        bottom: MarginsRaw.regular,
+      ),
+      child: ChipSeparator(),
+    );
+  }
+
+  Widget _buildLeaderboard() {
+    return Padding(
+      padding: Margins.small,
+      child: Consumer<LeaderboardProvider>(
+        builder: (context, provider, child) {
+          return provider.leaderboardPlayers.isNotEmpty
+              ? ListView.builder(
+                  itemCount: provider.leaderboardPlayers.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    UIPlayer uiPlayer = provider.leaderboardPlayers[index];
+                    return LeaderboardItemTile(
+                      uiPlayer: uiPlayer,
+                      position: index + 1,
+                    );
+                  },
+                )
+              : _renderEmptyLeaderboard();
+        },
+      ),
+    );
+  }
+
   Widget _renderEmptyLeaderboard() {
     return Center(
-      child: Text(AppLocalizations.of(context)
-          .translate('no_matches_started_yet_label')),
+      child: Text(AppLocalizations.translate(
+        context,
+        'no_matches_started_yet_label',
+      )),
     );
   }
 }

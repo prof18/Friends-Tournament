@@ -20,24 +20,25 @@ import 'package:friends_tournament/src/style/app_style.dart';
 class SettingsTile extends StatelessWidget {
   final String title;
 
-  SettingsTile(this.title);
+  const SettingsTile(this.title, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: MarginsRaw.small, bottom: MarginsRaw.small,),
+      padding: const EdgeInsets.only(
+        top: MarginsRaw.small,
+        bottom: MarginsRaw.small,
+      ),
       child: Material(
         elevation: 6,
-        borderRadius: BorderRadius.circular(
-          6,
-        ),
-        child: Container(
+        borderRadius: BorderRadius.circular(6),
+        child: SizedBox(
           width: MediaQuery.of(context).size.width - (MarginsRaw.regular * 4),
           child: Padding(
             padding: Margins.regular,
             child: Text(
               title,
-              style: TextStyle(fontSize: 16),
+              style: AppTextStyle.textStyle(fontSize: 16),
             ),
           ),
         ),

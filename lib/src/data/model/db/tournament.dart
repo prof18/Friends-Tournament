@@ -31,8 +31,15 @@ class Tournament {
   int isActive;
   int date;
 
-  Tournament(this.id, this.name, this.playersNumber, this.playersAstNumber,
-      this.matchesNumber, this.isActive, this.date);
+  Tournament(
+    this.id,
+    this.name,
+    this.playersNumber,
+    this.playersAstNumber,
+    this.matchesNumber,
+    this.isActive,
+    this.date,
+  );
 
   @override
   String toString() {

@@ -19,7 +19,8 @@ import 'package:flutter/cupertino.dart';
 class TextFieldWrapper {
   TextEditingController textEditingController;
   String label;
-  String value;
+  String? value;
+  TextInputAction inputAction;
 
-  TextFieldWrapper(this.textEditingController, this.label);
+  TextFieldWrapper(this.textEditingController, this.label, this.inputAction);
 }

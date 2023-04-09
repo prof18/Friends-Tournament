@@ -23,6 +23,7 @@ import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/chip_separator.dart';
 import 'package:friends_tournament/src/ui/error_dialog.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/is_tablet.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/settings/settings_screen.dart';
 import 'package:friends_tournament/src/views/setup/setup_pages_container.dart';
@@ -66,7 +67,11 @@ class _FinalScreenState extends State<FinalScreen> {
           statusBarIconBrightness: Brightness.dark,
         ),
         child: Padding(
-          padding: Margins.regular,
+          padding:  EdgeInsets.only(
+            left: isTablet(context) ? MarginsRaw.medium : MarginsRaw.regular,
+            right: isTablet(context) ? MarginsRaw.medium : MarginsRaw.regular,
+            bottom: isTablet(context) ? MarginsRaw.medium : MarginsRaw.regular,
+          ),
           child: Column(
             children: <Widget>[
               Expanded(
@@ -99,8 +104,6 @@ class _FinalScreenState extends State<FinalScreen> {
     return Padding(
       padding: const EdgeInsets.only(
         top: 36,
-        left: MarginsRaw.regular,
-        right: MarginsRaw.regular,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -138,11 +141,8 @@ class _FinalScreenState extends State<FinalScreen> {
   }
 
   Widget _buildImage() {
-    return Padding(
-      padding: Margins.regular,
-      child: Center(
-          child: SvgPicture.asset('assets/winner-art.svg'),
-      ),
+    return Center(
+        child: SvgPicture.asset('assets/winner-art.svg'),
     );
   }
 
@@ -150,8 +150,6 @@ class _FinalScreenState extends State<FinalScreen> {
     return const Padding(
       padding: EdgeInsets.only(
         top: MarginsRaw.regular,
-        left: MarginsRaw.regular,
-        bottom: MarginsRaw.medium,
       ),
       child: ChipSeparator(),
     );
@@ -161,9 +159,8 @@ class _FinalScreenState extends State<FinalScreen> {
     return Align(
       alignment: FractionalOffset.topLeft,
       child: Padding(
-        padding: const EdgeInsets.only(
-          left: MarginsRaw.regular,
-          right: MarginsRaw.regular,
+        padding: EdgeInsets.only(
+          top: isTablet(context) ? MarginsRaw.large : MarginsRaw.medium,
           bottom: MarginsRaw.regular,
         ),
         child: Text(
@@ -180,7 +177,10 @@ class _FinalScreenState extends State<FinalScreen> {
         return Align(
           alignment: FractionalOffset.topLeft,
           child: Padding(
-            padding: Margins.regular,
+            padding: const EdgeInsets.only(
+              top: MarginsRaw.regular,
+              bottom: MarginsRaw.regular,
+            ),
             child: Text(
               provider.leaderboardPlayers.isNotEmpty
                   ? "${provider.leaderboardPlayers.first.name} 🎉"

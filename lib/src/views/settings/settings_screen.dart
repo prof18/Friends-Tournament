@@ -53,6 +53,7 @@ class SettingsScreen extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(
                     top: MarginsRaw.small,
+                    left: MarginsRaw.regular,
                   ),
                   child: SizedBox(
                     width: 60,

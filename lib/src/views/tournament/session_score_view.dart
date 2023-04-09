@@ -24,6 +24,7 @@ import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/error_dialog.dart';
 import 'package:friends_tournament/src/ui/utils.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/is_tablet.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/tournament/end_tournament_dialog.dart';
 import 'package:friends_tournament/src/views/tournament/session_item_widget.dart';
@@ -175,7 +176,9 @@ class _SessionScoreViewState extends State<SessionScoreView> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: MarginsRaw.regular),
+                  padding: EdgeInsets.only(
+                    top: isTablet(context) ? MarginsRaw.large : MarginsRaw.regular,
+                  ),
                   child: Text(
                     AppLocalizations.translate(
                       context,

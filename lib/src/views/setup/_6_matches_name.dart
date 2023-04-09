@@ -23,6 +23,7 @@ import 'package:friends_tournament/src/provider/setup_provider.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/is_tablet.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/ui/chip_separator.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
@@ -38,10 +39,15 @@ class MatchesName extends StatelessWidget implements SetupPage {
   Widget build(BuildContext context) {
     return Consumer<SetupProvider>(
       builder: (context, provider, child) {
-        return _createBody(
-          provider.matchesNumber,
-          provider.matchesName,
-          context,
+        return Padding(
+          padding: EdgeInsets.all(
+            isTablet(context) ? MarginsRaw.large : MarginsRaw.regular,
+          ),
+          child: _createBody(
+            provider.matchesNumber,
+            provider.matchesName,
+            context,
+          ),
         );
       },
     );
@@ -110,20 +116,15 @@ class MatchesName extends StatelessWidget implements SetupPage {
 
   Widget _buildImage() {
     return Center(
-      child: Padding(
-        padding: Margins.regular,
-        child: SvgPicture.asset('assets/matches-art.svg'),
-      ),
+      child: SvgPicture.asset('assets/matches-art.svg'),
     );
   }
 
   Widget _buildTitle(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-        top: MarginsRaw.regular,
+      padding: EdgeInsets.only(
+        top: isTablet(context) ? MarginsRaw.large : MarginsRaw.regular,
         bottom: MarginsRaw.small,
-        left: MarginsRaw.regular,
-        right: MarginsRaw.regular,
       ),
       child: Text(
         AppLocalizations.translate(context, 'matches_name_title'),
@@ -135,9 +136,8 @@ class MatchesName extends StatelessWidget implements SetupPage {
   Widget _buildChipSeparator() {
     return const Padding(
       padding: EdgeInsets.only(
-          top: MarginsRaw.regular,
-          left: MarginsRaw.regular,
-          right: MarginsRaw.regular),
+        top: MarginsRaw.regular,
+      ),
       child: ChipSeparator(),
     );
   }
@@ -147,14 +147,17 @@ class MatchesName extends StatelessWidget implements SetupPage {
       padding: const EdgeInsets.only(
         top: MarginsRaw.regular,
         bottom: MarginsRaw.regular,
-        left: MarginsRaw.small,
-        right: MarginsRaw.small,
       ),
       child: ListView.builder(
         itemBuilder: (BuildContext context, int index) {
-          return TextFieldTile(
-            key: getKeyForMatchNameTextField(index),
-            textFieldWrapper: _textFieldsList[index],
+          return Padding(
+            padding:  EdgeInsets.symmetric(
+              vertical: isTablet(context) ? MarginsRaw.regular : MarginsRaw.small,
+            ),
+            child: TextFieldTile(
+              key: getKeyForMatchNameTextField(index),
+              textFieldWrapper: _textFieldsList[index],
+            ),
           );
         },
         itemCount: _textFieldsList.length,

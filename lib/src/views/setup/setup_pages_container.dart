@@ -33,6 +33,7 @@ import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:friends_tournament/src/views/tournament/tournament_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../../utils/is_tablet.dart';
 import '_4_matches_number.dart';
 
 /// Adapted from https://github.com/CODEHOMIE/Flutter-Onboarding-UI-Concept/blob/master/lib/ui_view/slider_layout_view.dart
@@ -97,7 +98,7 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
             alignment: AlignmentDirectional.bottomCenter,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(bottom: MarginsRaw.xlarge),
+                padding: const EdgeInsets.only(bottom: MarginsRaw.xxlarge),
                 child: PageView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   controller: _pageController,
@@ -106,13 +107,18 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
                   itemBuilder: (ctx, i) => _allPages[i],
                 ),
               ),
-              Stack(
-                alignment: AlignmentDirectional.topStart,
-                children: <Widget>[
-                  _buildBackButton(context),
-                  _buildNextButton(context),
-                  _buildPageDotSelector(),
-                ],
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: isTablet(context) ? MarginsRaw.large : MarginsRaw.regular,
+                ),
+                child: Stack(
+                  alignment: AlignmentDirectional.topStart,
+                  children: <Widget>[
+                    _buildBackButton(context),
+                    _buildNextButton(context),
+                    _buildPageDotSelector(),
+                  ],
+                ),
               )
             ],
           ),
@@ -143,7 +149,6 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
           },
           child: Padding(
             padding: const EdgeInsets.only(
-              left: MarginsRaw.regular,
               bottom: MarginsRaw.medium,
               top: MarginsRaw.medium,
               right: MarginsRaw.medium,
@@ -185,7 +190,6 @@ class _SetupPagesContainerState extends State<SetupPagesContainer>
         },
         child: Padding(
           padding: const EdgeInsets.only(
-            right: MarginsRaw.regular,
             bottom: MarginsRaw.medium,
             top: MarginsRaw.medium,
             left: MarginsRaw.medium,

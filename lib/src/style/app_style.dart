@@ -16,12 +16,22 @@
 
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/ui/utils.dart';
+import 'package:friends_tournament/src/utils/is_tablet.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Margins {
   static const small = EdgeInsets.all(8.0);
   static const regular = EdgeInsets.all(16.0);
   static const medium = EdgeInsets.all(24.0);
+
+  static EdgeInsets getRegular(BuildContext context) {
+    if (isTablet(context)) {
+      return const EdgeInsets.all(32.0);
+    } else {
+      return const EdgeInsets.all(0.0);
+    }
+  }
+
 }
 
 class MarginsRaw {
@@ -29,7 +39,8 @@ class MarginsRaw {
   static const regular = 16.0;
   static const medium = 24.0;
   static const large = 48.0;
-  static const xlarge = 60.0;
+  static const xlarge = 56.0;
+  static const xxlarge = 60.0;
 
   static const borderRadius = 18.0;
 

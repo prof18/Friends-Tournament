@@ -21,6 +21,7 @@ import 'package:friends_tournament/src/provider/setup_provider.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/chip_separator.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/is_tablet.dart';
 import 'package:friends_tournament/src/views/settings/settings_screen.dart';
 import 'package:friends_tournament/src/views/setup/setup_pages_container.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -61,7 +62,7 @@ class Welcome extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          _buildTitle(),
+                          _buildTitle(context),
                           _buildChipSeparator(),
                           _buildIntroMessage(context),
                           _buildStartButton(context),
@@ -113,28 +114,33 @@ class Welcome extends StatelessWidget {
     );
   }
 
-  Widget _buildTitle() {
-    return FittedBox(
-      alignment: Alignment.centerLeft,
-      fit: BoxFit.scaleDown,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Friends",
-            style: GoogleFonts.montserrat(
-              fontSize: 42,
-              fontWeight: FontWeight.bold,
+  Widget _buildTitle(BuildContext context) {
+    return Padding(
+      padding:  EdgeInsets.symmetric(
+        vertical: isTablet(context) ? MarginsRaw.medium : 0,
+      ),
+      child: FittedBox(
+        alignment: Alignment.centerLeft,
+        fit: BoxFit.scaleDown,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Friends",
+              style: GoogleFonts.montserrat(
+                fontSize: 42,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          Text(
-            "Tournament",
-            style: GoogleFonts.montserrat(
-              fontSize: 42,
-              fontWeight: FontWeight.bold,
+            Text(
+              "Tournament",
+              style: GoogleFonts.montserrat(
+                fontSize: 42,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -150,13 +156,13 @@ class Welcome extends StatelessWidget {
 
   Widget _buildIntroMessage(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-        top: MarginsRaw.regular,
+      padding: EdgeInsets.only(
+        top: isTablet(context) ? MarginsRaw.large : MarginsRaw.regular,
       ),
       child: Text(
         AppLocalizations.translate(context, 'friends_tournament_intro_message'),
         style: GoogleFonts.montserrat(
-          textStyle: Theme.of(context).textTheme.headline5,
+          textStyle: Theme.of(context).textTheme.headlineSmall,
         ),
       ),
     );
@@ -164,8 +170,8 @@ class Welcome extends StatelessWidget {
 
   Widget _buildStartButton(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-        top: MarginsRaw.regular,
+      padding: EdgeInsets.only(
+        top: isTablet(context) ? MarginsRaw.medium : MarginsRaw.regular,
       ),
       child: ElevatedButton(
         onPressed: () {
@@ -187,11 +193,11 @@ class Welcome extends StatelessWidget {
             side: BorderSide(color: AppColors.blue),
           ),
           padding: Margins.regular,
-          primary: AppColors.blue,
+          backgroundColor: AppColors.blue,
           textStyle: GoogleFonts.montserrat(
             textStyle: Theme.of(context)
                 .textTheme
-                .button
+                .labelLarge
                 ?.copyWith(color: Colors.white),
           ),
         ),

@@ -6,6 +6,7 @@ import 'package:friends_tournament/src/provider/tournament_provider.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/error_dialog.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/is_tablet.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/tournament/final_screen.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +43,9 @@ showEndTournamentDialog(
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: MarginsRaw.regular),
+                padding: EdgeInsets.only(
+                  top: isTablet(context) ? MarginsRaw.large : MarginsRaw.regular,
+                ),
                 child: Text(
                   message,
                   style: AppTextStyle.textStyle(fontSize: 18),

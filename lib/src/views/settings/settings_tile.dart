@@ -16,6 +16,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
+import 'package:friends_tournament/src/utils/is_tablet.dart';
 
 class SettingsTile extends StatelessWidget {
   final String title;
@@ -25,10 +26,9 @@ class SettingsTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-        top: MarginsRaw.small,
-        bottom: MarginsRaw.small,
-      ),
+      padding:  EdgeInsets.symmetric(
+        vertical: isTablet(context) ? MarginsRaw.regular : MarginsRaw.small,
+    ),
       child: Material(
         elevation: 6,
         borderRadius: BorderRadius.circular(6),

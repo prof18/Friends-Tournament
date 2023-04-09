@@ -23,6 +23,7 @@ import 'package:friends_tournament/src/provider/setup_provider.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/text_field_tile.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/is_tablet.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/ui/chip_separator.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
@@ -38,10 +39,15 @@ class PlayersName extends StatelessWidget implements SetupPage {
   Widget build(BuildContext context) {
     return Consumer<SetupProvider>(
       builder: (context, provider, child) {
-        return _createBody(
-          provider.playersNumber,
-          provider.playersName,
-          context,
+        return Padding(
+          padding: EdgeInsets.all(
+            isTablet(context) ? MarginsRaw.large : MarginsRaw.regular,
+          ),
+          child: _createBody(
+            provider.playersNumber,
+            provider.playersName,
+            context,
+          ),
         );
       },
     );
@@ -114,19 +120,14 @@ class PlayersName extends StatelessWidget implements SetupPage {
 
   Widget _buildImage() {
     return Center(
-      child: Padding(
-        padding: Margins.regular,
-        child: SvgPicture.asset('assets/players_art.svg'),
-      ),
+      child: SvgPicture.asset('assets/players_art.svg'),
     );
   }
 
   Widget _buildTitle(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-        top: MarginsRaw.regular,
-        left: MarginsRaw.regular,
-        right: MarginsRaw.regular,
+      padding: EdgeInsets.only(
+        top: isTablet(context) ? MarginsRaw.large : MarginsRaw.regular,
         bottom: MarginsRaw.small,
       ),
       child: Text(
@@ -140,8 +141,6 @@ class PlayersName extends StatelessWidget implements SetupPage {
     return const Padding(
       padding: EdgeInsets.only(
         top: MarginsRaw.regular,
-        left: MarginsRaw.regular,
-        right: MarginsRaw.regular,
       ),
       child: ChipSeparator(),
     );
@@ -152,14 +151,17 @@ class PlayersName extends StatelessWidget implements SetupPage {
       padding: const EdgeInsets.only(
         top: MarginsRaw.regular,
         bottom: MarginsRaw.regular,
-        left: MarginsRaw.small,
-        right: MarginsRaw.small,
       ),
       child: ListView.builder(
         itemBuilder: (BuildContext context, int index) {
-          return TextFieldTile(
-            key: getKeyForPlayerNameTextField(index),
-            textFieldWrapper: _textFieldsList[index],
+          return Padding(
+            padding:  EdgeInsets.symmetric(
+              vertical: isTablet(context) ? MarginsRaw.regular : MarginsRaw.small,
+            ),
+            child: TextFieldTile(
+              key: getKeyForPlayerNameTextField(index),
+              textFieldWrapper: _textFieldsList[index],
+            ),
           );
         },
         itemCount: _textFieldsList.length,

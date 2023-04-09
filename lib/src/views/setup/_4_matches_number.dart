@@ -22,6 +22,7 @@ import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/setup_counter_widget.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/ui/chip_separator.dart';
+import 'package:friends_tournament/src/utils/is_tablet.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:provider/provider.dart';
 
@@ -34,7 +35,9 @@ class MatchesNumber extends StatelessWidget implements SetupPage {
       children: <Widget>[
         Expanded(
           child: Padding(
-            padding: Margins.regular,
+            padding: EdgeInsets.all(
+              isTablet(context) ? MarginsRaw.large : MarginsRaw.regular,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -68,8 +71,8 @@ class MatchesNumber extends StatelessWidget implements SetupPage {
 
   Widget _buildTitle(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-        top: MarginsRaw.regular,
+      padding: EdgeInsets.only(
+        top: isTablet(context) ? MarginsRaw.large : MarginsRaw.regular,
         bottom: MarginsRaw.small,
       ),
       child: Text(
@@ -92,15 +95,20 @@ class MatchesNumber extends StatelessWidget implements SetupPage {
   Widget _buildMatchNumberCounter() {
     return Consumer<SetupProvider>(
       builder: (context, provider, child) {
-        return SetupCounterWidget(
-          minValue: 1,
-          currentValue: provider.matchesNumber,
-          onIncrease: (newValue) {
-            provider.setMatchesNumber(newValue);
-          },
-          onDecrease: (newValue) {
-            provider.setMatchesNumber(newValue);
-          },
+        return Padding(
+          padding:  EdgeInsets.only(
+            top: isTablet(context) ? MarginsRaw.regular : 0.0,
+          ),
+          child: SetupCounterWidget(
+            minValue: 1,
+            currentValue: provider.matchesNumber,
+            onIncrease: (newValue) {
+              provider.setMatchesNumber(newValue);
+            },
+            onDecrease: (newValue) {
+              provider.setMatchesNumber(newValue);
+            },
+          ),
         );
       },
     );

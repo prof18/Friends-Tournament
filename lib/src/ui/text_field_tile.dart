@@ -29,18 +29,15 @@ class TextFieldTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: Margins.small,
-      child: Material(
-        elevation: MarginsRaw.elevation,
-        borderRadius: const BorderRadius.all(
-          Radius.circular(MarginsRaw.borderRadius),
-        ),
-        child: TextField(
-          controller: textFieldWrapper.textEditingController,
-          decoration: getTextFieldDecoration(textFieldWrapper.label),
-          textInputAction: textFieldWrapper.inputAction,
-        ),
+    return Material(
+      elevation: MarginsRaw.elevation,
+      borderRadius: const BorderRadius.all(
+        Radius.circular(MarginsRaw.borderRadius),
+      ),
+      child: TextField(
+        controller: textFieldWrapper.textEditingController,
+        decoration: getTextFieldDecoration(textFieldWrapper.label),
+        textInputAction: textFieldWrapper.inputAction,
       ),
     );
   }

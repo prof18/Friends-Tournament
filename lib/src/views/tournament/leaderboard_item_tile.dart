@@ -31,23 +31,16 @@ class LeaderboardItemTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        left: MarginsRaw.small,
-        bottom: MarginsRaw.medium,
-        right: MarginsRaw.small,
-      ),
-      child: Material(
-        elevation: MarginsRaw.elevation,
-        borderRadius: BorderRadius.circular(8),
-        child: Row(
-          children: [
-            _buildPlayerPosition(),
-            _buildPlayerName(),
-            const Spacer(),
-            _buildPlayerScore(),
-          ],
-        ),
+    return Material(
+      elevation: MarginsRaw.elevation,
+      borderRadius: BorderRadius.circular(8),
+      child: Row(
+        children: [
+          _buildPlayerPosition(),
+          _buildPlayerName(),
+          const Spacer(),
+          _buildPlayerScore(),
+        ],
       ),
     );
   }

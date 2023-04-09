@@ -21,6 +21,7 @@ import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/text_field_decoration.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
 import 'package:friends_tournament/src/ui/chip_separator.dart';
+import 'package:friends_tournament/src/utils/is_tablet.dart';
 import 'package:friends_tournament/src/views/setup/setup_page.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +36,9 @@ class TournamentName extends StatelessWidget implements SetupPage {
       children: <Widget>[
         Expanded(
           child: Padding(
-            padding: Margins.regular,
+            padding: EdgeInsets.all(
+              isTablet(context) ? MarginsRaw.large : MarginsRaw.regular,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -69,8 +72,8 @@ class TournamentName extends StatelessWidget implements SetupPage {
 
   Widget _buildTitle(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-        top: MarginsRaw.regular,
+      padding: EdgeInsets.only(
+        top: isTablet(context) ? MarginsRaw.large : MarginsRaw.regular,
         bottom: MarginsRaw.small,
       ),
       child: Text(
@@ -91,17 +94,22 @@ class TournamentName extends StatelessWidget implements SetupPage {
   }
 
   Widget _buildTextField(BuildContext context) {
-    return Material(
-      elevation: MarginsRaw.elevation,
-      borderRadius: const BorderRadius.all(
-        Radius.circular(MarginsRaw.borderRadius),
+    return Padding(
+      padding:  EdgeInsets.only(
+        top: isTablet(context) ? MarginsRaw.regular : 0.0,
       ),
-      child: TextField(
-        controller: _tournamentController,
-        keyboardType: TextInputType.text,
-        textInputAction: TextInputAction.done,
-        decoration: getTextFieldDecoration(
-          AppLocalizations.translate(context, 'tournament_name_title'),
+      child: Material(
+        elevation: MarginsRaw.elevation,
+        borderRadius: const BorderRadius.all(
+          Radius.circular(MarginsRaw.borderRadius),
+        ),
+        child: TextField(
+          controller: _tournamentController,
+          keyboardType: TextInputType.text,
+          textInputAction: TextInputAction.done,
+          decoration: getTextFieldDecoration(
+            AppLocalizations.translate(context, 'tournament_name_title'),
+          ),
         ),
       ),
     );

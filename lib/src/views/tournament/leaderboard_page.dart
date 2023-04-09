@@ -23,6 +23,7 @@ import 'package:friends_tournament/src/provider/leaderboard_provider.dart';
 import 'package:friends_tournament/src/style/app_style.dart';
 import 'package:friends_tournament/src/ui/chip_separator.dart';
 import 'package:friends_tournament/src/utils/app_localizations.dart';
+import 'package:friends_tournament/src/utils/is_tablet.dart';
 import 'package:friends_tournament/src/utils/widget_keys.dart';
 import 'package:friends_tournament/src/views/tournament/leaderboard_item_tile.dart';
 import 'package:provider/provider.dart';
@@ -61,26 +62,35 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
             statusBarIconBrightness: statusBarBrightness,
           ),
           child: SafeArea(
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      _buildNavigationBar(context),
-                      Expanded(
-                        flex: 4,
-                        child: _buildImage(),
-                      ),
-                      _buildChipSeparator(),
-                      Expanded(
-                        flex: 6,
-                        child: _buildLeaderboard(),
-                      )
-                    ],
+            child: Padding(
+              padding: EdgeInsets.only(
+                // left: isTablet(context) ? MarginsRaw.medium : MarginsRaw.regular,
+                right:
+                    isTablet(context) ? MarginsRaw.medium : MarginsRaw.regular,
+                bottom:
+                    isTablet(context) ? MarginsRaw.medium : MarginsRaw.regular,
+              ),
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        _buildNavigationBar(context),
+                        Expanded(
+                          flex: 4,
+                          child: _buildImage(),
+                        ),
+                        _buildChipSeparator(),
+                        Expanded(
+                          flex: 6,
+                          child: _buildLeaderboard(),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -126,26 +136,30 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   Widget _buildImage() {
     return Center(
       child: Padding(
-        padding: Margins.regular,
+        padding: EdgeInsets.only(
+          left: isTablet(context) ? MarginsRaw.medium : MarginsRaw.regular,
+        ),
         child: SvgPicture.asset('assets/podium-art.svg'),
       ),
     );
   }
 
   Widget _buildChipSeparator() {
-    return const Padding(
+    return Padding(
       padding: EdgeInsets.only(
         top: MarginsRaw.regular,
-        left: MarginsRaw.regular,
+        left: isTablet(context) ? MarginsRaw.medium : MarginsRaw.regular,
         bottom: MarginsRaw.regular,
       ),
-      child: ChipSeparator(),
+      child: const ChipSeparator(),
     );
   }
 
   Widget _buildLeaderboard() {
     return Padding(
-      padding: Margins.small,
+      padding: EdgeInsets.only(
+        left: isTablet(context) ? MarginsRaw.medium : MarginsRaw.regular,
+      ),
       child: Consumer<LeaderboardProvider>(
         builder: (context, provider, child) {
           return provider.leaderboardPlayers.isNotEmpty
@@ -153,9 +167,16 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                   itemCount: provider.leaderboardPlayers.length,
                   itemBuilder: (BuildContext context, int index) {
                     UIPlayer uiPlayer = provider.leaderboardPlayers[index];
-                    return LeaderboardItemTile(
-                      uiPlayer: uiPlayer,
-                      position: index + 1,
+                    return Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: isTablet(context)
+                            ? MarginsRaw.regular
+                            : MarginsRaw.small,
+                      ),
+                      child: LeaderboardItemTile(
+                        uiPlayer: uiPlayer,
+                        position: index + 1,
+                      ),
                     );
                   },
                 )

@@ -58,9 +58,11 @@ class MatchesNumber extends StatelessWidget implements SetupPage {
   }
 
   Widget _buildImage() {
-    return Padding(
-      padding: const EdgeInsets.only(top: MarginsRaw.regular),
-      child: SvgPicture.asset('assets/matches-art.svg'),
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(top: MarginsRaw.regular),
+        child: SvgPicture.asset('assets/matches-art.svg'),
+      ),
     );
   }
 

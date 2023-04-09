@@ -123,10 +123,12 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
     );
   }
 
-  Padding _buildImage() {
-    return Padding(
-      padding: Margins.regular,
-      child: SvgPicture.asset('assets/podium-art.svg'),
+  Widget _buildImage() {
+    return Center(
+      child: Padding(
+        padding: Margins.regular,
+        child: SvgPicture.asset('assets/podium-art.svg'),
+      ),
     );
   }
 

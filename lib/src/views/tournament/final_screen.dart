@@ -140,9 +140,8 @@ class _FinalScreenState extends State<FinalScreen> {
   Widget _buildImage() {
     return Padding(
       padding: Margins.regular,
-      child: Align(
-        alignment: FractionalOffset.center,
-        child: SvgPicture.asset('assets/winner-art.svg'),
+      child: Center(
+          child: SvgPicture.asset('assets/winner-art.svg'),
       ),
     );
   }

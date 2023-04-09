@@ -57,9 +57,11 @@ class PlayersNumber extends StatelessWidget implements SetupPage {
   }
 
   Widget _buildImage() {
-    return Padding(
-      padding: const EdgeInsets.only(top: MarginsRaw.regular),
-      child: SvgPicture.asset('assets/players_art.svg'),
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(top: MarginsRaw.regular),
+        child: SvgPicture.asset('assets/players_art.svg'),
+      ),
     );
   }
 

@@ -52,22 +52,22 @@ flutter:
 
   assets:
     - google_fonts/
-    - intro-art.svg
-    - intro-art.svg
-    - players_art.svg
-    - player-ast-art.svg
-    - matches-art.svg
-    - podium-art.svg
-    - save-art.svg
-    - finish-art.svg
-    - error-art.svg
-    - winner-art.svg
+    - assets/intro-art.svg
+    - assets/intro-art.svg
+    - assets/players_art.svg
+    - assets/player-ast-art.svg
+    - assets/matches-art.svg
+    - assets/podium-art.svg
+    - assets/save-art.svg
+    - assets/finish-art.svg
+    - assets/error-art.svg
+    - assets/winner-art.svg
+    - assets/app-icon.png
     - lang/en.json
     - lang/it.json
     - lang/pt.json
     - lang/es.json
     - lang/fr.json
-    - app-icon.png
 
   fonts:
    - family:  CustomIcons

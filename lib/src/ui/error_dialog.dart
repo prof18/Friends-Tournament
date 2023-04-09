@@ -45,8 +45,10 @@ showErrorDialog(BuildContext context, bool isMounted) {
             children: [
               Expanded(
                 flex: 3,
-                child: SvgPicture.asset(
-                  'assets/error-art.svg',
+                child: Center(
+                  child: SvgPicture.asset(
+                    'assets/error-art.svg',
+                  ),
                 ),
               ),
               Padding(

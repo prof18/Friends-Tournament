@@ -35,8 +35,10 @@ showEndTournamentDialog(
             children: [
               Expanded(
                 flex: 3,
-                child: SvgPicture.asset(
-                  'assets/finish-art.svg',
+                child: Center(
+                  child: SvgPicture.asset(
+                    'assets/finish-art.svg',
+                  ),
                 ),
               ),
               Padding(

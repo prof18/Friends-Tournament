@@ -170,7 +170,9 @@ class _SessionScoreViewState extends State<SessionScoreView> {
               children: [
                 Expanded(
                   flex: 3,
-                  child: SvgPicture.asset('assets/save-art.svg'),
+                  child: Center(
+                      child: SvgPicture.asset('assets/save-art.svg'),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: MarginsRaw.regular),

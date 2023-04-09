@@ -113,9 +113,11 @@ class PlayersName extends StatelessWidget implements SetupPage {
   }
 
   Widget _buildImage() {
-    return Padding(
-      padding: Margins.regular,
-      child: SvgPicture.asset('assets/players_art.svg'),
+    return Center(
+      child: Padding(
+        padding: Margins.regular,
+        child: SvgPicture.asset('assets/players_art.svg'),
+      ),
     );
   }
 

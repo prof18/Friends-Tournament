@@ -109,9 +109,11 @@ class MatchesName extends StatelessWidget implements SetupPage {
   }
 
   Widget _buildImage() {
-    return Padding(
-      padding: Margins.regular,
-      child: SvgPicture.asset('assets/matches-art.svg'),
+    return Center(
+      child: Padding(
+        padding: Margins.regular,
+        child: SvgPicture.asset('assets/matches-art.svg'),
+      ),
     );
   }
 

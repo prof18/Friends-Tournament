@@ -12,10 +12,10 @@ description: A new Flutter application.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # e.g. 1.0.4 --> 10004
-version: 2.0.3+20003
+version: 2.0.4+20004
 
 environment:
-  sdk: '>=2.17.0 <3.0.0'
+  sdk: '>=2.19.6 <3.0.0'
 
 dependencies:
   flutter:
@@ -24,17 +24,17 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  flutter_svg: ^1.1.4
-  sqflite: ^2.0.3+1
-  google_fonts: ^3.0.1
+  flutter_svg: ^1.1.6
+  sqflite: ^2.2.6
+  google_fonts: ^4.0.3
   package_info: ^2.0.2
-  url_launcher: ^6.1.5
-  provider: ^6.0.3
+  url_launcher: ^6.1.10
+  provider: ^6.0.5
   cupertino_icons: ^1.0.5
-  collection: ^1.16.0
-  firebase_crashlytics: ^2.8.8
-  firebase_core: ^1.21.0
-  path: ^1.8.1
+  collection: ^1.17.0
+  firebase_crashlytics: ^3.1.0
+  firebase_core: ^2.9.0
+  path: ^1.8.2
 
 dev_dependencies:
   flutter_test:
@@ -43,8 +43,8 @@ dev_dependencies:
   integration_test:
     sdk: flutter
 
-  sqflite_common_ffi: ^2.1.1+1
-  synchronized: ^3.0.0+2
+  sqflite_common_ffi: ^2.2.2
+  synchronized: ^3.0.1
   flutter_lints: ^2.0.1
 
 flutter:

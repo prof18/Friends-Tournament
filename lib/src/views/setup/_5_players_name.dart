@@ -40,8 +40,8 @@ class PlayersName extends StatelessWidget implements SetupPage {
     return Consumer<SetupProvider>(
       builder: (context, provider, child) {
         return Padding(
-          padding: EdgeInsets.all(
-            isTablet(context) ? MarginsRaw.large : MarginsRaw.regular,
+          padding: EdgeInsets.symmetric(
+            vertical: isTablet(context) ? MarginsRaw.large : MarginsRaw.regular,
           ),
           child: _createBody(
             provider.playersNumber,
@@ -106,10 +106,10 @@ class PlayersName extends StatelessWidget implements SetupPage {
       children: <Widget>[
         Expanded(
           flex: 3,
-          child: _buildImage(),
+          child: _buildImage(context),
         ),
         _buildTitle(context),
-        _buildChipSeparator(),
+        _buildChipSeparator(context),
         Expanded(
           flex: 7,
           child: _buildTextFields(),
@@ -118,9 +118,14 @@ class PlayersName extends StatelessWidget implements SetupPage {
     );
   }
 
-  Widget _buildImage() {
-    return Center(
-      child: SvgPicture.asset('assets/players_art.svg'),
+  Widget _buildImage(BuildContext context) {
+    return Padding(
+      padding:  EdgeInsets.symmetric(
+        horizontal: isTablet(context) ? MarginsRaw.large : MarginsRaw.regular,
+      ),
+      child: Center(
+        child: SvgPicture.asset('assets/players_art.svg'),
+      ),
     );
   }
 
@@ -129,6 +134,8 @@ class PlayersName extends StatelessWidget implements SetupPage {
       padding: EdgeInsets.only(
         top: isTablet(context) ? MarginsRaw.large : MarginsRaw.regular,
         bottom: MarginsRaw.small,
+        left: isTablet(context) ? MarginsRaw.large : MarginsRaw.regular,
+        right: isTablet(context) ? MarginsRaw.large : MarginsRaw.regular,
       ),
       child: Text(
         AppLocalizations.translate(context, 'players_name_title'),
@@ -137,12 +144,14 @@ class PlayersName extends StatelessWidget implements SetupPage {
     );
   }
 
-  Widget _buildChipSeparator() {
-    return const Padding(
+  Widget _buildChipSeparator(BuildContext context) {
+    return Padding(
       padding: EdgeInsets.only(
         top: MarginsRaw.regular,
+        left: isTablet(context) ? MarginsRaw.large : MarginsRaw.regular,
+        right: isTablet(context) ? MarginsRaw.large : MarginsRaw.regular,
       ),
-      child: ChipSeparator(),
+      child: const ChipSeparator(),
     );
   }
 
@@ -157,6 +166,7 @@ class PlayersName extends StatelessWidget implements SetupPage {
           return Padding(
             padding:  EdgeInsets.symmetric(
               vertical: isTablet(context) ? MarginsRaw.regular : MarginsRaw.small,
+              horizontal: isTablet(context) ? MarginsRaw.large : MarginsRaw.regular,
             ),
             child: TextFieldTile(
               key: getKeyForPlayerNameTextField(index),

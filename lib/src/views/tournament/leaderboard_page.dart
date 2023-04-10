@@ -64,12 +64,9 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
           child: SafeArea(
             child: Padding(
               padding: EdgeInsets.only(
-                // left: isTablet(context) ? MarginsRaw.medium : MarginsRaw.regular,
-                right:
-                    isTablet(context) ? MarginsRaw.medium : MarginsRaw.regular,
-                bottom:
-                    isTablet(context) ? MarginsRaw.medium : MarginsRaw.regular,
-              ),
+                  bottom: isTablet(context)
+                      ? MarginsRaw.medium
+                      : MarginsRaw.regular),
               child: Column(
                 children: <Widget>[
                   Expanded(
@@ -138,6 +135,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
       child: Padding(
         padding: EdgeInsets.only(
           left: isTablet(context) ? MarginsRaw.medium : MarginsRaw.regular,
+          right: isTablet(context) ? MarginsRaw.medium : MarginsRaw.regular,
         ),
         child: SvgPicture.asset('assets/podium-art.svg'),
       ),
@@ -156,33 +154,31 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   }
 
   Widget _buildLeaderboard() {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: isTablet(context) ? MarginsRaw.medium : MarginsRaw.regular,
-      ),
-      child: Consumer<LeaderboardProvider>(
-        builder: (context, provider, child) {
-          return provider.leaderboardPlayers.isNotEmpty
-              ? ListView.builder(
-                  itemCount: provider.leaderboardPlayers.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    UIPlayer uiPlayer = provider.leaderboardPlayers[index];
-                    return Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: isTablet(context)
-                            ? MarginsRaw.regular
-                            : MarginsRaw.small,
-                      ),
-                      child: LeaderboardItemTile(
-                        uiPlayer: uiPlayer,
-                        position: index + 1,
-                      ),
-                    );
-                  },
-                )
-              : _renderEmptyLeaderboard();
-        },
-      ),
+    return Consumer<LeaderboardProvider>(
+      builder: (context, provider, child) {
+        return provider.leaderboardPlayers.isNotEmpty
+            ? ListView.builder(
+                itemCount: provider.leaderboardPlayers.length,
+                itemBuilder: (BuildContext context, int index) {
+                  UIPlayer uiPlayer = provider.leaderboardPlayers[index];
+                  return Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: isTablet(context)
+                          ? MarginsRaw.regular
+                          : MarginsRaw.small,
+                      horizontal: isTablet(context)
+                          ? MarginsRaw.medium
+                          : MarginsRaw.regular,
+                    ),
+                    child: LeaderboardItemTile(
+                      uiPlayer: uiPlayer,
+                      position: index + 1,
+                    ),
+                  );
+                },
+              )
+            : _renderEmptyLeaderboard();
+      },
     );
   }
 

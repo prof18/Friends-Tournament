@@ -1,22 +1,18 @@
 # Title
-Friends Tournament - Gestione Tornei
+Friends Tournament
 
 # Short Desc
-Crea e gestisci i tuoi tornei in modo semplice
+Il modo facile per pianificare e gestire i tornei.
 
 # Long desc
 
-Friends Tournament è il perfetto strumento per gestire i tornei con i tuoi amici. Puoi usare Friends Tournament per generare tornei di videogiochi, tornei sportivi, tornei di giochi da tavolo, qualunque tipo di torneo desideri.
+Cerchi un'app che ti aiuti ad organizzare tornei con i tuoi amici? Non cercare oltre Friends Tournament! Con la nostra interfaccia facile da usare, puoi generare rapidamente tornei per una varietà di giochi, sport o giochi da tavolo.
 
-- Creazione Torneo
+La creazione di un torneo è semplice: inserisci il numero di giocatori, partite e quanti giocatori possono competere contemporaneamente. Friends Tournament genererà quindi le partite e i round per te, togliendoti il fastidio dell'organizzazione.
 
-Tutto quello che c'è da fare è impostare il numero di giocatori, il numero di match e il numero di giocatori che possono giocare contemporaneamente. Friends Tournament genererà i vari match e i round automaticamente.
+Tieni traccia dei punteggi e delle classifiche con facilità utilizzando la nostra funzione integrata di punteggio e classifica. Mentre i giocatori competono, i loro punteggi verranno registrati e la classifica verrà aggiornata in tempo reale.
 
-- Gestione del torneo, classifica e punteggi
-
-Aggiorna il punteggio di ogni giocatore e la classifica verrà generata automaticamente.
-
-
+Che tu stia organizzando un incontro informale o un evento più competitivo, Friends Tournament ha tutto ciò di cui hai bisogno. Scarica l'app ora e inizia a pianificare il tuo prossimo torneo con facilità!
 
 
 

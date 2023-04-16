@@ -86,21 +86,19 @@ class SessionPlayerTile extends StatelessWidget {
 
   Widget _buildPlayerScore(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: MarginsRaw.small),
-      child: Padding(
-        padding: Margins.regular,
-        child: Column(
-          children: [
-            Text(
-              player.score.toString(),
-              style: AppTextStyle.textStyle(fontSize: 32),
-            ),
-            Text(
-              AppLocalizations.translate(context, 'score'),
-              style: AppTextStyle.textStyle(fontSize: 12),
-            )
-          ],
-        ),
+      padding: Margins.regular,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            player.score.toString(),
+            style: AppTextStyle.textStyle(fontSize: 32),
+          ),
+          Text(
+            AppLocalizations.translate(context, 'score'),
+            style: AppTextStyle.textStyle(fontSize: 12),
+          )
+        ],
       ),
     );
   }

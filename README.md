@@ -19,9 +19,11 @@ Keep the score of each player and a leaderboard will be generated automatically.
 
 ## Download 📦
 
-Friends Tournament works both on Android and iOs but for the time being is only available on the Play Store
+Friends Tournament is available for Android and iOS.
 
-<div align="center"><a href="https://play.google.com/store/apps/details?id=com.prof.friends_tournament"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" width="200px"/></a></div>
+<div align="center"><a href="https://play.google.com/store/apps/details?id=com.prof.friends_tournament"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" width="230px"/></a></div>
+<div align="center"><a href="https://apps.apple.com/it/app/friends-tournament/id6447518129?l=en"><img alt="Get it on Google Play" src="store_assets/app-store/app_store_download.svg" width="200px"/></a></div>
+
 
 ## Translating 🌍
 

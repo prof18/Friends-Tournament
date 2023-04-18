@@ -1,5 +1,5 @@
 <div align="center">
-  <img style="border-radius: 50%" src="assets/app-icon.png" width="100px">
+  <img style="border-radius: 50%" src="app-icon.png" width="100px">
   <h1>Friends Tournament</h1>
 </div>
 

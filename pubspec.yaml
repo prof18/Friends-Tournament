@@ -12,7 +12,7 @@ description: A new Flutter application.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # e.g. 1.0.4 --> 10004
-version: 2.0.5+20005
+version: 2.0.6+20006
 
 environment:
   sdk: '>=2.19.6 <3.0.0'
